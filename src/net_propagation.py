@@ -2,25 +2,26 @@
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
 # import when finished, wildcard is just for convenience.
-from scapy.layers.inet import IP, TCP
-from scapy.interfaces import get_if_list
+
 from scapy.all import get_if_addr
-from scapy.utils import subprocess, os
+from scapy.interfaces import get_if_list
+from scapy.layers.inet import IP, TCP
 from scapy.sendrecv import sr
-from time import sleep
-import sys
-import requests
+from scapy.utils import subprocess, os
 from telnetlib import Telnet
+from time import sleep
 from paramiko import SSHClient, AutoAddPolicy
+import requests
+import sys
 
 """
-Importing scapy for Packet Crafting and Sending / Sniffing.
-Importing sleep for the scan port function to allow responses to be processed.
-Importing sys to make OS calls and use OS level utilities.
-Importing requests for web based operations.
-Importing telnetlib for telnet operations.
-Importing Paramiko for ssh operations.
+ - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
+ - Importing telnetlib for telnet operations.
+ - Importing Paramiko for ssh operations.
+ - Importing requests for web based operations.
+ - Importing sys to make OS calls and use OS level utilities.
 """
+
 """
 ===PLEASE READ===
 Functions and methods are organised alphabetically with the exception of the 
@@ -28,6 +29,9 @@ main method specified last. Every function besides the main function has a
 block comment explaining what it does, the main function itself has more 
 specific, low level commenting.
 """
+
+# For ensuring the system exits properly but not for tests.
+PROPER_EXIT_CODE = 0
 
 
 def additional_attacks(args, ip, port, bruteforce,
@@ -70,7 +74,7 @@ def assigning_values(args):
         except RuntimeError:
             print("!!!ERROR: IP LIST CANNOT BE READ FROM FILENAME: "
                   + ip_addresses_filename + "!!!")
-            gtfo_and_rtfm()
+            gtfo_and_rtfm(PROPER_EXIT_CODE)
 
 
 def bruteforce_service(ip, port, username, password_list):
@@ -250,13 +254,13 @@ def cycle_through_subnet(ip_list, interface):
     return ip_list
 
 
-def file_error_handler(filename):
+def file_error_handler(filename, exit_code):
     """
     This function handles errors related to the processing of files.
     """
     print("!!!ERROR: SOMETHING WENT WRONG WHEN PROCESSING THE FILENAME: "
           + filename + "!!!")
-    gtfo_and_rtfm()
+    gtfo_and_rtfm(exit_code)
 
 
 def file_not_exist(ip, port, username, password):
@@ -284,7 +288,7 @@ def gathering_local_ips(ip_list):
     return ip_list
 
 
-def gtfo_and_rtfm():
+def gtfo_and_rtfm(exit_code):
     """
     This function will print the help screen, show an exit prompt, and
     gracefully exit the script... If you call telling the user to gtfo and
@@ -292,7 +296,13 @@ def gtfo_and_rtfm():
     """
     pls_help()
     print("Exiting...")
-    exit()
+    try:
+        sys.exit(exit_code)
+    except SystemExit as e:
+        if e.code == PROPER_EXIT_CODE:
+            raise
+        else:
+            os._exit(exit_code)
 
 
 def is_reachable_ip(ip):
@@ -612,7 +622,7 @@ def validate_file_exists(filename):
     if not os.path.isfile(filename):
         print("!!!ERROR: THE FOLLOWING FILE DOES NOT EXIST: " + filename
               + "!!!")
-        gtfo_and_rtfm()
+        gtfo_and_rtfm(PROPER_EXIT_CODE)
 
 
 def main():
@@ -655,11 +665,11 @@ def main():
             # values, mostly triggered by null entries.
             print("!!!ERROR: FAILED ASSIGNING VALUES (MAYBE NULL)!!!")
             # Teach the user how to use this spaghetti code.
-            gtfo_and_rtfm()
+            gtfo_and_rtfm(PROPER_EXIT_CODE)
     else:
         # Probably a typo, either way showing the help again.
         print("!!!ERROR: PARAMETER MISUSE, CHECK HELP TEXT BELOW!!!")
-        gtfo_and_rtfm()
+        gtfo_and_rtfm(PROPER_EXIT_CODE)
 
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
@@ -677,7 +687,7 @@ def main():
     except RuntimeError:
         # Uh oh, file doesn't exist, alert the user and exit gracefully, so
         # they can either fix their mistake or repent their sins.
-        file_error_handler(passwords_filename)
+        file_error_handler(passwords_filename, PROPER_EXIT_CODE)
 
     # If the user wants to transfer a file, this stuff should be done...
     if "-d" in args:
@@ -691,7 +701,9 @@ def main():
         except RuntimeError:
             # File doesn't exist, throw an error and give the usual slap across
             # the wrist.
-            file_error_handler(transfer_file_filename)
+            file_error_handler(transfer_file_filename,
+                               file_error_handler(passwords_filename,
+                                                  PROPER_EXIT_CODE))
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file among
     # other things and silliness.
