@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import main
+import net_propagation
 """
 ===PLEASE READ===
 Functions are organised alphabetically with the main function specified last.
