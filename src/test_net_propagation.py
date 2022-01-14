@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
 import net_propagation
+import strings
+import pytest
 
 """
- - Importing modules from net_propagation for testing.
- - Importing pytest for test functions.
- - Importing os to force exiting without failed tests (see try/catch 
-   surrounding functions which lead to system exits in testing)
+ - Importing net_propagation for testing.
+ - Importing strings for common string resources.
+ - Importing pytest for test functionality.
 """
 
 """
@@ -17,10 +18,21 @@ does.
 """
 
 
-def test_file_error_handler():
+def test_additional_attacks(args, ip, port, bruteforce,
+                            transfer_file_filename, service):
     """
-    This function tests the file_error_handler method in the main class. Should
-    just run straight through no problem hence why all this method does is run
-    that method, errors or exceptions will fail this test for us.
+    This function tests the additional_attacks method in the main class.
+    """
+
+
+def test_file_error_handler(capfd):
+    """
+    This function tests the file_error_handler function. Should just run
+    straight through no problem hence why all this function does is run that
+    function and check what shows up in the console, errors or exceptions will
+    fail this test for us.
     """
     net_propagation.file_error_handler("test")
+    out, err = capfd.readouterr()
+    assert out == strings.filename_processing_error("test") + "\n" \
+           + strings.PLS_HELP + "\n" + strings.EXITING + "\n"

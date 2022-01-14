@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
+from src import net_propagation, strings
 import sys
-
-from src import net_propagation
 
 """
  - Importing sys to make OS calls and use OS level utilities.
@@ -63,8 +62,7 @@ def main():
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
     if "-L" in args:
-        print("Performing local scan, this might take a while so grab a"
-              + " coffee...")
+        print(strings.PERFORMING_LOCAL_SCAN)
         ip_list.extend(net_propagation.gathering_local_ips(ip_list))
 
     try:
@@ -78,6 +76,7 @@ def main():
         # Uh oh, file doesn't exist, alert the user and exit gracefully, so
         # they can either fix their mistake or repent their sins.
         net_propagation.file_error_handler(passwords_filename)
+        sys.exit()
 
     # If the user wants to transfer a file, this stuff should be done...
     if "-d" in args:
@@ -92,6 +91,7 @@ def main():
             # File doesn't exist, throw an error and give the usual slap across
             # the wrist.
             net_propagation.file_error_handler(transfer_file_filename)
+            sys.exit()
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file among
     # other things and silliness.
