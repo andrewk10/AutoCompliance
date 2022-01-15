@@ -18,7 +18,7 @@ def main():
     This main function controls all the things.
     """
     # These arguments are passed in by the end user.
-    args = sys.argv
+    arguments = sys.argv
     # Blank target ports until we assign them later, they're here purely for
     # scope related reasons.
     target_ports = []
@@ -35,12 +35,12 @@ def main():
 
     # The following if statement only runs if the user uses the script
     # correctly, or they don't ask for help.
-    if (("-t" or "-L" in args) and "-p" and "-u" and "-f" in args
-            and len(args) >= 8 and "-h" and "--help" not in args):
+    if (("-t" or "-L" in arguments) and "-p" and "-u" and "-f" in arguments
+            and len(arguments) >= 8 and "-h" and "--help" not in arguments):
         try:
             # Here I'm fetching the values needed for the blank variables
             # above.
-            values = net_propagation.assigning_values(args)
+            values = net_propagation.assigning_values(arguments)
             # Then assigning these values to their associated variables which
             # are most of the blank ones above.
             ip_list = values[0]
@@ -61,7 +61,7 @@ def main():
 
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
-    if "-L" in args:
+    if "-L" in arguments:
         print(strings.PERFORMING_LOCAL_SCAN)
         ip_list.extend(net_propagation.gathering_local_ips(ip_list))
 
@@ -79,14 +79,14 @@ def main():
         sys.exit()
 
     # If the user wants to transfer a file, this stuff should be done...
-    if "-d" in args:
+    if "-d" in arguments:
         try:
             # Again making sure the transfer file actually exits, just like
             # the password file above.
             net_propagation.validate_file_exists(transfer_file_filename)
             # if it does though we assign the filename to the name out of scope
             # above.
-            transfer_file_filename = args[args.index("-d") + 1]
+            transfer_file_filename = arguments[arguments.index("-d") + 1]
         except RuntimeError:
             # File doesn't exist, throw an error and give the usual slap across
             # the wrist.
@@ -111,7 +111,7 @@ def main():
             # for example, not attacking, propagating and protecting more like.
             net_propagation.try_attack(ip, port, target_username,
                                        password_list, transfer_file_filename,
-                                       args)
+                                       arguments)
 
 
 main()

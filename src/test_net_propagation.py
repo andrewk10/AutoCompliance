@@ -18,11 +18,22 @@ does.
 """
 
 
-def test_additional_attacks(args, ip, port, bruteforce,
-                            transfer_file_filename, service):
+def test_additional_attacks():
     """
-    This function tests the additional_attacks method in the main class.
+    This function tests the additional_attacks method in the main class. The
+    goal is to check every service for both good paths and bad paths.
     """
+    # TODO: Finish this test. Check assert for console output in the bad path
+    #  and start the good path.
+    arguments = ["-t", "-d"]
+    ip = "0.0.0.0"
+    port = "9999"
+    username = "test"
+    transfer_file_filename = "test"
+    services = ["ssh", "telnet", "web login"]
+    for service in services:
+        net_propagation.additional_attacks(arguments, ip, port, username,
+                                           transfer_file_filename, service)
 
 
 def test_file_error_handler(capfd):
