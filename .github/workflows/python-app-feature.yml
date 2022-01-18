@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ creating_multiple_git_workflows ]
+    branches: [ addressing_security_and_linting_items ]
   pull_request:
-    branches: [ creating_multiple_git_workflows ]
+    branches: [ addressing_security_and_linting_items ]
 
 jobs:
   build:
