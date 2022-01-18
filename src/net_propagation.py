@@ -24,8 +24,8 @@ import strings
 
 """
 ===PLEASE READ===
-Functions and methods are organised alphabetically with the exception of the 
-main method specified last. Every function has a block comment explaining what 
+Functions and methods are organised alphabetically with the exception of the
+main method specified last. Every function has a block comment explaining what
 it does.
 """
 
@@ -145,6 +145,32 @@ def check_telnet_data(string_to_check, data):
     if data.__contains__(string_to_check.encode("ascii")):
         return True
     return False
+
+
+def checking_arguments(arguments):
+    """
+    This function checks if the arguments are appropriately given and if
+    they're not it calls the help function and kicks them out. There's also a
+    check for the help argument itself. It'll try to assign the values if the
+    proper arguments are given, and they're valid
+    :param arguments: Arguments passed in by the user themselves
+    :return values[0]: List of IP addresses
+    :return values[1]: Ports and subsequently services to target
+    :return values[2]: Username to target
+    :return values[3]: Filename for a file containing passwords
+    """
+    if (("-t" or "-L" in arguments) and "-p" and "-u" and "-f" in arguments
+            and len(arguments) >= 8 and "-h" and "--help" not in arguments):
+        try:
+            values = assigning_values(arguments)
+            return values[0], values[1], values[2], values[3]
+
+        except RuntimeError:
+            print("!!!ERROR: FAILED ASSIGNING VALUES (MAYBE NULL)!!!")
+            gtfo_and_rtfm()
+    else:
+        print("!!!ERROR: PARAMETER MISUSE, CHECK HELP TEXT BELOW!!!")
+        gtfo_and_rtfm()
 
 
 def connect_ssh_client(ip, port, username, password):

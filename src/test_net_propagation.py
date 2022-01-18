@@ -2,7 +2,6 @@
 
 import net_propagation
 import strings
-import pytest
 
 """
  - Importing net_propagation for testing.
@@ -12,8 +11,8 @@ import pytest
 
 """
 ===PLEASE READ===
-Test functions are organised alphabetically. The tests here pertain to 
-net_propagation.py. Every test function has a block comment explaining what it 
+Test functions are organised alphabetically. The tests here pertain to
+net_propagation.py. Every test function has a block comment explaining what it
 does.
 """
 
