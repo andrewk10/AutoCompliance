@@ -2,11 +2,13 @@
 # TODO: Change method names and reread some comments like here for example, not
 #  attacking, propagating and protecting more like. (Andrew)
 
+import logging
 import net_propagation
 import strings
 import sys
 
 """
+ - Importing logging to safely log sensitive, error or debug info.
  - Importing net_propagation for propagating across the network.
  - Importing strings for use of the external strings resources.
  - Importing sys to make OS calls and use OS level utilities.
@@ -33,7 +35,7 @@ def main():
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
     if "-L" in arguments:
-        print(strings.PERFORMING_LOCAL_SCAN)
+        logging.info(strings.PERFORMING_LOCAL_SCAN)
         ip_list.extend(net_propagation.gathering_local_ips(ip_list))
 
     try:

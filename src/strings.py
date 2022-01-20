@@ -22,13 +22,15 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "-p 22 -u root -f passwords.txt"
 
 
-def connection_status(service, ip, port, username, password, status):
+def connection_status(service, ip, port, status, password_number):
     """
     This function creates the connection status string dependent
     on the context given by the arguments passed into it.
     """
     string = str(status) + " " + str(service) + " login to " + str(ip) + ":" \
-        + str(port) + " using " + str(username) + ":" + str(password)
+        + str(port) \
+        + " using the specified username with password at line " \
+        + str(password_number) + "in the passwords file."
     return string
 
 
@@ -38,7 +40,7 @@ def filename_processing_error(filename):
     return string
 
 
-def ip_list_cannot_be_read(filename):
+def ip_list_not_read(filename):
     """
     This function returns the error for an ip list that can't be generated from
     a particular filename
@@ -46,6 +48,5 @@ def ip_list_cannot_be_read(filename):
     derived from it
     :return string: The string in question.
     """
-    string = "!!!ERROR: IP LIST CANNOT BE READ FROM FILENAME: " + filename \
-             + "!!!"
+    string = "IP list cannot be read from filename: " + filename
     return string
