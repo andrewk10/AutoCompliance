@@ -574,7 +574,7 @@ def try_propagating(arguments, ip, port, bruteforce):
     if "-P" in arguments and (port == "22" or "23"):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
-            logging.info("Script propagated over port " + port + ".")
+            logging.info("Script propagated over  this port")
         else:
             logging.debug("Script couldn't be propagated over this port")
     else:
@@ -596,11 +596,9 @@ def try_transferring_file(arguments, ip, port, bruteforce,
         transferred = transfer_file(ip, port, bruteforce,
                                     transfer_file_filename)
         if transferred:
-            logging.info("File " + str(transfer_file_filename) +
-                         " transferred over port " + port + ".")
+            logging.info("File transferred over port 22 or 23")
         else:
-            logging.debug("File " + str(transfer_file_filename)
-                          + " couldn't be transferred over port " + port + ".")
+            logging.debug("File couldn't be transferred over port 22 or 23")
     else:
         logging.info("Requirement to transfer file not specified, skipping...")
 
