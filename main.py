@@ -1,9 +1,14 @@
 #!/usr/bin/python3
+# TODO: Change method names and reread some comments like here for example, not
+#  attacking, propagating and protecting more like. (Andrew)
 
-from src import net_propagation, strings
+from src import net_propagation
+from src import strings
 import sys
 
 """
+ - Importing net_propagation for propagating across the network.
+ - Importing strings for use of the external strings resources.
  - Importing sys to make OS calls and use OS level utilities.
 """
 
@@ -73,8 +78,6 @@ def main():
         # And then using all user specified ports against that specific IP...
         for port in ports:
             # Try to spread :D
-            # TODO: Change method names and reread some comments like here
-            # for example, not attacking, propagating and protecting more like.
             net_propagation.try_attack(ip, port, target_username,
                                        password_list, transfer_file_filename,
                                        arguments)

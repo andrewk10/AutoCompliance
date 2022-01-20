@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+# TODO: Finish this test by checking assert for console output in the bad path
+#  and start the good path. (Andrew)
+# TODO: Implement proper logging for tests. Not much point if we don't know
+#  what's going on. :) In fact, implement it wherever it can be... (Andrew)
 
 import net_propagation
 import strings
@@ -6,7 +10,6 @@ import strings
 """
  - Importing net_propagation for testing.
  - Importing strings for common string resources.
- - Importing pytest for test functionality.
 """
 
 """
@@ -22,8 +25,6 @@ def test_additional_attacks():
     This function tests the additional_attacks method in the main class. The
     goal is to check every service for both good paths and bad paths.
     """
-    # TODO: Finish this test. Check assert for console output in the bad path
-    #  and start the good path.
     arguments = ["-t", "-d"]
     ip = "0.0.0.0"
     port = "9999"

