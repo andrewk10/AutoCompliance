@@ -22,15 +22,15 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "-p 22 -u root -f passwords.txt"
 
 
-def connection_status(service, ip, port, status, password_number):
+def connection_status(service, ip, port, status):
     """
     This function creates the connection status string dependent
     on the context given by the arguments passed into it.
     """
     string = str(status) + " " + str(service) + " login to " + str(ip) + ":" \
         + str(port) \
-        + " using the specified username with password at line " \
-        + str(password_number) + "in the passwords file."
+        + " using the specified username with a password in the passwords" \
+          " file."
     return string
 
 

@@ -88,9 +88,8 @@ def bruteforce_service(ip, port, username, password_list):
     details are returned, if not then Null is returned.
     """
     for password in password_list:
-        password_number = password_list.index(password)+1
         login_details = (try_password_for_service(ip, port, username,
-                                                  password, password_number))
+                                                  password))
         if login_details != "":
             return login_details
     return None
@@ -181,7 +180,7 @@ def checking_arguments(arguments):
         gtfo_and_rtfm()
 
 
-def connect_ssh_client(ip, port, username, password, password_number):
+def connect_ssh_client(ip, port, username, password):
     """
     This function checks to see if an SSH connection can be established and if
     so then it returns true, if not then it returns false.
@@ -192,19 +191,17 @@ def connect_ssh_client(ip, port, username, password, password_number):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.close()
-        logging.info(strings.connection_status("SSH", ip, port, "Successful",
-                                               password_number))
+        logging.info(strings.connection_status("SSH", ip, port, "Successful"))
         return True
 
     except RuntimeError:
         client.close()
         logging.debug(strings.connection_status("SSH", ip, port,
-                                                "Unsuccessful",
-                                                password_number))
+                                                "Unsuccessful"))
         return False
 
 
-def connect_telnet(ip, port, username, password, password_number):
+def connect_telnet(ip, port, username, password):
     """
     This function checks to see if a telnet connection can be established and
     if so then it returns true, if not then it returns false.
@@ -218,38 +215,33 @@ def connect_telnet(ip, port, username, password, password_number):
 
         data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
         logging.info(strings.connection_status("telnet", ip, port,
-                                               "Successful", password_number))
+                                               "Successful"))
         if check_telnet_data("Welcome to", data):
             return True
         logging.debug(strings.connection_status("telnet", ip, port,
-                                                "Unsuccessful",
-                                                password_number))
+                                                "Unsuccessful"))
         return False
 
     except RuntimeError:
         logging.debug(strings.connection_status("telnet", ip, port,
-                                                "Unsuccessful",
-                                                password_number))
+                                                "Unsuccessful"))
         return False
 
 
-def connect_web(ip, port, username, password, password_number):
+def connect_web(ip, port, username, password):
     """
     This function check to see if a web login can be established and if so then
     it returns true, if not then it returns false.
     """
     attempt_succeeded = False
     try:
-        send_post_request_with_login(ip, port, username, password,
-                                     password_number)
+        send_post_request_with_login(ip, port, username, password)
         attempt_succeeded = True
     except RuntimeError:
         logging.debug(strings.connection_status("web", ip, port,
-                                                "Unsuccessful",
-                                                password_number))
+                                                "Unsuccessful"))
     if attempt_succeeded:
-        logging.info(strings.connection_status("web", ip, port, "Successful",
-                                               password_number))
+        logging.info(strings.connection_status("web", ip, port, "Successful"))
     return attempt_succeeded
 
 
@@ -435,8 +427,7 @@ def scan_port(ip, port):
     return False
 
 
-def send_post_request_with_login(ip, port, username, password,
-                                 password_number):
+def send_post_request_with_login(ip, port, username, password):
     """
     This function sends a post request to a web server in an attempt to
     bruteforce its login details. If it succeeds with the given arguments then
@@ -447,25 +438,23 @@ def send_post_request_with_login(ip, port, username, password,
                              data={"username": username, "password": password},
                              timeout=4)
     if response:
-        logging.info(strings.connection_status("web", ip, port, "Successful",
-                                               password_number))
+        logging.info(strings.connection_status("web", ip, port, "Successful"))
         return str(username) + ":" + str(password)
     else:
         logging.debug(strings.connection_status("web", ip, port,
-                                                password_number,
                                                 "Unsuccessful"))
         return None
 
 
 def telnet_connection(ip_telnet, port_telnet, username_telnet,
-                      password_telnet, password_number):
+                      password_telnet):
     """
     This function will try to establish a telnet connection, if it does it will
     return the successful telnet login string and if not then it will return a
     null value.
     """
     if connect_telnet(ip_telnet, port_telnet, username_telnet,
-                      password_telnet, password_number):
+                      password_telnet):
         return str(username_telnet) + ":" + str(password_telnet)
     return None
 
@@ -554,7 +543,7 @@ def try_bruteforce(ip, port, target_username, password_list,
     return None, service
 
 
-def try_password_for_service(ip, port, username, password, password_number):
+def try_password_for_service(ip, port, username, password):
     """
     This function tries to log into to a port's associated service using a
     specific username and password pair. If it succeeds it returns the
@@ -562,16 +551,11 @@ def try_password_for_service(ip, port, username, password, password_number):
     """
     try:
         connect_service_switch = {
-            "22": lambda: connect_ssh_client(ip, port, username, password,
-                                             password_number),
-            "23": lambda: connect_telnet(ip, port, username, password,
-                                         password_number),
-            "80": lambda: connect_web(ip, port, username, password,
-                                      password_number),
-            "8080": lambda: connect_web(ip, port, username, password,
-                                        password_number),
-            "8888": lambda: connect_web(ip, port, username, password,
-                                        password_number),
+            "22": lambda: connect_ssh_client(ip, port, username, password),
+            "23": lambda: connect_telnet(ip, port, username, password),
+            "80": lambda: connect_web(ip, port, username, password),
+            "8080": lambda: connect_web(ip, port, username, password),
+            "8888": lambda: connect_web(ip, port, username, password),
         }
         connect_service = connect_service_switch.get(str(port))
         if connect_service():
