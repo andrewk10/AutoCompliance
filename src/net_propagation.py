@@ -500,23 +500,20 @@ def try_attack(ip, port, target_username, password_list,
     is successful it will then check the need for additional attacks specified
     by the end user.
     """
-    ip_address_and_port = str(ip) + ":" + str(port)
-    print("Now testing the following address: " + ip_address_and_port + "...")
+    logging.info("Now testing an IP address and port pair")
     if scan_port(ip, port):
-        print(ip_address_and_port + " is open.")
+        logging.info("Found an open IP address and port pair")
         bruteforce_login_details = try_bruteforce(ip, port, target_username,
-                                                  password_list,
-                                                  ip_address_and_port)
+                                                  password_list)
         if bruteforce_login_details[0]:
             additional_attacks(arguments, ip, port,
                                bruteforce_login_details[0],
                                transfer_file_filename)
     else:
-        print(ip_address_and_port + " is closed.")
+        print("This IP address and port pair is closed.")
 
 
-def try_bruteforce(ip, port, target_username, password_list,
-                   ip_address_and_port):
+def try_bruteforce(ip, port, target_username, password_list):
     """
     This function will try to bruteforce a specific service depending on the
     port supplied. If it gets a successful login then it will return the login
@@ -537,8 +534,8 @@ def try_bruteforce(ip, port, target_username, password_list,
                      + " was found.")
         return str(bruteforce), service
     else:
-        logging.debug("It was impossible to bruteforce: " + ip_address_and_port
-                      + ", that's rough buddy. :(")
+        logging.debug("It was impossible to bruteforce this IP address and"
+                      " port")
     return None, service
 
 
@@ -579,8 +576,7 @@ def try_propagating(arguments, ip, port, bruteforce):
         if propagated:
             logging.info("Script propagated over port " + port + ".")
         else:
-            logging.debug("Script couldn't be propagated over port " + port
-                          + ".")
+            logging.debug("Script couldn't be propagated over this port")
     else:
         logging.info("Requirement to propagate script not specified,"
                      " skipping...")
@@ -616,6 +612,5 @@ def validate_file_exists(filename):
     Just kidding we show the help screen and exit gracefully.
     """
     if not os.path.isfile(filename):
-        logging.error("!!!ERROR: THE FOLLOWING FILE DOES NOT EXIST: "
-                      + filename + "!!!")
+        logging.error("A specified file does not exist")
         gtfo_and_rtfm()
