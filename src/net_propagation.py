@@ -11,11 +11,11 @@ from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
 from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
-from src import strings
 from telnetlib import Telnet
 from time import sleep
 from paramiko import SSHClient, AutoAddPolicy
 import requests
+import strings
 import logging
 
 """

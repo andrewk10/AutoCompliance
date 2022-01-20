@@ -2,8 +2,8 @@
 # TODO: Change method names and reread some comments like here for example, not
 #  attacking, propagating and protecting more like. (Andrew)
 
-from src import net_propagation
-from src import strings
+import net_propagation
+import strings
 import sys
 
 """
