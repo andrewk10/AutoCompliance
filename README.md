@@ -3,18 +3,18 @@ Automating the Implementation of a Cybersecurity Governance, Risk and Compliance
 
 # Research Questions and Deliverables (WIP)
 1. Can DLTs help implement a GRC programme better than other means?
-   - [] A comparison report of DLT performance compared to the conventional means for implementing a GRC programme.
-   - [] DLT solution(s) that assist with the implementation of a GRC programme in any given organisation.
+   - [ ] A comparison report of DLT performance compared to the conventional means for implementing a GRC programme.
+   - [ ] DLT solution(s) that assist with the implementation of a GRC programme in any given organisation.
 2. Is there anything that can’t or should not be automated in the implementation? Why?
-   - [] A breakdown on all items that can not be automated with in depth technical analysis as to why that is the case.
+   - [ ] A breakdown on all items that can not be automated with in depth technical analysis as to why that is the case.
 3. Are existing implementation solutions suitable or is there more work to be done?
-   - [] A definition on what is to be classified as “suitable”.
-   - [] An outline of all that needs to be done to reach a suitable state.
+   - [ ] A definition on what is to be classified as “suitable”.
+   - [ ] An outline of all that needs to be done to reach a suitable state.
 4. What possible future technical developments need to be accounted for in the GRC space?
-   - [] A list of future technical areas and a description on how they should be accounted for in the future.
+   - [ ] A list of future technical areas and a description on how they should be accounted for in the future.
 5. Is machine learning the best way towards total zero trust security solutions?
-   - [] A comparison report of ML performance compared to the conventional means for implementing zero trust security in an organisation’s network.
-   - [] ML solution(s) that assist with the implementation of a zero trust security network in any given organisation.
+   - [ ] A comparison report of ML performance compared to the conventional means for implementing zero trust security in an organisation’s network.
+   - [ ] ML solution(s) that assist with the implementation of a zero trust security network in any given organisation.
 
 
 # Project Abstract
