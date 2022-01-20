@@ -26,7 +26,6 @@ import strings
  - Importing logging to safely log sensitive, error or debug info.
  - Importing requests for web based operations.
  - Importing strings for use of the external strings resources.
- 
 """
 
 """
