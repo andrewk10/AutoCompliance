@@ -8,6 +8,7 @@ every string constant has a comment describing its use.
 """
 
 EXITING = "Exiting..."
+FILENAME_PROCESSING_ERROR = "One of the filenames are invalid."
 PERFORMING_LOCAL_SCAN = "Performing local scan, this might take a while so " \
                         "grab a coffee..."
 PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
@@ -22,23 +23,19 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "-p 22 -u root -f passwords.txt"
 
 
-def connection_status(service, ip, port, username, password, status):
+def connection_status(service, ip, port, status):
     """
     This function creates the connection status string dependent
     on the context given by the arguments passed into it.
     """
     string = str(status) + " " + str(service) + " login to " + str(ip) + ":" \
-        + str(port) + " using " + str(username) + ":" + str(password)
+        + str(port) \
+        + " using the specified username with a password in the passwords" \
+          " file."
     return string
 
 
-def filename_processing_error(filename):
-    string = "!!!ERROR: SOMETHING WENT WRONG WHEN PROCESSING THE FILENAME: " \
-             + filename + "!!!"
-    return string
-
-
-def ip_list_cannot_be_read(filename):
+def ip_list_not_read(filename):
     """
     This function returns the error for an ip list that can't be generated from
     a particular filename
@@ -46,6 +43,5 @@ def ip_list_cannot_be_read(filename):
     derived from it
     :return string: The string in question.
     """
-    string = "!!!ERROR: IP LIST CANNOT BE READ FROM FILENAME: " + filename \
-             + "!!!"
+    string = "IP list cannot be read from filename: " + filename
     return string

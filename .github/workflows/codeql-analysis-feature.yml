@@ -13,10 +13,10 @@ name: "CodeQL - Feature"
 
 on:
   push:
-    branches: [ creating_multiple_git_workflows ]
+    branches: [ addressing_security_and_linting_items ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ creating_multiple_git_workflows ]
+    branches: [ addressing_security_and_linting_items ]
   schedule:
     - cron: '34 22 * * 4'
 

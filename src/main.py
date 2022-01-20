@@ -1,9 +1,16 @@
 #!/usr/bin/python3
+# TODO: Change method names and reread some comments like here for example, not
+#  attacking, propagating and protecting more like. (Andrew)
 
-from src import net_propagation, strings
+import logging
+import net_propagation
+import strings
 import sys
 
 """
+ - Importing logging to safely log sensitive, error or debug info.
+ - Importing net_propagation for propagating across the network.
+ - Importing strings for use of the external strings resources.
  - Importing sys to make OS calls and use OS level utilities.
 """
 
@@ -19,50 +26,16 @@ def main():
     """
     # These arguments are passed in by the end user.
     arguments = sys.argv
-    # Blank target ports until we assign them later, they're here purely for
-    # scope related reasons.
-    target_ports = []
-    # Same here....
-    target_username = ""
-    # And here...
-    passwords_filename = ""
-    # Here...
+    # Just initialising this for use later.
     transfer_file_filename = ""
-    # *yawn*
-    ip_list = []
-    # Right, done...
-    password_list = []
 
-    # The following if statement only runs if the user uses the script
-    # correctly, or they don't ask for help.
-    if (("-t" or "-L" in arguments) and "-p" and "-u" and "-f" in arguments
-            and len(arguments) >= 8 and "-h" and "--help" not in arguments):
-        try:
-            # Here I'm fetching the values needed for the blank variables
-            # above.
-            values = net_propagation.assigning_values(arguments)
-            # Then assigning these values to their associated variables which
-            # are most of the blank ones above.
-            ip_list = values[0]
-            target_ports = values[1]
-            target_username = values[2]
-            passwords_filename = values[3]
-
-        except RuntimeError:
-            # Some silliness happened when it came to fetching / assigning
-            # values, mostly triggered by null entries.
-            print("!!!ERROR: FAILED ASSIGNING VALUES (MAYBE NULL)!!!")
-            # Teach the user how to use this spaghetti code.
-            net_propagation.gtfo_and_rtfm()
-    else:
-        # Probably a typo, either way showing the help again.
-        print("!!!ERROR: PARAMETER MISUSE, CHECK HELP TEXT BELOW!!!")
-        net_propagation.gtfo_and_rtfm()
+    ip_list, target_ports, target_username, passwords_filename = \
+        net_propagation.checking_arguments(arguments)
 
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
     if "-L" in arguments:
-        print(strings.PERFORMING_LOCAL_SCAN)
+        logging.info(strings.PERFORMING_LOCAL_SCAN)
         ip_list.extend(net_propagation.gathering_local_ips(ip_list))
 
     try:
@@ -75,7 +48,7 @@ def main():
     except RuntimeError:
         # Uh oh, file doesn't exist, alert the user and exit gracefully, so
         # they can either fix their mistake or repent their sins.
-        net_propagation.file_error_handler(passwords_filename)
+        net_propagation.file_error_handler()
         sys.exit()
 
     # If the user wants to transfer a file, this stuff should be done...
@@ -90,7 +63,7 @@ def main():
         except RuntimeError:
             # File doesn't exist, throw an error and give the usual slap across
             # the wrist.
-            net_propagation.file_error_handler(transfer_file_filename)
+            net_propagation.file_error_handler()
             sys.exit()
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file among
@@ -107,8 +80,6 @@ def main():
         # And then using all user specified ports against that specific IP...
         for port in ports:
             # Try to spread :D
-            # TODO: Change method names and reread some comments like here
-            # for example, not attacking, propagating and protecting more like.
             net_propagation.try_attack(ip, port, target_username,
                                        password_list, transfer_file_filename,
                                        arguments)

