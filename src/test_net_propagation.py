@@ -27,13 +27,12 @@ def test_additional_attacks():
     """
     arguments = ["-t", "-d"]
     ip = "0.0.0.0"
-    port = "9999"
     username = "test"
     transfer_file_filename = "test"
-    services = ["ssh", "telnet", "web login"]
-    for service in services:
+    ports = ["22", "23", "80", "8080", "8888"]
+    for port in ports:
         net_propagation.additional_attacks(arguments, ip, port, username,
-                                           transfer_file_filename, service)
+                                           transfer_file_filename)
 
 
 def test_file_error_handler(capfd):
@@ -43,7 +42,7 @@ def test_file_error_handler(capfd):
     function and check what shows up in the console, errors or exceptions will
     fail this test for us.
     """
-    net_propagation.file_error_handler("test")
+    net_propagation.file_error_handler()
     out, err = capfd.readouterr()
-    assert out == strings.filename_processing_error("test") + "\n" \
+    assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
            + strings.PLS_HELP + "\n" + strings.EXITING + "\n"

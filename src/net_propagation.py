@@ -38,15 +38,15 @@ it does.
 
 
 def additional_attacks(arguments, ip, port, username,
-                       transfer_file_filename, service):
+                       transfer_file_filename):
     """
     This function passes the appropriate arguments to and runs the transferring
     file and propagating functions, these functions contain the check to stop
     them from being run if the appropriate arguments aren't used.
     """
     try_transferring_file(arguments, ip, port, username,
-                          transfer_file_filename, service)
-    try_propagating(arguments, ip, port, username, service)
+                          transfer_file_filename)
+    try_propagating(arguments, ip, port, username)
 
 
 def append_lines_from_file_to_list(file):
@@ -276,11 +276,11 @@ def cycle_through_subnet(ip_list, interface):
     return ip_list
 
 
-def file_error_handler(filename):
+def file_error_handler():
     """
     This function handles errors related to the processing of files.
     """
-    print(strings.filename_processing_error(filename))
+    print(strings.FILENAME_PROCESSING_ERROR)
     gtfo_and_rtfm()
 
 
@@ -510,8 +510,7 @@ def try_attack(ip, port, target_username, password_list,
         if bruteforce_login_details[0]:
             additional_attacks(arguments, ip, port,
                                bruteforce_login_details[0],
-                               transfer_file_filename,
-                               bruteforce_login_details[1])
+                               transfer_file_filename)
     else:
         print(ip_address_and_port + " is closed.")
 
@@ -566,7 +565,7 @@ def try_password_for_service(ip, port, username, password):
         return ""
 
 
-def try_propagating(arguments, ip, port, bruteforce, service):
+def try_propagating(arguments, ip, port, bruteforce):
     """
     This function attempts propagation of the network_attack.py script over
     the network. If it succeeds we alert the user and let them know what
@@ -578,17 +577,17 @@ def try_propagating(arguments, ip, port, bruteforce, service):
     if "-P" in arguments and (port == "22" or "23"):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
-            logging.info("Script propagated over " + service + ".")
+            logging.info("Script propagated over port " + port + ".")
         else:
-            logging.debug("Script couldn't be propagated over " + service
+            logging.debug("Script couldn't be propagated over port " + port
                           + ".")
     else:
-        logging.info("Requirement to propagate script not specified, "
-                     "skipping...")
+        logging.info("Requirement to propagate script not specified,"
+                     " skipping...")
 
 
 def try_transferring_file(arguments, ip, port, bruteforce,
-                          transfer_file_filename, service):
+                          transfer_file_filename):
     """
     This function attempts transferring a user specified file across the
     network. If it succeeds we alert the user and let them know transferring
@@ -602,10 +601,10 @@ def try_transferring_file(arguments, ip, port, bruteforce,
                                     transfer_file_filename)
         if transferred:
             logging.info("File " + str(transfer_file_filename) +
-                         " transferred over " + service + ".")
+                         " transferred over port " + port + ".")
         else:
             logging.debug("File " + str(transfer_file_filename)
-                          + " couldn't be transferred over " + service + ".")
+                          + " couldn't be transferred over port " + port + ".")
     else:
         logging.info("Requirement to transfer file not specified, skipping...")
 

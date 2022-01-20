@@ -8,6 +8,7 @@ every string constant has a comment describing its use.
 """
 
 EXITING = "Exiting..."
+FILENAME_PROCESSING_ERROR = "One of the filenames are invalid."
 PERFORMING_LOCAL_SCAN = "Performing local scan, this might take a while so " \
                         "grab a coffee..."
 PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
@@ -31,12 +32,6 @@ def connection_status(service, ip, port, status):
         + str(port) \
         + " using the specified username with a password in the passwords" \
           " file."
-    return string
-
-
-def filename_processing_error(filename):
-    string = "!!!ERROR: SOMETHING WENT WRONG WHEN PROCESSING THE FILENAME: " \
-             + filename + "!!!"
     return string
 
 

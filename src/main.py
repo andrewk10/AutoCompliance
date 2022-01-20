@@ -48,7 +48,7 @@ def main():
     except RuntimeError:
         # Uh oh, file doesn't exist, alert the user and exit gracefully, so
         # they can either fix their mistake or repent their sins.
-        net_propagation.file_error_handler(passwords_filename)
+        net_propagation.file_error_handler()
         sys.exit()
 
     # If the user wants to transfer a file, this stuff should be done...
@@ -63,7 +63,7 @@ def main():
         except RuntimeError:
             # File doesn't exist, throw an error and give the usual slap across
             # the wrist.
-            net_propagation.file_error_handler(transfer_file_filename)
+            net_propagation.file_error_handler()
             sys.exit()
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file among
