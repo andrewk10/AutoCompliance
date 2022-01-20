@@ -502,7 +502,7 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
 
 
 def try_attack(ip, port, target_username, password_list,
-               transfer_file_filename, arguments, user_number):
+               transfer_file_filename, arguments):
     """
     This function will attempt a bruteforce attack across various services
     depending on the ip or port supplied (if the port is open on that IP), it
@@ -517,8 +517,7 @@ def try_attack(ip, port, target_username, password_list,
         print(ip_address_and_port + " is open.")
         bruteforce_login_details = try_bruteforce(ip, port, target_username,
                                                   password_list,
-                                                  ip_address_and_port,
-                                                  user_number)
+                                                  ip_address_and_port)
         if bruteforce_login_details[0]:
             additional_attacks(arguments, ip, port,
                                bruteforce_login_details[0],
@@ -547,7 +546,7 @@ def try_bruteforce(ip, port, target_username, password_list,
     bruteforce = bruteforce_service(ip, port, target_username, password_list)
     if bruteforce:
         logging.info("A working username and password for " + str(service)
-                     + " was found: " + str(bruteforce))
+                     + " was found.")
         return str(bruteforce), service
     else:
         logging.debug("It was impossible to bruteforce: " + ip_address_and_port
