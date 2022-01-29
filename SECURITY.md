@@ -1,21 +1,10 @@
-# Security Policy <TODO>
+# Security Policy
 
-## Supported Versions <TODO>
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+## Supported Versions
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+|  0.0.1  | :x:                |
 
-## Reporting a Vulnerability <TODO>
-
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+## Reporting a Vulnerability
+Report as a bug, but format the title with "SECURITY: " at the beggining, try to include a CVE code and link to resources if you can.
