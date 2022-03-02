@@ -6,3 +6,6 @@ Go here for general information and usage guidelines.
 
 ## [Development and Contribution Guidelines](guidelines.md)
 Go here for information regarding development and contributing to the project.
+
+## [Research](research.md)
+Academic work carried out as part of this project.
