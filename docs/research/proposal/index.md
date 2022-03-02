@@ -1,4 +1,4 @@
-[Home](../../index.md) / [Research](../index.md)
+[Home](../../index.md) / [Research](../index.md) /
 # Proposal
 This project takes a pre-existing cyber-enabled domain, be it a personal home, 
 factory, office space etc. and configures all the devices within the immediate 
