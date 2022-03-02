@@ -1,4 +1,4 @@
-[Home](../../index.md), [Research](../research.md)
+[Home](../../index.md), [Research](../index.md)
 # Proposal
 This project takes a pre-existing cyber-enabled domain, be it a personal home, 
 factory, office space etc. and configures all the devices within the immediate 
@@ -26,7 +26,7 @@ becoming a catalyst of digital transformation, as well as accelerating human
 beings’ adaptability to new forms of work. With its arrival, as well as the 
 urgency of information and news distribution, COVID-19-related phishing and 
 ransomware attacks increased 
-exponentially<sup>[1](bibliography/bibliography.md)</sup>". See Fig. 1 to gain 
+exponentially<sup>[1](bibliography/index.md)</sup>". See Fig. 1 to gain 
 insight on what this growth looks like.
 
 ## Research Area
