@@ -1,3 +1,3 @@
-# Proposal
+[Back to Home](index.md)
 
-## Research Area
+Check back here soon for more content :)
