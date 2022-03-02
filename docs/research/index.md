@@ -1,4 +1,4 @@
-[Back to Home](../index.md)
+[Home](../index.md)
 # Research
 All research that has been carried out in order to better inform the design and
 creation of AutoCompliance.

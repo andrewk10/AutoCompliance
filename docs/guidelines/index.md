@@ -1,3 +1,3 @@
-[Back to Home](../index.md)
+[Home](../index.md)
 
 Check back here soon for content :)
