@@ -78,6 +78,27 @@ CMMC,GDPR, PCI DSS, ENISA Strategy, AT-101 (SOC2), ISO 9001:2015 and ISO/IEC
 27001:-2013.
 
 ### Project Goals
+- Investigate how far one can minimise human involvement in the cybersecurity 
+governance, risk management and compliance space. The process is often 
+laborious and resource intensive for an organisation.
+- Work towards reducing liability or human error for any given organisation in 
+regard to implementing a GRC programme. Peace of mind as it were.
+- Experiment with the utilisation of distributed ledger technologies in an 
+ecologically friendly, efficient and reasonable manner to inform the machine 
+learning processes mentioned below. DLTs and their effect on the environment is 
+a heavily discussed topic at the moment and advancements made here could lead 
+to further environmentally friendly practices in the space.
+- See if implementing machine learning to help process specific organisation 
+GRC requirements automatically and dynamically. No two organisations are the 
+same when it comes to GRC requirements and this must be accounted for.
+- Try to find the necessary tools and technologies that meet these 
+aforementioned GRC requirements. Malware scanning, firewall rules, port 
+management to name a few could all be manipulated to suit particular GRC 
+requirements.
+- Attempt to ease the process of internal and external auditing in regard to 
+GRC for any given organisation through automated report and design documenting 
+as a result of a successful/unsuccessful GRC implementation. Leave a paper 
+trail at every step of the implementation of a GRC programme. 
 
 ### Research Question & Deliverables
 
