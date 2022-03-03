@@ -26,9 +26,12 @@ becoming a catalyst of digital transformation, as well as accelerating human
 beings’ adaptability to new forms of work. With its arrival, as well as the 
 urgency of information and news distribution, COVID-19-related phishing and 
 ransomware attacks increased 
-exponentially<sup>[1](bibliography/index.md)</sup>". See Fig. 1 to gain 
-insight on what this growth looks like.
+exponentially<sup>[1](bibliography/index.md)</sup>". See the Fig. 1 below  to 
+gain insight on what this growth looks like.
 
+![Figure 1](assets/Figure1_1Edited.png)
+FIGURE 1: World Cyberattacks since the Appearance of COVID-19 (In Number of 
+Weekly Attacks)<sup>[1](bibliography/index.md)</sup>
 ## Research Area
 
 ### Project Goals
