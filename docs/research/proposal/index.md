@@ -32,7 +32,50 @@ gain insight on what this growth looks like.
 ![Figure 1](assets/Figure1_1Edited.png)
 FIGURE 1: World Cyberattacks since the Appearance of COVID-19 (In Number of 
 Weekly Attacks)<sup>[1](bibliography/index.md)</sup>
+
+With  the  rise  in  a  need  for  cybersecurity  comes  the  need for 
+cybersecurity governance, but many industries and nations may find themselves 
+struggling to comply with current governance  standards.  Enter  cybersecurity  
+governance  frameworks which are  effective  outlines  of  how  to  achieve  
+cybersecurity governance  targets.  One of the objectives for  this  project  
+is to seek any relevant cybersecurity governance frameworks for a given 
+organisation and automate the application of these frameworks to the 
+organisation's domain.
+
+This rise in need for cybersecurity governance goes hand in hand with risk 
+management, as sacrifices in cybersecurity implementations inherently come with 
+elements of risk. Sometimes, within an organisation, sacrifices like this must 
+be made. Inversely, a minor cybersecurity implementation may lead to a major 
+deferral in risk. It's important to gauge and optimise your cybersecurity 
+decision-making around this relationship and for this, risk management 
+frameworks are more than useful. This project looks to automate the 
+decision-making process and establishment of an organisation's relevant risk 
+management frameworks.
+
+All of this is to be explored with a select few dummy organisations with the 
+goal of creating a more general purpose implementation. As with any kind of 
+industry, there are coinciding industry regulations at play. Adherence to these 
+regulations will be done using any relevant compliance frameworks for the 
+given organisation's industry sector.
+
+This project seeks to automatically examine any relevant cybersecurity 
+governance frameworks, risk management frameworks and industry regulations and 
+will form a layout of the organisation's cybersecurity GRC Requirements as well 
+as an automated implementation approach henceforth known as the tool 
+"AutoCompliance".
+
 ## Research Area
+Zero trust security for endpoints and clients alongside security automation are 
+the core research areas of the project. Machine learning is to be used for the 
+formation of organisation profiles. This project takes a look at how to 
+automate the implementation of a programme of cybersecurity governance, 
+risk management and compliance in any given organisation through the use of 
+Distributed Ledger Technologies. Governance, Compliance and regulatory 
+frameworks as well as numerous laws will be researched. These include but are 
+not limited to; NIST, OSSTMM, PMMM, PMBoK, COBIT, ISO/IEC 27014:2020, National 
+Cyber Security Strategy - Government of Ireland, NIST RMF, ISO/IEC 27005:2018, 
+CMMC,GDPR, PCI DSS, ENISA Strategy, AT-101 (SOC2), ISO 9001:2015 and ISO/IEC 
+27001:-2013.
 
 ### Project Goals
 
