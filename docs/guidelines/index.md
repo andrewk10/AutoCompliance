@@ -3,6 +3,10 @@ Here you will find guidelines on the various ways you can contribute back to
 the project. You do not have to follow these guidelines to the letter, but it 
 would be most recommended that you do.
 
+## [Design and Development Documentation](design/index.md) [WIP]
+Use Cases, Workflows, Mock-Ups, Architecture Block Diagram, Sample Business 
+Domains Etc.
+
 ## Development Environment
 PyCharm IDE with native libraries and Python 3.10 installation on a Fedora 35 
 host machine.
