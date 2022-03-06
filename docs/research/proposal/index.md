@@ -101,5 +101,33 @@ as a result of a successful/unsuccessful GRC implementation. Leave a paper
 trail at every step of the implementation of a GRC programme. 
 
 ### Research Question & Deliverables
+- Can DLTs help implement a GRC programme better than other means?
+  - A comparison report of DLT performance compared to the conventional means 
+  for implementing a GRC programme.
+  - DLT solution(s) that assist with the implementation of a GRC programme in 
+  any given organisation. 
+- Is there anything that can't or should not be automated in the 
+implementation? Why? 
+  - A breakdown on all items that can not be automated with in depth technical 
+  analysis as to why that is the case.
+- Are existing implementation solutions suitable or is there more work to be 
+done?
+  - A definition on what is to be classified as "suitable".
+  - An outline of all that needs to be done to reach a suitable state.
+- What possible future technical developments need to be accounted for in the 
+GRC space?
+  - A list of future technical areas and a description on how they should be 
+  accounted for in the future.
+- Is machine learning the best way towards total zero trust security solutions?
+  - A comparison report of ML performance compared to the conventional means \
+  for implementing zero trust security in an organisation's network.
+  - ML solution(s) that assist with the implementation of a zero trust security 
+  network in any given organisation.
 
 ## Project Resources
+- Mega Cloud File
+  - https://mega.nz/folder/GgpV3QJT#12NyyoDLzVzn425jrK8EOQ
+- GitHub
+  - https://github.com/andrewk10/AutoCompliance
+- Meeting Notes and Outstanding Items 
+  - https://docs.google.com/document/d/1gxrai-zpmATkwgbDc8EFp_WIKIwZ2ojA_dCE4tvENAk/edit?usp=sharing
