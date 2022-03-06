@@ -14,3 +14,7 @@ Actions.
 ## Build Process [WIP]
 Being researched as of 06/03/2022 but so far it's looking like Flatpak for 
 Linux, .exe for Windows and .app for MacOS.
+
+## Contributing to Documentation
+Feel free to create a branch and change the respective .md files as you see 
+fit, just submit a pull request for approval.
