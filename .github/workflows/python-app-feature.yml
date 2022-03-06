@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ addressing_security_and_linting_items ]
+    branches: [ wiki_and_documentation_establishment ]
   pull_request:
-    branches: [ addressing_security_and_linting_items ]
+    branches: [ wiki_and_documentation_establishment ]
 
 jobs:
   build:
