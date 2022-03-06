@@ -8,7 +8,8 @@ PyCharm IDE with native libraries and Python 3.10 installation on a Fedora 35
 host machine.
 
 ## Coding Standards And Best Practices
-Following the native PyCharm linter and CodeQL feedback as part of Git Actions.
+Following the native PyCharm linter and CodeQL feedback as part of GitHub 
+Actions.
 
 ## Build Process [WIP]
 Being researched as of 06/03/2022 but so far it's looking like Flatpak for 
