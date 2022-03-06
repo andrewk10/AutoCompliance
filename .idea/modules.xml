@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/AutoCompliance.iml" filepath="$PROJECT_DIR$/.idea/AutoCompliance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../AutoCompliance.wiki/.idea/AutoCompliance.wiki.iml" filepath="$PROJECT_DIR$/../AutoCompliance.wiki/.idea/AutoCompliance.wiki.iml" />
     </modules>
   </component>
 </project>
