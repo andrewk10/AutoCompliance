@@ -1,4 +1,4 @@
-[Home](../../index.md) / [Wiki](../index.md) / 
+[Wiki](../index.md) / 
 # General Usage
 A manual of sorts for AutoCompliance. Note that the only functionality that 
 exists at the moment is propagation across specific ports and services.

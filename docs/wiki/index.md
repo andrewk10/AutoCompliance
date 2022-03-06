@@ -1,5 +1,3 @@
-[Home](../index.md) /
-
 # AutoCompliance Wiki
 Here you will find all the information regarding general usage, reporting bugs,
 defects and security issues.

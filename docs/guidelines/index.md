@@ -1,5 +1,3 @@
-[Home](../../index.md) / [Wiki](../index.md) /
-
 # Development and Contribution Guidelines [WIP]
 Here you will find guidelines on the various ways you can contribute back to 
 the project. You do not have to follow these guidelines to the letter, but it 
