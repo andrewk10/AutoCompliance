@@ -125,9 +125,6 @@ GRC space?
   network in any given organisation.
 
 ## Project Resources
-- Mega Cloud File
-  - https://mega.nz/folder/GgpV3QJT#12NyyoDLzVzn425jrK8EOQ
-- GitHub
-  - https://github.com/andrewk10/AutoCompliance
-- Meeting Notes and Outstanding Items 
-  - https://docs.google.com/document/d/1gxrai-zpmATkwgbDc8EFp_WIKIwZ2ojA_dCE4tvENAk/edit?usp=sharing
+- [Mega Cloud Files](https://mega.nz/folder/GgpV3QJT#12NyyoDLzVzn425jrK8EOQ) 
+- [GitHub](https://github.com/andrewk10/AutoCompliance)
+- [Meeting Notes and Outstanding Items](https://docs.google.com/document/d/1gxrai-zpmATkwgbDc8EFp_WIKIwZ2ojA_dCE4tvENAk/edit?usp=sharing)

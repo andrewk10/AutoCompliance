@@ -10,7 +10,7 @@ file containing a list of IP addresses. For each IP address in the list the
 script will scan the ports on that host, and attempt a login for detected 
 services.
 
-The script will take in the following parameters: </br>
+The script will take in the following parameters:
 
 | Parameter | Purpose                                               |
 |-----------|-------------------------------------------------------|
@@ -22,7 +22,7 @@ The script will take in the following parameters: </br>
 | -L        | Perform scan on local networks                        |
 | -P        | Propagate the script itself and password file         |
 
-Example usage would look like this: </br>
+Example usage would look like this:
 ```
 ./net_attack.py -t my_ip_list.txt -p 22,23,25,80 -u admin -f my_password_list.txt
 ./net_attack.py -t ip_list.txt -p 22 -u root -f passwords.txt
