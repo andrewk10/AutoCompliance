@@ -215,7 +215,7 @@ def checking_arguments(arguments):
 def connect_ssh_client(ip, port, username, password):
     """
     This function checks to see if an SSH connection can be established and if
-    so then it returns true, if not then it returns false.
+    so then it returns true, if not then it returns false
     :param ip: The target IP address for SSH
     :param port: The target port for SSH
     :param username: The target username for SSH
@@ -242,7 +242,7 @@ def connect_ssh_client(ip, port, username, password):
 def connect_telnet(ip, port, username, password):
     """
     This function checks to see if a telnet connection can be established and
-    if so then it returns true, if not then it returns false.
+    if so then it returns true, if not then it returns false
     :param ip: The target IP address for Telnet
     :param port: The target port for Telnet
     :param username: The target username for Telnet
@@ -299,7 +299,8 @@ def convert_file_to_list(filename):
     """
     This function will convert a given file specified by a filename to a list
     and will then proceed to return that list
-    :param filename: The filename of the file that needs to be converted to a list
+    :param filename: The filename of the file that needs to be converted to a
+    list
     :return file_as_list: The list of the lines from the file
     """
     with open(str(filename)) as file:
@@ -313,8 +314,8 @@ def cycle_through_subnet(ip_list, interface):
     get the IP address of the interface and add all the address from its /24
     subnet to the IP list and will then return the list
     :param ip_list: The list of IP addresses in the subnet
-    :param interface: The interface on which each IP address is to be checked for a
-    response
+    :param interface: The interface on which each IP address is to be checked
+    for a response
     """
     interface_split = get_if_addr(interface).split(".")
     last_byte = 0
@@ -358,9 +359,9 @@ def file_not_exist(ip, port, username, password):
 def gathering_local_ips(ip_list):
     """
     This function will cycle through all local interfaces outside the loopback
-    interface and will add their /24 subnets to the IP list.
-    :param ip_list: The IPs for which we're fetching the subnets.
-    :return ip_list: The IP list with the newly found subnet addresses.
+    interface and will add their /24 subnets to the IP list
+    :param ip_list: The IPs for which we're fetching the subnets
+    :return ip_list: The IP list with the newly found subnet addresses
     """
     print("Fetching local interface list...")
     local_interfaces = get_if_list()
@@ -415,10 +416,10 @@ def propagate_script(ip, port, login_string):
     specified
     :param ip: The IP address we wish to propagate the script to
     :param port: The port through which we'll propagate the script
-    :param login_string: This string contains the username and password for the service
-    used
-    :return True: If the script is successfully propagated here.
-    :return False: If the script is not successfully propagated here.
+    :param login_string: This string contains the username and password for the
+    service used
+    :return True: If the script is successfully propagated here
+    :return False: If the script is not successfully propagated here
     """
     login_string_split = login_string.split(":")
     try:
@@ -473,7 +474,10 @@ def propagate_script(ip, port, login_string):
 def remove_unreachable_ips(ip_list):
     """
     This function will try and ping every IP in the IP list and if it doesn't
-    receive a response it will then remove that IP from the IP list.
+    receive a response it will then remove that IP from the IP list
+    :param ip_list: The list of IP Addresses to check
+    :return new_ip_list: The revised list of IP addresses with invalid
+    addresses removed.
     """
     new_ip_list = []
     for ip in ip_list:
@@ -486,7 +490,11 @@ def remove_unreachable_ips(ip_list):
 def scan_port(ip, port):
     """
     This function will scan a port to see if it is open. If the port is open
-    then it will return true and if it is not then it will return false.
+    then it will return true and if it is not then it will return false
+    :param ip: The IP address on which the port is situated
+    :param port: The port we wish to scan
+    :return True: The port is open
+    :return False: The port is not open
     """
     ip_header = IP(dst=ip)
     tcp_header = TCP(dport=int(port), flags="S")
@@ -503,7 +511,11 @@ def send_post_request_with_login(ip, port, username, password):
     This function sends a post request to a web server in an attempt to
     bruteforce its login details. If it succeeds with the given arguments then
     it will return the successful string of details, if not then it will return
-    Null.
+    Null
+    :param ip: The IP address with the web service
+    :param port: The port of the web service
+    :param username: The username for the web login
+    :param password: The password for the web login
     """
     response = requests.post("https://" + ip + ":" + port + "/login.php",
                              data={"username": username, "password": password},
@@ -517,16 +529,20 @@ def send_post_request_with_login(ip, port, username, password):
         return None
 
 
-def telnet_connection(ip_telnet, port_telnet, username_telnet,
-                      password_telnet):
+def telnet_connection(ip, port, username, password):
     """
     This function will try to establish a telnet connection, if it does it will
     return the successful telnet login string and if not then it will return a
-    null value.
+    null value
+    :param ip: The target IP address for the telnet connection
+    :param port: The target port for the telnet connection
+    :param username: The target username for the telnet connection
+    :param password: The target password for the telnet connection
+    :return str(username) + ":" + str(password): The successful login string
+    :return None: If the telnet connection is unsuccessful
     """
-    if connect_telnet(ip_telnet, port_telnet, username_telnet,
-                      password_telnet):
-        return str(username_telnet) + ":" + str(password_telnet)
+    if connect_telnet(ip, port, username, password):
+        return str(username) + ":" + str(password)
     return None
 
 
@@ -535,7 +551,14 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
     This function will transfer a given file if the end user has provided the
     appropriate argument, and only when bruteforce login details are found for
     either tenet or SSH. It handles the transfer of this file differently
-    depending on whether the port value given is an SSH port or a telnet port.
+    depending on whether the port value given is an SSH port or a telnet port
+    :param ip: The IP address to which the file should be transferred
+    :param port: The port over which the file should be transferred
+    :param login_string: The username and password needed for the transfer of
+    the file over the given service
+    :param transfer_file_filename: The filename of the file to be transferred
+    :return True: The transfer of the file is a success
+    :return False: The transfer of the file is unsuccessful
     """
     login_string_split = login_string.split(":")
     try:
@@ -569,7 +592,13 @@ def try_attack(ip, port, target_username, password_list,
     iterates through the password list when you bruteforce the appropriate
     service associated with the port number supplied. If the bruteforce attack
     is successful it will then check the need for additional attacks specified
-    by the end user.
+    by the end user
+    :param ip: The IP address on which we wish to try an action
+    :param port: The port over which we wish to try an action
+    :param target_username: The username for the action
+    :param password_list: A list of possible passwords
+    :param transfer_file_filename: A filename for file to transfer
+    :param arguments: List of user specified arguments
     """
     logging.info("Now testing an IP address and port pair")
     if scan_port(ip, port):
@@ -581,7 +610,7 @@ def try_attack(ip, port, target_username, password_list,
                                bruteforce_login_details[0],
                                transfer_file_filename)
     else:
-        print("This IP address and port pair is closed.")
+        logging.debug("This IP address and port pair is closed")
 
 
 def try_bruteforce(ip, port, target_username, password_list):
@@ -589,7 +618,11 @@ def try_bruteforce(ip, port, target_username, password_list):
     This function will try to bruteforce a specific service depending on the
     port supplied. If it gets a successful login then it will return the login
     details and the service used, otherwise it returns null as the login
-    details along with the service used.
+    details along with the service used
+    :param ip: Target IP address for an action
+    :param port: Target port over which to carry out an action
+    :param target_username: Target username 
+    :param password_list:
     """
     service_switch = {
         "22": "ssh",
