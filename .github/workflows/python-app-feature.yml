@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ wiki_and_documentation_establishment ]
+    branches: [ 17_adding_strings ]
   pull_request:
-    branches: [ wiki_and_documentation_establishment ]
+    branches: [ 17_adding_strings ]
 
 jobs:
   build:
