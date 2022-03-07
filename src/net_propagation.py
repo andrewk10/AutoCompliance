@@ -1,7 +1,4 @@
 #!/usr/bin/python3
-# TODO: Add param and return keywords to block comments with the necessary
-#  contents to clarify what's being passed in and out. Maybe look at some
-#  automatic documentation / keyword solutions? (Andrew)
 
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
@@ -41,7 +38,12 @@ def additional_attacks(arguments, ip, port, username,
     """
     This function passes the appropriate arguments to and runs the transferring
     file and propagating functions, these functions contain the check to stop
-    them from being run if the appropriate arguments aren't used.
+    them from being run if the appropriate arguments aren't used
+    :param arguments: Arguments passed in by the user themselves
+    :param ip: The ip address we are transferring the file to
+    :param port: The port we are transferring the file through
+    :param username: The username for the transfer action
+    :param transfer_file_filename: Filename for the file to be transferred
     """
     try_transferring_file(arguments, ip, port, username,
                           transfer_file_filename)
@@ -51,7 +53,9 @@ def additional_attacks(arguments, ip, port, username,
 def append_lines_from_file_to_list(file):
     """
     This function will read a file and return the lines (minus the newline
-    character) as a list.
+    character) as a list
+    :param file: The file to read and gather lines from
+    :return lines_list: The lines themselves.
     """
     lines_list = []
     for line in file:
@@ -63,7 +67,12 @@ def assigning_values(arguments):
     """
     This function will read in the target ports, target username and passwords
     filename from the user and if the user specified an ip addresses file it
-    will read that and return it alongside all the other values.
+    will read that and return it alongside all the other values
+    :param arguments: The arguments passed in by the user
+    :return ip_list: The list of IP addresses contained in the given file
+    :return target_ports: The selection of ports to target
+    :return target_username: The username that will be used for actions
+    :return passwords_filename: The filename of the passwords file
     """
     if "-t" in arguments:
         ip_addresses_filename = arguments[arguments.index("-t") + 1]
@@ -84,7 +93,13 @@ def bruteforce_service(ip, port, username, password_list):
     attempt to bruteforce the appropriate service with that password. It will
     only move on to the next password in the event that the current password
     fails in its bruteforce attempt. If it succeeds then the successful login
-    details are returned, if not then Null is returned.
+    details are returned, if not then Null is returned
+    :param ip: The IP address to attempt to breach
+    :param port: The port and subsequently service we're breaching
+    :param username: The username we're signing in to services on
+    :param password_list: The list of passwords to attempt
+    :return login_details: The username and password to return
+    :return NONE: Only done to indicate an unsuccessful task
     """
     for password in password_list:
         login_details = (try_password_for_service(ip, port, username,
@@ -98,7 +113,14 @@ def check_over_ssh(ip, port, username, password):
     """
     This function checks if the net_attack.py script is already located at the
     target machine over SSH. If it is then false is returned and if not then
-    true is returned. This is needed as a prerequisite to propagating over SSH.
+    true is returned. This is needed as a prerequisite to propagating over SSH
+    :param ip: The IP address target for SSH
+    :param port: The port on which we're running SSH
+    :param username: The username to target over SSH
+    :param password: Password to use with SSH
+    :return True: If the file doesn't exist on the target host or there's a
+    problem with SSH (assuming file isn't present essentially)
+    :return False: If the file does exist
     """
     client = SSHClient()
     try:
@@ -122,7 +144,14 @@ def check_over_telnet(ip, port, username, password):
     This function checks if the net_attack.py script is already located at the
     target machine over telnet. If it is then false is returned and if not then
     true is returned. This is needed as a prerequisite to propagating over
-    telnet.
+    telnet
+    :param ip: The IP address target for Telnet
+    :param port: The port on which we're running Telnet
+    :param username: The username to target over Telnet
+    :param password: Password to use with Telnet
+    :return True: If the file doesn't exist on the target host or there's a
+    problem with Telnet (assuming file isn't present essentially)
+    :return False: If the file does exist
     """
     try:
         tel = Telnet(host=ip, port=port, timeout=2)
@@ -146,7 +175,11 @@ def check_over_telnet(ip, port, username, password):
 def check_telnet_data(string_to_check, data):
     """
     This function checks data gathered from the telnet service for a specific
-    string and returns True if it finds it and false if it doesn't.
+    string and returns True if it finds it and false if it doesn't
+    :param string_to_check: The string to find in the Telnet data
+    :param data: The telnet data itself
+    :return True: The string was found in the telnet data
+    :return False: The string was not found in the telnet data
     """
     if data.__contains__(string_to_check.encode("ascii")):
         return True
@@ -183,6 +216,12 @@ def connect_ssh_client(ip, port, username, password):
     """
     This function checks to see if an SSH connection can be established and if
     so then it returns true, if not then it returns false.
+    :param ip: The target IP address for SSH
+    :param port: The target port for SSH
+    :param username: The target username for SSH
+    :param password: The target password for SSH
+    :return True: If the SSH connect is successful
+    :return False: If the SSH connect is unsuccessful
     """
     client = SSHClient()
     try:
@@ -204,6 +243,12 @@ def connect_telnet(ip, port, username, password):
     """
     This function checks to see if a telnet connection can be established and
     if so then it returns true, if not then it returns false.
+    :param ip: The target IP address for Telnet
+    :param port: The target port for Telnet
+    :param username: The target username for Telnet
+    :param password: The target password for Telnet
+    :return True: If the Telnet connect is successful
+    :return False: If the Telnet connect is unsuccessful
     """
     try:
         tel = Telnet(host=ip, port=port, timeout=2)
@@ -231,6 +276,12 @@ def connect_web(ip, port, username, password):
     """
     This function check to see if a web login can be established and if so then
     it returns true, if not then it returns false.
+    :param ip: The target IP address for web login
+    :param port: The target port for web login
+    :param username: The target username for Telnet
+    :param password: The target password for Telnet
+    :return True: If the Telnet connect is successful
+    :return False: If the Telnet connect is unsuccessful
     """
     attempt_succeeded = False
     try:
