@@ -1,1 +1,6 @@
 scapy>=2.4.5
+ipykernel
+paramiko
+scapy
+pytest
+requests
