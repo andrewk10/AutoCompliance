@@ -1,7 +1,4 @@
 #!/usr/bin/python3
-# TODO: Change method names and reread some comments like here for example, not
-#  attacking, propagating and protecting more like. (Andrew)
-
 import logging
 import net_propagation
 import strings

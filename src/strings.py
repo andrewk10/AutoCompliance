@@ -7,8 +7,16 @@ function has a block comment explaining what it does and where it's used and
 every string constant has a comment describing its use.
 """
 
+ARGUMENT_IP_ADDRESS_FILENAME = "-t"
+ARGUMENT_PORTS = "-p"
+ARGUMENT_USERNAME = "-u"
+ARGUMENT_PASSWORDS_FILENAME = "-f"
+BLANK_STRING = ""
+ENCODE_ASCII = "ascii"
 EXITING = "Exiting..."
 FILENAME_PROCESSING_ERROR = "One of the filenames are invalid."
+LOGIN_PROMPT = "login:"
+PASSWORD_PROMPT = "Password:"
 PERFORMING_LOCAL_SCAN = "Performing local scan, this might take a while so " \
                         "grab a coffee..."
 PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
@@ -21,6 +29,7 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "\t./net_attack.py -t my_ip_list.txt -p 22,23,25,80 -u admin " \
            "-f my_password_list.txt\n\n\t./net_attack.py -t ip_list.txt " \
            "-p 22 -u root -f passwords.txt"
+RETURN_OR_NEWLINE = "\n"
 
 
 def connection_status(service, ip, port, status):
@@ -33,6 +42,26 @@ def connection_status(service, ip, port, status):
         + " using the specified username with a password in the passwords" \
           " file."
     return string
+
+
+def touch_file(filename):
+    """
+    This function creates a command for touching a specific file
+    :param filename: The filename of the file we want to touch
+    :return command: The completed touch command
+    """
+    command = "touch " + filename
+    return command
+
+
+def cat_file(filename):
+    """
+    This function creates a command for concatenating a specific file
+    :param filename: The filename of the file we want to touch
+    :return command: The completed touch command
+    """
+    command = "cat " + filename
+    return command
 
 
 def ip_list_not_read(filename):

