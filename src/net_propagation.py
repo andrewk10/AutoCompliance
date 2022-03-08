@@ -10,7 +10,7 @@ from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
 from telnetlib import Telnet
 from time import sleep
-from paramiko import SSHClient, AutoAddPolicy
+from paramiko import SSHClient, AutoAddPolicy, RejectPolicy
 import logging
 import requests
 import strings
@@ -131,7 +131,7 @@ def check_over_ssh(ip, port, username, password):
     """
     client = SSHClient()
     try:
-        client.set_missing_host_key_policy(AutoAddPolicy())
+        client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.exec_command(strings.touch_file(os.path.basename(__file__)))
@@ -243,7 +243,7 @@ def connect_ssh_client(ip, port, username, password):
     """
     client = SSHClient()
     try:
-        client.set_missing_host_key_policy(AutoAddPolicy())
+        client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.close()
@@ -453,7 +453,7 @@ def propagate_script(ip, port, login_string):
                           + login_string_split[0] + "@" + ip + ":~/")
                 client = SSHClient()
                 try:
-                    client.set_missing_host_key_policy(AutoAddPolicy())
+                    client.set_missing_host_key_policy(RejectPolicy)
                     client.connect(hostname=str(ip), port=int(port),
                                    username=str(login_string_split[0]),
                                    password=str(login_string_split[1]))
