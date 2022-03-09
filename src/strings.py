@@ -75,10 +75,9 @@ def cat_file(filename):
     """
     This function creates a command for concatenating a specific file
     :param filename: The filename of the file we want to touch
-    :return command: The completed touch command
+    :return "cat " + filename: The completed cat command
     """
-    command = "cat " + filename
-    return command
+    return "cat " + filename
 
 
 def connection_status(service, ip, port, status):
@@ -87,9 +86,9 @@ def connection_status(service, ip, port, status):
     on the context given by the arguments passed into it.
     """
     string = str(status) + " " + str(service) + " login to " + str(ip) + ":" \
-             + str(port) \
-             + " using the specified username with a password in the passwords" \
-               " file."
+        + str(port) \
+        + " using the specified username with a password in the " \
+        "passwords file."
     return string
 
 
@@ -97,10 +96,21 @@ def fetching_ips_for_interface(interface):
     """
     This function generates the string for fetching the IPs for a specific
     interface
-    :param interface:
-    :return:
+    :param interface: The interface we're fetching IPs on
+    :return "Fetching IPs for interface " + str(interface) + "...": The string
+    in question
     """
-    "Fetching IPs for interface " + str(interface) + "..."
+    return "Fetching IPs for interface " + str(interface) + "..."
+
+
+def file_present_on_host(ip):
+    """
+    This function generates the string for a file already present on a host
+    :param ip: The host itself
+    :return "A file is already present on this host: " + str(ip): The string
+    in question
+    """
+    return "A file is already present on this host: " + str(ip)
 
 
 def scp_command_string(port, username, target_ip, filename):
@@ -154,10 +164,36 @@ def ip_reachability(ip, reachable):
     return str(ip) + " was not reachable."
 
 
-def ssh_run_script_command(filename, username):
+def netcat_listener(port, filename):
+    """
+    This function will create a netcat listener on the device we have a telnet
+    link to
+    :param port: The port on which the telnet listener will operate
+    :param filename: The filename of the file we're moving using the listener
+    parameter
+    :return "nc -l -p " + str(port) + " > " + filename: The string in question
+    """
+    return "nc -l -p " + str(port) + " > " + filename
+
+
+def netcat_writer(ip, port, filename):
+    """
+    This function will create a netcat writer to write a file to a device we
+    have a telnet link to
+    :param ip: Machine with the telnet listener we are writing to
+    :param port: The port on which the telnet writer will operate
+    :param filename: The filename of the file we're moving using the writer
+    parameter
+    :return "nc -w 3 " + str(ip) + " " + str(port) + " < " + filename: The
+    string in question
+    """
+    return "nc -w 3 " + str(ip) + " " + str(port) + " < " + filename
+
+
+def run_script_command(filename, username):
     """
     This function will run the propagation script on another target machine
-    over SSH
+    over any service
     :param filename: The file that holds the propagation script
     :param username: The username to run against the propagation script as a
     parameter
