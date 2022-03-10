@@ -9,53 +9,115 @@ every string constant has a comment describing its use.
 
 # Argument to denote the filename of the IP address file.
 ARGUMENT_IP_ADDRESS_FILENAME = "-t"
+
 # Argument to denote the set of ports to use.
 ARGUMENT_PORTS = "-p"
+
 # Argument to denote the username for each of the actions.
 ARGUMENT_USERNAME = "-u"
+
 # Argument to denote the filename of the passwords file.
 ARGUMENT_PASSWORDS_FILENAME = "-f"
+
 # Argument to denote the need to propagate the running script.
 ARGUMENT_PROPAGATE = "-P"
+
 # Argument to denote the need to scan the local network.
 ARGUMENT_SCAN_LOCAL_NETWORKS = "-L"
+
 # Argument to denote the use of a specific file given the filename propagation.
 ARGUMENT_SPECIFIC_PROPAGATION_FILE = "-d"
+
 # Argument to denote the need for further help.
 ARGUMENT_HELP_SHORT = "-h"
+
 # Argument to denote the need for further help, just the long version.
 ARGUMENT_HELP_LONG = "--help"
+
 # Just a blank string, no point assigning multiple of these to memory. :)
 BLANK_STRING = ""
+
 # A string that states that the IP and port pair is closed.
 CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
-# A string that just denotes the use of a colon, same "craic" as above.
+
+# A string that just denotes the use of a colon, same "idea" as above.
 COLON = ":"
-# A string
+
+# A string that states a script wasn't propagated.
 DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
+
+# A string that states a file wasn't transferred.
 DO_NOT_TRANSFER = "Requirement to transfer file not specified, skipping..."
+
+# A string for specifying encoding for ascii.
 ENCODE_ASCII = "ascii"
+
+# An exiting prompt.
 EXITING = "Exiting..."
+
+# Prompts the user that values couldn't be assigned
 FAILED_ASSIGNING_VALUES = "Failed assigning values (maybe null)"
+
+# Prompts the user that their fetching the local interface list.
 FETCHING_LOCAL_INTERFACE_LIST = "Fetching local interface list..."
+
+# Lets the user know a file doesn't exist.
 FILE_DOES_NOT_EXIST = "A specified file does not exist"
+
+# Lets the user know there's an open port on a specific IP address.
 FOUND_OPEN_IP_PORT_PAIR = "Found an open IP address and port pair"
+
+# Full stop string, memory saving again, reducing redundant assigns.
 FULL_STOP = "."
+
+# There's a problem with parsing a file with a given filename.
 FILENAME_PROCESSING_ERROR = "One of the filenames are invalid"
+
+# Letting the user know a propagation action had failed.
 IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
+
+# The login prompt a user usually sees with SSH/Telnet.
 LOGIN_PROMPT = "login:"
+
+# The typical ID of the loopback interface.
 LOOPBACK = "lo"
+
+# The main function call.
 MAIN = "main()"
+
+# Just the numerical form of the number one, again, memory preservation.
 ONE = "1"
+
+# Password prompt for SSH/Telnet.
 PASSWORD_PROMPT = "Password:"
+
+# Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
+
+# TODO: The way passwords are handled needs to be heavily revised
+#  (super insecure)
+# The default password file being used by scripts.
 PASSWORDS_FILE = "passwords.txt"
+
+# Parameters were used incorrectly, so we're telling the user what to do.
 PARAMETER_MISUSE = "Parameter misuse, check help text below"
+
+# Letting the user know we're performing a local scan.
 PERFORMING_LOCAL_SCAN = "Performing local scan, this might take a while so " \
                         "grab a coffee..."
+
+# The ping command.
 PING = "ping"
+
+# The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
+
+# TODO: On top of moving this prompt to UI, there should be no difference in
+#  the prompt, avoid confusion.
+# A different password prompt following the previous one.
 PLEASE_TYPE_PASSWORD_AGAIN = "Please type in this password again: "
+
+# The help prompt for the end user.
 PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "target IP addresses\n\t-p -> Ports to scan on the target host" \
            "\n\t-u -> A username\n\t-f -> Filename for a file containing " \
@@ -66,28 +128,76 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "\t./net_attack.py -t my_ip_list.txt -p 22,23,25,80 -u admin " \
            "-f my_password_list.txt\n\n\t./net_attack.py -t ip_list.txt " \
            "-p 22 -u root -f passwords.txt"
+
+# Newline character, mostly used to mimic an enter key press.
 RETURN_OR_NEWLINE = "\n"
+
+# RSA specific password prompt.
 RSA_AND_PASSWORD = "Please type in this password below and say yes to any " \
                    "RSA key prompts: "
+
+# Specifies that the script has been propagated over a port (use debug for
+# specific port number).
 SCRIPT_PROPAGATED = "Script propagated over this port"
+
+# Specifies that the script hasn't been propagated over a port.
 SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
+
+# Just an SSH strings, memory saving measures again.
 SSH = "SSH"
+
+# Same as above just lowercase, needed in some instances.
 SSH_LOWERCASE = "ssh"
+
+# The default port for SSH.
 SSH_PORT = "22"
+
+# Station an action was successful.
 SUCCESSFUL = "Successful"
+
+# The syn flag for packet crafting in Scapy
 SYN_FLAG = "S"
+
+# Telnet string for service definitions and actions.
 TELNET = "telnet"
+
+# The default port for the telnet service.
 TELNET_PORT = "23"
+
+# Letting the user know an IP address and port pair is being tested. Again,
+# use the debug tools in your IDE of choice to see the specific values.
 TESTING_IP_PORT_PAIR = "Now testing an IP address and port pair..."
+
+# Letting the user know a file couldn't be transferred over telnet or SSH
+# default ports.
 TRANSFER_FAILURE_SSH_TELNET = "File couldn't be transferred over port 22 or 23"
+
+# Letting the user know a file could be transferred over telnet or SSH
+# default ports.
 TRANSFER_SUCCESS_SSH_TELNET = "File transferred over port 22 or 23"
+
+# Unsuccessful statement to be used with services and actions.
 UNSUCCESSFUL = "Unsuccessful"
+
+# The username prompt that comes with web login POST requests.
 USERNAME_PROMPT_WEB = "username:"
+
+# Just a web string to define services and actions.
 WEB = "web"
+
+# Just a web login string to define services and actions.
 WEB_LOGIN = "web login"
+
+# Port 80 for web services.
 WEB_PORT_EIGHTY = "80"
+
+# Port 8080 for web services.
 WEB_PORT_EIGHTY_EIGHTY = "8080"
+
+# Port 8888 for web services.
 WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT = "8888"
+
+# Welcome to string, used for a lot of the prompts.
 WELCOME_TO = "Welcome to"
 
 
