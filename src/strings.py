@@ -7,19 +7,31 @@ function has a block comment explaining what it does and where it's used and
 every string constant has a comment describing its use.
 """
 
+# Argument to denote the filename of the IP address file.
 ARGUMENT_IP_ADDRESS_FILENAME = "-t"
+# Argument to denote the set of ports to use.
 ARGUMENT_PORTS = "-p"
+# Argument to denote the username for each of the actions.
 ARGUMENT_USERNAME = "-u"
+# Argument to denote the filename of the passwords file.
 ARGUMENT_PASSWORDS_FILENAME = "-f"
+# Argument to denote the need to propagate the running script.
 ARGUMENT_PROPAGATE = "-P"
+# Argument to denote the need to scan the local network.
 ARGUMENT_SCAN_LOCAL_NETWORKS = "-L"
+# Argument to denote the use of a specific file given the filename propagation.
 ARGUMENT_SPECIFIC_PROPAGATION_FILE = "-d"
+# Argument to denote the need for further help.
 ARGUMENT_HELP_SHORT = "-h"
-ARGUMENT_ = "-c"
+# Argument to denote the need for further help, just the long version.
 ARGUMENT_HELP_LONG = "--help"
+# Just a blank string, no point assigning multiple of these to memory. :)
 BLANK_STRING = ""
+# A string that states that the IP and port pair is closed.
 CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
+# A string that just denotes the use of a colon, same "craic" as above.
 COLON = ":"
+# A string
 DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
 DO_NOT_TRANSFER = "Requirement to transfer file not specified, skipping..."
 ENCODE_ASCII = "ascii"
