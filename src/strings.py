@@ -11,18 +11,26 @@ ARGUMENT_IP_ADDRESS_FILENAME = "-t"
 ARGUMENT_PORTS = "-p"
 ARGUMENT_USERNAME = "-u"
 ARGUMENT_PASSWORDS_FILENAME = "-f"
+ARGUMENT_PROPAGATE = "-P"
 ARGUMENT_SCAN_LOCAL_NETWORKS = "-L"
+ARGUMENT_SPECIFIC_PROPAGATION_FILE = "-d"
 ARGUMENT_HELP_SHORT = "-h"
 ARGUMENT_ = "-c"
 ARGUMENT_HELP_LONG = "--help"
 BLANK_STRING = ""
+CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
 COLON = ":"
+DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
+DO_NOT_TRANSFER = "Requirement to transfer file not specified, skipping..."
 ENCODE_ASCII = "ascii"
 EXITING = "Exiting..."
 FAILED_ASSIGNING_VALUES = "Failed assigning values (maybe null)"
 FETCHING_LOCAL_INTERFACE_LIST = "Fetching local interface list..."
+FILE_DOES_NOT_EXIST = "A specified file does not exist"
+FOUND_OPEN_IP_PORT_PAIR = "Found an open IP address and port pair"
 FULL_STOP = "."
-FILENAME_PROCESSING_ERROR = "One of the filenames are invalid."
+FILENAME_PROCESSING_ERROR = "One of the filenames are invalid"
+IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
 LOGIN_PROMPT = "login:"
 LOOPBACK = "lo"
 MAIN = "main()"
@@ -49,14 +57,25 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
 RETURN_OR_NEWLINE = "\n"
 RSA_AND_PASSWORD = "Please type in this password below and say yes to any " \
                    "RSA key prompts: "
+SCRIPT_PROPAGATED = "Script propagated over this port"
+SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
 SSH = "SSH"
+SSH_LOWERCASE = "ssh"
 SSH_PORT = "22"
 SUCCESSFUL = "Successful"
 SYN_FLAG = "S"
 TELNET = "telnet"
+TELNET_PORT = "23"
+TESTING_IP_PORT_PAIR = "Now testing an IP address and port pair..."
+TRANSFER_FAILURE_SSH_TELNET = "File couldn't be transferred over port 22 or 23"
+TRANSFER_SUCCESS_SSH_TELNET = "File transferred over port 22 or 23"
 UNSUCCESSFUL = "Unsuccessful"
 USERNAME_PROMPT_WEB = "username:"
 WEB = "web"
+WEB_LOGIN = "web login"
+WEB_PORT_EIGHTY = "80"
+WEB_PORT_EIGHTY_EIGHTY = "8080"
+WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT = "8888"
 WELCOME_TO = "Welcome to"
 
 
@@ -226,3 +245,16 @@ def web_login_url(ip, port):
     :return "https://" + ip + ":" + port + "/login.php": The string itself
     """
     return "https://" + ip + ":" + port + "/login.php"
+
+
+def working_username_password(service):
+    """
+    This function will build a string for a working username and password given
+     a specific service
+    :param service: Service for which there is a working username and password
+    combination
+    :return "A working username and password for " + str(service) +
+    " was found.": The string itself
+    """
+    return "A working username and password for " + str(service) +\
+           " was found."

