@@ -24,10 +24,9 @@ def main():
     # These arguments are passed in by the end user.
     arguments = sys.argv
 
-    # If there is no arguments then just print the help menue and exit.
+    # If there is no arguments then just print the help menu and exit.
     if arguments.__len__():
         net_propagation.gtfo_and_rtfm()
-        sys.exit(-1)
 
     # Just initialising this for use later.
     transfer_file_filename = ""

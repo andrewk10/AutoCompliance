@@ -3,6 +3,7 @@
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
 # import when finished, wildcard is just for convenience.
+
 from scapy.all import get_if_addr
 from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
@@ -14,6 +15,7 @@ from paramiko import SSHClient, RejectPolicy
 import logging
 import requests
 import strings
+import sys
 
 """
  - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
@@ -23,6 +25,7 @@ import strings
  - Importing logging to safely log sensitive, error or debug info.
  - Importing requests for web based operations.
  - Importing strings for use of the external strings resources.
+ - Importing sys for the system exits.
 """
 
 """
@@ -402,6 +405,7 @@ def gtfo_and_rtfm():
     """
     print(strings.PLS_HELP)
     print(strings.EXITING)
+    sys.exit(-1)
 
 
 def is_reachable_ip(ip):
