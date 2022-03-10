@@ -16,6 +16,7 @@ ARGUMENT_HELP_SHORT = "-h"
 ARGUMENT_ = "-c"
 ARGUMENT_HELP_LONG = "--help"
 BLANK_STRING = ""
+COLON = ":"
 ENCODE_ASCII = "ascii"
 EXITING = "Exiting..."
 FAILED_ASSIGNING_VALUES = "Failed assigning values (maybe null)"
@@ -27,6 +28,7 @@ LOOPBACK = "lo"
 MAIN = "main()"
 ONE = "1"
 PASSWORD_PROMPT = "Password:"
+PASSWORD_PROMPT_WEB = "password:"
 PASSWORDS_FILE = "passwords.txt"
 PARAMETER_MISUSE = "Parameter misuse, check help text below"
 PERFORMING_LOCAL_SCAN = "Performing local scan, this might take a while so " \
@@ -50,8 +52,10 @@ RSA_AND_PASSWORD = "Please type in this password below and say yes to any " \
 SSH = "SSH"
 SSH_PORT = "22"
 SUCCESSFUL = "Successful"
+SYN_FLAG = "S"
 TELNET = "telnet"
 UNSUCCESSFUL = "Unsuccessful"
+USERNAME_PROMPT_WEB = "username:"
 WEB = "web"
 WELCOME_TO = "Welcome to"
 
@@ -78,6 +82,17 @@ def cat_file(filename):
     :return "cat " + filename: The completed cat command
     """
     return "cat " + filename
+
+
+def checking_ip_reachable(ip):
+    """
+    This function creates a string that describes the availability of a machine
+    on a specific IP address
+    :param ip: The specific IP address
+    :return "Checking if the following ip address is reachable: " + str(ip):
+    The string in question
+    """
+    return "Checking if the following ip address is reachable: " + str(ip)
 
 
 def connection_status(service, ip, port, status):
@@ -201,3 +216,13 @@ def run_script_command(filename, username):
     -P": The command itself
     """
     return filename + " -L -p 22,23 -u " + username + " -f passwords.txt -P"
+
+
+def web_login_url(ip, port):
+    """
+    This function will build the web login url string
+    :param ip: The IP of the machine running the web service
+    :param port: The port the web service is running on
+    :return "https://" + ip + ":" + port + "/login.php": The string itself
+    """
+    return "https://" + ip + ":" + port + "/login.php"
