@@ -34,6 +34,9 @@ ARGUMENT_HELP_SHORT = "-h"
 # Argument to denote the need for further help, just the long version.
 ARGUMENT_HELP_LONG = "--help"
 
+# Blank IP addresses, mostly for test purposes.
+BLANK_IP = "0.0.0.0"
+
 # Just a blank string, no point assigning multiple of these to memory. :)
 BLANK_STRING = ""
 
@@ -168,6 +171,9 @@ TELNET = "telnet"
 
 # The default port for the telnet service.
 TELNET_PORT = "23"
+
+# A stringing just for tests.
+TEST = "tests"
 
 # Letting the user know an IP address and port pair is being tested. Again,
 # use the debug tools in your IDE of choice to see the specific values.

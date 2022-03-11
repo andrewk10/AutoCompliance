@@ -26,11 +26,14 @@ def test_additional_actions():
     script. The goal is to check every service for both good paths and bad
     paths.
     """
-    arguments = ["-t", "-d"]
-    ip = "0.0.0.0"
-    username = "test"
-    transfer_file_filename = "test"
-    ports = ["22", "23", "80", "8080", "8888"]
+    arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
+                 strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
+    ip = strings.BLANK_STRING
+    username = strings.TEST
+    transfer_file_filename = strings.TEST
+    ports = [strings.SSH_PORT, strings.TELNET_PORT, strings.WEB_PORT_EIGHTY,
+             strings.WEB_PORT_EIGHTY_EIGHTY,
+             strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
     for port in ports:
         net_propagation.additional_actions(arguments, ip, port, username,
                                            transfer_file_filename)
@@ -42,7 +45,9 @@ def test_file_error_handler(capfd):
     straight through no problem hence why all this function does is run that
     function and check what shows up in the console, errors or exceptions will
     fail this test for us.
+    :param capfd: Parameter needed to capture log output.
     """
+    # TODO: Is this test really needed? Investigate removal.
     net_propagation.file_error_handler()
     out, err = capfd.readouterr()
     assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
