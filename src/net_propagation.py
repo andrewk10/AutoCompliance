@@ -406,7 +406,7 @@ def exit_and_show_instructions():
     """
     print(strings.PLS_HELP)
     print(strings.EXITING)
-    sys.exit(-1)
+    sys.exit()
 
 
 def is_reachable_ip(ip):

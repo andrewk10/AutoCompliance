@@ -42,7 +42,6 @@ def test_additional_actions():
             net_propagation.additional_actions(arguments, ip, port, username,
                                                transfer_file_filename)
     assert pytest_wrapped_e.type == SystemExit
-    assert pytest_wrapped_e.value.code == -1
 
 
 def test_file_error_handler(capfd):
