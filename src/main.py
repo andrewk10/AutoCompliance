@@ -27,6 +27,7 @@ def main():
     # If there is no arguments then just print the help menu and exit.
     if arguments.__len__():
         net_propagation.exit_and_show_instructions()
+        sys.exit(-1)
 
     # Just initialising this for use later.
     transfer_file_filename = strings.BLANK_STRING
@@ -52,7 +53,7 @@ def main():
         # File doesn't exist, alert the user and exit gracefully, so
         # they can possibly fix their mistake.
         net_propagation.file_error_handler()
-        sys.exit()
+        sys.exit(-1)
 
     # If the user wants to transfer a file, this stuff should be done...
     if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments:

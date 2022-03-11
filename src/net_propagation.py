@@ -15,7 +15,6 @@ from paramiko import SSHClient, RejectPolicy
 import logging
 import requests
 import strings
-import sys
 
 """
  - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
@@ -25,7 +24,6 @@ import sys
  - Importing logging to safely log sensitive, error or debug info.
  - Importing requests for web based operations.
  - Importing strings for use of the external strings resources.
- - Importing sys for the system exits.
 """
 
 """
@@ -93,6 +91,9 @@ def assigning_values(arguments):
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
             logging.error(strings.ip_list_not_read(ip_addresses_filename))
+            # TODO: Need to handle the exit, should be done as high up as
+            #  possible as to not interfere with test flow, ideally in main or
+            #  where-ever these functions are called
             exit_and_show_instructions()
 
 
@@ -406,7 +407,6 @@ def exit_and_show_instructions():
     """
     print(strings.PLS_HELP)
     print(strings.EXITING)
-    sys.exit()
 
 
 def is_reachable_ip(ip):
