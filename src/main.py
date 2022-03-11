@@ -69,7 +69,7 @@ def main():
             # File doesn't exist, throw an error and give the user a chance to
             # try again.
             net_propagation.file_error_handler()
-            sys.exit()
+            sys.exit(-1)
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
     # example.
