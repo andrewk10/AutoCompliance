@@ -5,10 +5,12 @@
 #  what's going on. :) In fact, implement it wherever it can be... (Andrew)
 
 import net_propagation
+import pytest
 import strings
 
 """
  - Importing net_propagation for testing.
+ - Importing pytest for testing (especially fixing system exits if possible)
  - Importing strings for common string resources.
 """
 
@@ -26,17 +28,21 @@ def test_additional_actions():
     script. The goal is to check every service for both good paths and bad
     paths.
     """
-    arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
-                 strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
-    ip = strings.BLANK_STRING
-    username = strings.TEST
-    transfer_file_filename = strings.TEST
-    ports = [strings.SSH_PORT, strings.TELNET_PORT, strings.WEB_PORT_EIGHTY,
-             strings.WEB_PORT_EIGHTY_EIGHTY,
-             strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
-    for port in ports:
-        net_propagation.additional_actions(arguments, ip, port, username,
-                                           transfer_file_filename)
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
+                     strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
+        ip = strings.BLANK_STRING
+        username = strings.TEST
+        transfer_file_filename = strings.TEST
+        ports = [strings.SSH_PORT, strings.TELNET_PORT,
+                 strings.WEB_PORT_EIGHTY,
+                 strings.WEB_PORT_EIGHTY_EIGHTY,
+                 strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
+        for port in ports:
+            net_propagation.additional_actions(arguments, ip, port, username,
+                                               transfer_file_filename)
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == 42
 
 
 def test_file_error_handler(capfd):
@@ -47,8 +53,12 @@ def test_file_error_handler(capfd):
     fail this test for us.
     :param capfd: Parameter needed to capture log output.
     """
-    # TODO: Is this test really needed? Investigate removal.
-    net_propagation.file_error_handler()
-    out, err = capfd.readouterr()
-    assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
-           + strings.PLS_HELP + "\n" + strings.EXITING + "\n"
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        # TODO: Is this test really needed? Investigate removal.
+        net_propagation.file_error_handler()
+        out, err = capfd.readouterr()
+        assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
+               + strings.PLS_HELP + "\n" + strings.EXITING + "\n"
+
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == 42
