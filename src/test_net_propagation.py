@@ -5,12 +5,10 @@
 #  what's going on. :) In fact, implement it wherever it can be... (Andrew)
 
 import net_propagation
-import pytest
 import strings
 
 """
  - Importing net_propagation for testing.
- - Importing pytest for testing (especially fixing system exits if possible)
  - Importing strings for common string resources.
 """
 
@@ -30,7 +28,7 @@ def test_additional_actions():
     """
     arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
                  strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
-    ip = strings.BLANK_STRING
+    ip = strings.BLANK_IP
     username = strings.TEST
     transfer_file_filename = strings.TEST
     ports = [strings.SSH_PORT, strings.TELNET_PORT,
