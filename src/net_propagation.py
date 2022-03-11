@@ -457,13 +457,13 @@ def propagate_script(ip, port, login_string):
             if str(port) == strings.SSH_PORT:
                 # TODO: Need feedback from the end user, should be worked into
                 #  the UI itself. Not a dedicated print statement.
-                print(strings.RSA_AND_PASSWORD)
+                print(strings.RSA_AND_PROMPT)
                 os.system(strings.scp_command_string(port,
                                                      login_string_split[0],
                                                      ip,
                                                      os.path
                                                      .basename(__file__)))
-                print(strings.PLEASE_TYPE_PASSWORD_AGAIN)
+                print(strings.RSA_PROMPT_AGAIN)
                 os.system(strings.scp_command_string(port,
                                                      login_string_split[0],
                                                      ip,
@@ -609,7 +609,7 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
     login_string_split = login_string.split(strings.COLON)
     try:
         if str(port) == strings.SSH_PORT:
-            print(strings.RSA_AND_PASSWORD)
+            print(strings.RSA_AND_PROMPT)
             os.system(strings.scp_command_string(port, login_string_split[0],
                                                  ip, transfer_file_filename))
             return True

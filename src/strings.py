@@ -121,7 +121,7 @@ PING_ARGUMENT = "-c"
 # TODO: On top of moving this prompt to UI, there should be no difference in
 #  the prompt, avoid confusion.
 # A different password prompt following the previous one.
-PLEASE_TYPE_PASSWORD_AGAIN = "Please type in this password again: "
+RSA_PROMPT_AGAIN = "Please type in this password again: "
 
 # The help prompt for the end user.
 # TODO: Update this to use the argument string values above, avoid changes in
@@ -141,7 +141,7 @@ PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
 RETURN_OR_NEWLINE = "\n"
 
 # RSA specific password prompt.
-RSA_AND_PASSWORD = "Please type in this password below and say yes to any " \
+RSA_AND_PROMPT = "Please type in this password below and say yes to any " \
                    "RSA key prompts: "
 
 # Specifies that the script has been propagated over a port (use debug for

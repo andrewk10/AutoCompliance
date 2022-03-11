@@ -45,7 +45,7 @@ def test_file_error_handler(capfd):
     This function tests the file_error_handler function. Should just run
     straight through no problem hence why all this function does is run that
     function and check what shows up in the console, errors or exceptions will
-    fail this test for us.
+    fail this test for us
     :param capfd: Parameter needed to capture log output.
     """
     # TODO: Is this test really needed? Investigate removal.
@@ -53,4 +53,3 @@ def test_file_error_handler(capfd):
     out, err = capfd.readouterr()
     assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
            + strings.PLS_HELP + "\n" + strings.EXITING + "\n"
-
