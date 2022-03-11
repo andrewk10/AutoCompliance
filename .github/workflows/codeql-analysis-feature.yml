@@ -13,10 +13,10 @@ name: "CodeQL - Feature"
 
 on:
   push:
-    branches: [ wiki_and_documentation_establishment ]
+    branches: [ 17_adding_strings ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ wiki_and_documentation_establishment ]
+    branches: [ 17_adding_strings ]
   schedule:
     - cron: '34 22 * * 4'
 
