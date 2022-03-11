@@ -20,10 +20,11 @@ does.
 """
 
 
-def test_additional_attacks():
+def test_additional_actions():
     """
-    This function tests the additional_attacks method in the main class. The
-    goal is to check every service for both good paths and bad paths.
+    This function tests the additional_actions method in the net_propagation
+    script. The goal is to check every service for both good paths and bad
+    paths.
     """
     arguments = ["-t", "-d"]
     ip = "0.0.0.0"
@@ -31,7 +32,7 @@ def test_additional_attacks():
     transfer_file_filename = "test"
     ports = ["22", "23", "80", "8080", "8888"]
     for port in ports:
-        net_propagation.additional_attacks(arguments, ip, port, username,
+        net_propagation.additional_actions(arguments, ip, port, username,
                                            transfer_file_filename)
 
 

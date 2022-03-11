@@ -36,7 +36,7 @@ it does.
 """
 
 
-def additional_attacks(arguments, ip, port, username,
+def additional_actions(arguments, ip, port, username,
                        transfer_file_filename):
     """
     This function passes the appropriate arguments to and runs the transferring
@@ -93,18 +93,18 @@ def assigning_values(arguments):
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
             logging.error(strings.ip_list_not_read(ip_addresses_filename))
-            gtfo_and_rtfm()
+            exit_and_show_instructions()
 
 
-def bruteforce_service(ip, port, username, password_list):
+def sign_in_service(ip, port, username, password_list):
     """
     This function will run through every password in the password list and will
-    attempt to bruteforce the appropriate service with that password. It will
+    attempt to sign in to the appropriate service with that password. It will
     only move on to the next password in the event that the current password
-    fails in its bruteforce attempt. If it succeeds then the successful login
+    fails in its sign in attempt. If it succeeds then the successful login
     details are returned, if not then Null is returned
-    :param ip: The IP address to attempt to breach
-    :param port: The port and subsequently service we're breaching
+    :param ip: The IP address to attempt to sign in to
+    :param port: The port and subsequently service we're signing in to
     :param username: The username we're signing in to services on
     :param password_list: The list of passwords to attempt
     :return login_details: The username and password to return
@@ -153,7 +153,7 @@ def check_over_ssh(ip, port, username, password):
 
 def check_over_telnet(ip, port, username, password):
     """
-    This function checks if the net_attack.py script is already located at the
+    This function checks if the current script is already located at the
     target machine over telnet. If it is then false is returned and if not then
     true is returned. This is needed as a prerequisite to propagating over
     telnet
@@ -228,10 +228,10 @@ def checking_arguments(arguments):
 
         except RuntimeError:
             logging.error(strings.FAILED_ASSIGNING_VALUES)
-            gtfo_and_rtfm()
+            exit_and_show_instructions()
     else:
         logging.error(strings.PARAMETER_MISUSE)
-        gtfo_and_rtfm()
+        exit_and_show_instructions()
 
 
 def connect_ssh_client(ip, port, username, password):
@@ -364,7 +364,7 @@ def file_error_handler():
     This function handles errors related to the processing of files.
     """
     print(strings.FILENAME_PROCESSING_ERROR)
-    gtfo_and_rtfm()
+    exit_and_show_instructions()
 
 
 def file_not_exist(ip, port, username, password):
@@ -393,13 +393,14 @@ def gathering_local_ips(ip_list):
     logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
     local_interfaces = get_if_list()
     for interface in local_interfaces:
+        # TODO: Maybe remove the loopback interface before running for loop?
         if str(interface) != strings.LOOPBACK:
             logging.info(strings.fetching_ips_for_interface(interface))
             ip_list.extend(cycle_through_subnet(ip_list, interface))
     return ip_list
 
 
-def gtfo_and_rtfm():
+def exit_and_show_instructions():
     """
     This function will print the help screen and show an exit prompt.
     """
@@ -449,7 +450,7 @@ def propagate_script(ip, port, login_string):
     :return True: If the script is successfully propagated here
     :return False: If the script is not successfully propagated here
     """
-    login_string_split = login_string.split(":")
+    login_string_split = login_string.split(strings.COLON)
     try:
         if file_not_exist(ip, port, login_string_split[0],
                           login_string_split[1]):
@@ -582,7 +583,8 @@ def telnet_connection(ip, port, username, password):
     :param port: The target port for the telnet connection
     :param username: The target username for the telnet connection
     :param password: The target password for the telnet connection
-    :return str(username) + ":" + str(password): The successful login string
+    :return str(username) + strings.COLON + str(password): The successful login
+    string
     :return None: If the telnet connection is unsuccessful
     """
     if connect_telnet(ip, port, username, password):
@@ -628,14 +630,14 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
         return False
 
 
-def try_attack(ip, port, target_username, password_list,
+def try_action(ip, port, target_username, password_list,
                transfer_file_filename, arguments):
     """
-    This function will attempt a bruteforce attack across various services
+    This function will attempt a sign in action across various services
     depending on the ip or port supplied (if the port is open on that IP), it
-    iterates through the password list when you bruteforce the appropriate
-    service associated with the port number supplied. If the bruteforce attack
-    is successful it will then check the need for additional attacks specified
+    iterates through the password list when you sign in to the appropriate
+    service associated with the port number supplied. If the sign in action
+    is successful it will then check the need for additional actions specified
     by the end user
     :param ip: The IP address on which we wish to try an action
     :param port: The port over which we wish to try an action
@@ -647,19 +649,19 @@ def try_attack(ip, port, target_username, password_list,
     logging.info(strings.TESTING_IP_PORT_PAIR)
     if scan_port(ip, port):
         logging.info(strings.FOUND_OPEN_IP_PORT_PAIR)
-        bruteforce_login_details = try_bruteforce(ip, port, target_username,
-                                                  password_list)
-        if bruteforce_login_details[0]:
-            additional_attacks(arguments, ip, port,
-                               bruteforce_login_details[0],
+        action_login_details = try_sign_in(ip, port, target_username,
+                                           password_list)
+        if action_login_details[0]:
+            additional_actions(arguments, ip, port,
+                               action_login_details[0],
                                transfer_file_filename)
     else:
         logging.debug(strings.CLOSED_IP_PORT_PAIR)
 
 
-def try_bruteforce(ip, port, target_username, password_list):
+def try_sign_in(ip, port, target_username, password_list):
     """
-    This function will try to bruteforce a specific service depending on the
+    This function will try to sign in to a specific service depending on the
     port supplied. If it gets a successful login then it will return the login
     details and the service used, otherwise it returns null as the login
     details along with the service used
@@ -667,8 +669,8 @@ def try_bruteforce(ip, port, target_username, password_list):
     :param port: Target port over which to carry out an action
     :param target_username: Target username that's needed for the action
     :param password_list: Target password that's needed for the action
-    :return str(bruteforce), service: The username and password of a successful
-    action with the service used
+    :return str(sign_in_details), service: The username and password of a
+    successful action with the service used
     :return None, service: Empty username and password for an unsuccessful
     action and the service which was used.
     """
@@ -680,10 +682,10 @@ def try_bruteforce(ip, port, target_username, password_list):
         strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: strings.WEB_LOGIN
     }
     service = service_switch.get(str(port))
-    bruteforce = bruteforce_service(ip, port, target_username, password_list)
-    if bruteforce:
+    sign_in_details = sign_in_service(ip, port, target_username, password_list)
+    if sign_in_details:
         logging.info(strings.working_username_password(service))
-        return str(bruteforce), service
+        return str(sign_in_details), service
     else:
         logging.debug(strings.IMPOSSIBLE_ACTION)
     return None, service
@@ -779,10 +781,10 @@ def try_transferring_file(arguments, ip, port, bruteforce,
 def validate_file_exists(filename):
     """
     This function checks if a file exists given a set filename and if it
-    doesn't we alert the user with an error and put them in the bold corner.
-    Just kidding we show the help screen and exit gracefully
+    doesn't we alert the user with an error, show the help screen and exit
+    gracefully
     :param filename: The name of the file we wish to ensure exists
     """
     if not os.path.isfile(filename):
         logging.error(strings.FILE_DOES_NOT_EXIST)
-        gtfo_and_rtfm()
+        exit_and_show_instructions()

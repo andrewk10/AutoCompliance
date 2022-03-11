@@ -43,6 +43,9 @@ CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
 # A string that just denotes the use of a colon, same "idea" as above.
 COLON = ":"
 
+# A string that just denotes the use of a comma, same "idea" as above.
+COMMA = ","
+
 # A string that states a script wasn't propagated.
 DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
 
@@ -118,6 +121,8 @@ PING_ARGUMENT = "-c"
 PLEASE_TYPE_PASSWORD_AGAIN = "Please type in this password again: "
 
 # The help prompt for the end user.
+# TODO: Update this to use the argument string values above, avoid changes in
+#  multiple places when needed.
 PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
            "target IP addresses\n\t-p -> Ports to scan on the target host" \
            "\n\t-u -> A username\n\t-f -> Filename for a file containing " \
