@@ -97,28 +97,6 @@ def assigning_values(arguments):
             exit_and_show_instructions()
 
 
-def sign_in_service(ip, port, username, password_list):
-    """
-    This function will run through every password in the password list and will
-    attempt to sign in to the appropriate service with that password. It will
-    only move on to the next password in the event that the current password
-    fails in its sign in attempt. If it succeeds then the successful login
-    details are returned, if not then Null is returned
-    :param ip: The IP address to attempt to sign in to
-    :param port: The port and subsequently service we're signing in to
-    :param username: The username we're signing in to services on
-    :param password_list: The list of passwords to attempt
-    :return login_details: The username and password to return
-    :return None: Only done to indicate an unsuccessful task
-    """
-    for password in password_list:
-        login_details = (try_password_for_service(ip, port, username,
-                                                  password))
-        if login_details != strings.BLANK_STRING:
-            return login_details
-    return None
-
-
 def check_over_ssh(ip, port, username, password):
     """
     This function checks if the net_propagation.py script is already located at
@@ -572,6 +550,28 @@ def send_post_request_with_login(ip, port, username, password):
         logging.debug(strings.connection_status(strings.WEB, ip, port,
                                                 strings.UNSUCCESSFUL))
         return None
+
+
+def sign_in_service(ip, port, username, password_list):
+    """
+    This function will run through every password in the password list and will
+    attempt to sign in to the appropriate service with that password. It will
+    only move on to the next password in the event that the current password
+    fails in its sign in attempt. If it succeeds then the successful login
+    details are returned, if not then Null is returned
+    :param ip: The IP address to attempt to sign in to
+    :param port: The port and subsequently service we're signing in to
+    :param username: The username we're signing in to services on
+    :param password_list: The list of passwords to attempt
+    :return login_details: The username and password to return
+    :return None: Only done to indicate an unsuccessful task
+    """
+    for password in password_list:
+        login_details = (try_password_for_service(ip, port, username,
+                                                  password))
+        if login_details != strings.BLANK_STRING:
+            return login_details
+    return None
 
 
 def telnet_connection(ip, port, username, password):

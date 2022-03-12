@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-# TODO: Finish this test by checking assert for console output in the bad path
-#  and start the good path. (Andrew)
 # TODO: Implement proper logging for tests. Not much point if we don't know
 #  what's going on. :) In fact, implement it wherever it can be... (Andrew)
 
@@ -23,7 +21,7 @@ does.
 
 def test_additional_actions():
     """
-    This function tests the additional_actions method in the net_propagation
+    This function tests the additional_actions function in the net_propagation
     script. The goal is to check every service for both good paths and bad
     paths.
     """
@@ -38,9 +36,35 @@ def test_additional_actions():
              strings.WEB_PORT_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
+    # TODO: Finish this test by checking assert for console output in the bad
+    #  path and start the good path. (Andrew)
     for port in ports:
         net_propagation.additional_actions(arguments, ip, port, username,
                                            transfer_file_filename)
+
+
+def test_append_lines_from_file_to_list():
+    """
+    This function tests the append_lines_from_file_to_list function in the
+    net_propagation script. It feeds in a test file, and we check the result it
+    returns for validity.
+    """
+    lines_list = net_propagation.append_lines_from_file_to_list(
+        strings.test_filename)
+    logging.info(lines_list)
+    
+
+def test_exit_and_show_instructions(capfd):
+    """
+    This function tests the exit_and_show_instructions function.
+    Should just run straight through no problem hence why all this function
+    does is run that function and check what shows up in the console, errors or
+    exceptions will fail this test for us
+    :param capfd: Parameter needed to capture log output.
+    """
+    net_propagation.exit_and_show_instructions()
+    out, err = capfd.readouterr()
+    assert out == strings.PLS_HELP + "\n" + strings.EXITING + "\n"
 
 
 def test_file_error_handler(capfd):
@@ -51,7 +75,6 @@ def test_file_error_handler(capfd):
     fail this test for us
     :param capfd: Parameter needed to capture log output.
     """
-    # TODO: Is this test really needed? Investigate removal.
     net_propagation.file_error_handler()
     out, err = capfd.readouterr()
     assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \

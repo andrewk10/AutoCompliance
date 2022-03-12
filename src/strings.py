@@ -190,6 +190,9 @@ TELNET_PORT = "23"
 # A stringing just for tests.
 TEST = "tests"
 
+# Name of the test text file.
+TEST_FILENAME = "test_file.txt"
+
 # Letting the user know an IP address and port pair is being tested. Again,
 # use the debug tools in your IDE of choice to see the specific values.
 TESTING_IP_PORT_PAIR = "Now testing an IP address and port pair..."
