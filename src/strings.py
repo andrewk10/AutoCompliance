@@ -164,7 +164,7 @@ SCRIPT_PROPAGATED = "Script propagated over this port"
 SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
 
 # Setting blank IP address, used in tests.
-SETTING_BLANK_IP_ADDRESS = "Setting a blank IP address"
+SETTING_BLANK_IP = "Setting a blank IP address"
 
 # Just an SSH strings, memory saving measures again.
 SSH = "SSH"
