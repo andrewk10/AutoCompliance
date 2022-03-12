@@ -127,25 +127,34 @@ PING_ARGUMENT = "-c"
 RSA_PROMPT_AGAIN = "Please type in this password again: "
 
 # The help prompt for the end user.
-# TODO: Update this to use the argument string values above, avoid changes in
-#  multiple places when needed.
-PLS_HELP = "Parameters:\n\t-t -> Filename for a file containing a list of " \
-           "target IP addresses\n\t-p -> Ports to scan on the target host" \
-           "\n\t-u -> A username\n\t-f -> Filename for a file containing " \
-           "a list of passwords\n\t-L -> Scans the lan across all " \
+PLS_HELP = "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
+           " -> Filename for a file containing a list of " \
+           "target IP addresses\n\t" + ARGUMENT_PORTS + \
+           " -> Ports to scan on the target host" \
+           "\n\t" + ARGUMENT_USERNAME + " -> A username\n\t" + \
+           ARGUMENT_PASSWORDS_FILENAME + \
+           " -> Filename for a file containing " \
+           "a list of passwords\n\t" + ARGUMENT_SCAN_LOCAL_NETWORKS + \
+           " -> Scans the lan across all " \
            "interfaces and creates/adds to the list of target IP addresses" \
-           "\n\t-P -> Propagates the script onto available devices and " \
+           "\n\t" + ARGUMENT_PROPAGATE + \
+           " -> Propagates the script onto available devices and " \
            "executes the script using the given command\nExample usage:\n" \
-           "\t./net_attack.py -t my_ip_list.txt -p 22,23,25,80 -u admin " \
-           "-f my_password_list.txt\n\n\t./net_attack.py -t ip_list.txt " \
-           "-p 22 -u root -f passwords.txt"
+           "\t./net_attack.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
+           " my_ip_list.txt " + ARGUMENT_PORTS + " 22,23,25,80 " + \
+           ARGUMENT_USERNAME + " admin " \
+           + ARGUMENT_PASSWORDS_FILENAME + \
+           " my_password_list.txt\n\n\t./net_attack.py " + \
+           ARGUMENT_IP_ADDRESS_FILENAME + " ip_list.txt " \
+           + ARGUMENT_PORTS + " 22 " + ARGUMENT_USERNAME + " root " + \
+           ARGUMENT_PASSWORDS_FILENAME + " passwords.txt"
 
 # Newline character, mostly used to mimic an enter key press.
 RETURN_OR_NEWLINE = "\n"
 
 # RSA specific password prompt.
 RSA_AND_PROMPT = "Please type in this password below and say yes to any " \
-                   "RSA key prompts: "
+                 "RSA key prompts: "
 
 # Specifies that the script has been propagated over a port (use debug for
 # specific port number).
@@ -153,6 +162,9 @@ SCRIPT_PROPAGATED = "Script propagated over this port"
 
 # Specifies that the script hasn't been propagated over a port.
 SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
+
+# Setting blank IP address, used in tests.
+SETTING_BLANK_IP_ADDRESS = "Setting a blank IP address"
 
 # Just an SSH strings, memory saving measures again.
 SSH = "SSH"
@@ -258,7 +270,7 @@ def connection_status(service, ip, port, status):
     string = str(status) + " " + str(service) + " login to " + str(ip) + ":" \
         + str(port) \
         + " using the specified username with a password in the " \
-        "passwords file."
+          "passwords file."
     return string
 
 
@@ -392,5 +404,5 @@ def working_username_password(service):
     :return "A working username and password for " + str(service) +
     " was found.": The string itself
     """
-    return "A working username and password for " + str(service) +\
+    return "A working username and password for " + str(service) + \
            " was found."
