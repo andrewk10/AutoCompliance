@@ -34,6 +34,9 @@ ARGUMENT_HELP_SHORT = "-h"
 # Argument to denote the need for further help, just the long version.
 ARGUMENT_HELP_LONG = "--help"
 
+#
+ASSIGNING_ARGUMENTS = "Assigning arguments as part of test"
+
 # Blank IP addresses, mostly for test purposes.
 BLANK_IP = "0.0.0.0"
 

@@ -6,6 +6,7 @@
 
 import net_propagation
 import strings
+import logging
 
 """
  - Importing net_propagation for testing.
@@ -26,8 +27,10 @@ def test_additional_actions():
     script. The goal is to check every service for both good paths and bad
     paths.
     """
+    logging.info(strings.ASSIGNING_ARGUMENTS)
     arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
                  strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
+    logging.info(strings.SETTING_BLANK_IP)
     ip = strings.BLANK_IP
     username = strings.TEST
     transfer_file_filename = strings.TEST
