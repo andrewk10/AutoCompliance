@@ -17,7 +17,7 @@ ARGUMENT_PORTS = "-p"
 ARGUMENT_USERNAME = "-u"
 
 # Argument to denote the filename of the passwords file.
-ARGUMENT_PASSWORDS_FILENAME = "-f"
+ARGUMENT_PWS_FILENAME = "-f"
 
 # Argument to denote the need to propagate the running script.
 ARGUMENT_PROPAGATE = "-P"
@@ -132,7 +132,7 @@ PLS_HELP = "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
            "target IP addresses\n\t" + ARGUMENT_PORTS + \
            " -> Ports to scan on the target host" \
            "\n\t" + ARGUMENT_USERNAME + " -> A username\n\t" + \
-           ARGUMENT_PASSWORDS_FILENAME + \
+           ARGUMENT_PWS_FILENAME + \
            " -> Filename for a file containing " \
            "a list of passwords\n\t" + ARGUMENT_SCAN_LOCAL_NETWORKS + \
            " -> Scans the lan across all " \
@@ -143,11 +143,11 @@ PLS_HELP = "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
            "\t./net_attack.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
            " my_ip_list.txt " + ARGUMENT_PORTS + " 22,23,25,80 " + \
            ARGUMENT_USERNAME + " admin " \
-           + ARGUMENT_PASSWORDS_FILENAME + \
+           + ARGUMENT_PWS_FILENAME + \
            " my_password_list.txt\n\n\t./net_attack.py " + \
            ARGUMENT_IP_ADDRESS_FILENAME + " ip_list.txt " \
            + ARGUMENT_PORTS + " 22 " + ARGUMENT_USERNAME + " root " + \
-           ARGUMENT_PASSWORDS_FILENAME + " passwords.txt"
+           ARGUMENT_PWS_FILENAME + " passwords.txt"
 
 # Newline character, mostly used to mimic an enter key press.
 RETURN_OR_NEWLINE = "\n"

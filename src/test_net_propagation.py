@@ -50,9 +50,9 @@ def test_append_lines_from_file_to_list():
     returns for validity.
     """
     lines_list = net_propagation.append_lines_from_file_to_list(
-        strings.test_filename)
+        strings.TEST_FILENAME)
     logging.info(lines_list)
-    
+
 
 def test_exit_and_show_instructions(capfd):
     """

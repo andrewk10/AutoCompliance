@@ -86,7 +86,7 @@ def assigning_values(arguments):
             target_username = \
                 arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
             passwords_filename = \
-                arguments[arguments.index(strings.ARGUMENT_PASSWORDS_FILENAME)
+                arguments[arguments.index(strings.ARGUMENT_PWS_FILENAME)
                           + 1]
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
