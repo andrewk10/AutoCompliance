@@ -188,7 +188,10 @@ TELNET_PORT = "23"
 TEST = "tests"
 
 # Name of the test text file, prepended with src/ for Pytest to work.
-TEST_FILENAME = "src/test_file.txt"
+TEST_FILENAME = "src/test_files/test_file.txt"
+
+# Name of the test IP list file, prepended with src/ for Pytest to work.
+TEST_IP_LIST = "src/test_files/test_ip_list.txt"
 
 # Lines to check from the test file.
 TEST_LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
@@ -201,10 +204,14 @@ TEST_LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
               " proident, sunt", "in culpa qui officia deserunt mollit anim id"
                                  " est laborum."]
 # Arguments to check and test. Essentially example usages.
-TEST_ARGUMENTS_SET_ONE = ["-t", "test_ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
-TEST_ARGUMENTS_SET_TWO = ["-t", "ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
-TEST_ARGUMENTS_SET_THREE = ["-t", "test_ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
-TEST_ARGUMENTS_SET_FOUR = ["-t", "test_ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
+TEST_ARGUMENTS_SET_ONE = [ARGUMENT_IP_ADDRESS_FILENAME, "test_ip_list.txt", "-p", "22,23,25,80", "-u",
+                          "admin", "-f", "my_password_list.txt"]
+TEST_ARGUMENTS_SET_TWO = [ARGUMENT_IP_ADDRESS_FILENAME, "ip_list.txt", "-p", "22", "-u", "root" "-f",
+                          "passwords.txt"]
+TEST_ARGUMENTS_SET_THREE = [ARGUMENT_IP_ADDRESS_FILENAME, "ip_list.txt", "-p", "22", "-u", "root",
+                            "-f", "passwords.txt", "-d", "test.txt"]
+TEST_ARGUMENTS_SET_FOUR = [ARGUMENT_SCAN_LOCAL_NETWORKS, "-p", "22,23", "-u", "root", "-f",
+                           "passwords.txt", "-P"]
 
 # Letting the user know an IP address and port pair is being tested. Again,
 # use the debug tools in your IDE of choice to see the specific values.
