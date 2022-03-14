@@ -45,8 +45,8 @@ def test_append_lines_from_file_to_list():
     for readability in test results i.e we'll be able to correlate a specific
     line with an error.
     """
-    lines_list = net_propagation.append_lines_from_file_to_list(
-        strings.TEST_FILENAME)
+    with open(str(strings.TEST_FILENAME)) as file:
+        lines_list = net_propagation.append_lines_from_file_to_list(file)
     assert lines_list[0] == strings.TEST_LINES[0]
     assert lines_list[1] == strings.TEST_LINES[1]
     assert lines_list[2] == strings.TEST_LINES[2]
