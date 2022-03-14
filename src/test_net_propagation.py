@@ -42,7 +42,7 @@ def test_append_lines_from_file_to_list():
     This function tests the append_lines_from_file_to_list function in the
     net_propagation script. It feeds in a test file, and we check the result it
     returns for validity. Each line is checked independently without a for loop
-    for readability in test results i.e we'll be able to correlate a specific
+    for readability in test results i.e. we'll be able to correlate a specific
     line with an error.
     """
     with open(str(strings.TEST_FILENAME)) as file:
@@ -62,6 +62,7 @@ def test_assigning_values():
     before it does that the bad path is checked by passing in a single argument
     with no value to get a runtime error.
     """
+
 
 
 def test_exit_and_show_instructions(capfd):

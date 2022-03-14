@@ -187,7 +187,7 @@ TELNET_PORT = "23"
 # A stringing just for tests.
 TEST = "tests"
 
-# Name of the test text file.
+# Name of the test text file, prepended with src/ for Pytest to work.
 TEST_FILENAME = "src/test_file.txt"
 
 # Lines to check from the test file.
@@ -200,6 +200,11 @@ TEST_LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
               "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non"
               " proident, sunt", "in culpa qui officia deserunt mollit anim id"
                                  " est laborum."]
+# Arguments to check and test. Essentially example usages.
+TEST_ARGUMENTS_SET_ONE = ["-t", "test_ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
+TEST_ARGUMENTS_SET_TWO = ["-t", "ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
+TEST_ARGUMENTS_SET_THREE = ["-t", "test_ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
+TEST_ARGUMENTS_SET_FOUR = ["-t", "test_ip_list.txt", "-p", "22,23,25,80", "-u", "admin", "-f", "my_password_list.txt"]
 
 # Letting the user know an IP address and port pair is being tested. Again,
 # use the debug tools in your IDE of choice to see the specific values.
