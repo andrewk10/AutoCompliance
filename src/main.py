@@ -33,8 +33,16 @@ def main():
     transfer_file_filename = strings.BLANK_STRING
 
     # Validating and assigning values based on arguments passed in.
-    ip_list, target_ports, target_username, passwords_filename = \
-        net_propagation.checking_arguments(arguments)
+    valid_values = net_propagation.checking_arguments(arguments)
+    # If they are valid values...
+    if valid_values is not None:
+        # Assign them...
+        ip_list, target_ports, target_username, passwords_filename = \
+            valid_values
+    # Else...
+    else:
+        # Show the user instructions and exit gracefully.
+        net_propagation.exit_and_show_instructions()
 
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.

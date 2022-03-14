@@ -74,11 +74,15 @@ def assigning_values(arguments):
     :return target_ports: The selection of ports to target
     :return target_username: The username that will be used for actions
     :return passwords_filename: The filename of the passwords file
+    :return None: If a runtime error occurs
     """
     if strings.ARGUMENT_IP_ADDRESS_FILENAME in arguments:
-        ip_addresses_filename = \
-            arguments[
-                arguments.index(strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
+        try:
+            ip_addresses_filename = \
+                arguments[
+                    arguments.index(strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
+        except RuntimeError:
+            logging.error(strings.IP_FILENAME_NOT_FOUND)
         try:
             ip_list = convert_file_to_list(ip_addresses_filename)
             target_ports = arguments[
@@ -91,10 +95,7 @@ def assigning_values(arguments):
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
             logging.error(strings.ip_list_not_read(ip_addresses_filename))
-            # TODO: Need to handle the exit, should be done as high up as
-            #  possible as to not interfere with test flow, ideally in main or
-            #  where-ever these functions are called
-            exit_and_show_instructions()
+            return None
 
 
 def check_over_ssh(ip, port, username, password):
@@ -194,6 +195,7 @@ def checking_arguments(arguments):
     :return values[1]: Ports and subsequently services to target
     :return values[2]: Username to target
     :return values[3]: Filename for a file containing passwords
+    :return None: If the values can't be assigned.
     """
     if ((strings.ARGUMENT_IP_ADDRESS_FILENAME or
          strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments) and
@@ -203,14 +205,16 @@ def checking_arguments(arguments):
             arguments):
         try:
             values = assigning_values(arguments)
-            return values[0], values[1], values[2], values[3]
-
+            if values is not None:
+                return values[0], values[1], values[2], values[3]
+            logging.error(strings.FAILED_ASSIGNING_VALUES)
+            return None
         except RuntimeError:
             logging.error(strings.FAILED_ASSIGNING_VALUES)
-            exit_and_show_instructions()
+            return None
     else:
         logging.error(strings.PARAMETER_MISUSE)
-        exit_and_show_instructions()
+        return None
 
 
 def connect_ssh_client(ip, port, username, password):

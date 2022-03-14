@@ -1,10 +1,7 @@
 #!/usr/bin/python3
-# TODO: Implement proper logging for tests. Not much point if we don't know
-#  what's going on. :) In fact, implement it wherever it can be... (Andrew)
 
 import net_propagation
 import strings
-import logging
 
 """
  - Importing net_propagation for testing.
@@ -22,13 +19,12 @@ does.
 def test_additional_actions():
     """
     This function tests the additional_actions function in the net_propagation
-    script. The goal is to check every service for both good paths and bad
-    paths.
+    script. Currently, the function only calls two other functions, so this
+    test uses the bad path in both to run through once. Good paths are tested
+    in the two functions own tests.
     """
-    logging.info(strings.ASSIGNING_ARGUMENTS)
     arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
                  strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
-    logging.info(strings.SETTING_BLANK_IP)
     ip = strings.BLANK_IP
     username = strings.TEST
     transfer_file_filename = strings.TEST
@@ -36,8 +32,6 @@ def test_additional_actions():
              strings.WEB_PORT_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
-    # TODO: Finish this test by checking assert for console output in the bad
-    #  path and start the good path. (Andrew)
     for port in ports:
         net_propagation.additional_actions(arguments, ip, port, username,
                                            transfer_file_filename)
@@ -47,11 +41,28 @@ def test_append_lines_from_file_to_list():
     """
     This function tests the append_lines_from_file_to_list function in the
     net_propagation script. It feeds in a test file, and we check the result it
-    returns for validity.
+    returns for validity. Each line is checked independently without a for loop
+    for readability in test results i.e we'll be able to correlate a specific
+    line with an error.
     """
     lines_list = net_propagation.append_lines_from_file_to_list(
         strings.TEST_FILENAME)
-    logging.info(lines_list)
+    assert lines_list[0] == strings.TEST_LINES[0]
+    assert lines_list[1] == strings.TEST_LINES[1]
+    assert lines_list[2] == strings.TEST_LINES[2]
+    assert lines_list[3] == strings.TEST_LINES[3]
+    assert lines_list[4] == strings.TEST_LINES[4]
+    assert lines_list[5] == strings.TEST_LINES[5]
+
+
+def test_assigning_values():
+    """
+    This function tests the assigning_values function in the net_propagation
+    script. It uses example arguments to do this stored in strings.py, but
+    before it does that the bad path is checked by passing in a single argument
+    with no value to get a runtime error.
+    """
+
 
 
 def test_exit_and_show_instructions(capfd):

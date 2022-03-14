@@ -163,9 +163,6 @@ SCRIPT_PROPAGATED = "Script propagated over this port"
 # Specifies that the script hasn't been propagated over a port.
 SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
 
-# Setting blank IP address, used in tests.
-SETTING_BLANK_IP = "Setting a blank IP address"
-
 # Just an SSH strings, memory saving measures again.
 SSH = "SSH"
 
@@ -192,6 +189,17 @@ TEST = "tests"
 
 # Name of the test text file.
 TEST_FILENAME = "test_file.txt"
+
+# Lines to check from the test file.
+TEST_LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
+              "do eiusmod tempor", "incididunt ut labore et dolore magna "
+                                   "aliqua. Ut enim ad minim veniam, quis",
+              "nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
+              "commodo consequat.", "Duis aute irure dolor in reprehenderit "
+                                    "in voluptate velit esse cillum dolore",
+              "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non"
+              " proident, sunt", "in culpa qui officia deserunt mollit anim id"
+                                 " est laborum."]
 
 # Letting the user know an IP address and port pair is being tested. Again,
 # use the debug tools in your IDE of choice to see the specific values.
