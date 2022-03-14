@@ -64,7 +64,6 @@ def test_assigning_values():
     """
 
 
-
 def test_exit_and_show_instructions(capfd):
     """
     This function tests the exit_and_show_instructions function.

@@ -188,7 +188,7 @@ TELNET_PORT = "23"
 TEST = "tests"
 
 # Name of the test text file.
-TEST_FILENAME = "test_file.txt"
+TEST_FILENAME = "src/test_file.txt"
 
 # Lines to check from the test file.
 TEST_LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
