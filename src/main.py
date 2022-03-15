@@ -35,14 +35,16 @@ def main():
     # Validating and assigning values based on arguments passed in.
     valid_values = net_propagation.checking_arguments(arguments)
     # If they are valid values...
-    if valid_values is not None:
+    if valid_values is None:
+        # Show the user instructions and exit gracefully.
+        net_propagation.exit_and_show_instructions()
+        sys.exit(-1)
+
+    # Else...
+    else:
         # Assign them...
         ip_list, target_ports, target_username, passwords_filename = \
             valid_values
-    # Else...
-    else:
-        # Show the user instructions and exit gracefully.
-        net_propagation.exit_and_show_instructions()
 
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.

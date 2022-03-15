@@ -7,6 +7,12 @@ function has a block comment explaining what it does and where it's used and
 every string constant has a comment describing its use.
 """
 
+# Admin user string.
+ADMIN = "admin"
+
+# All ports list, for utilising all services in the scripts.
+ALL_PORTS = "22,23,25,80"
+
 # Argument to denote the filename of the IP address file.
 ARGUMENT_IP_ADDRESS_FILENAME = "-t"
 
@@ -70,6 +76,9 @@ FAILED_ASSIGNING_VALUES = "Failed assigning values (maybe null)"
 # Prompts the user that their fetching the local interface list.
 FETCHING_LOCAL_INTERFACE_LIST = "Fetching local interface list..."
 
+# Name of the test text file, prepended with src/ for Pytest to work.
+FILE = "src/test_files/test_file.txt"
+
 # Lets the user know a file doesn't exist.
 FILE_DOES_NOT_EXIST = "A specified file does not exist"
 
@@ -84,6 +93,20 @@ FILENAME_PROCESSING_ERROR = "One of the filenames are invalid"
 
 # Letting the user know a propagation action had failed.
 IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
+
+# Name of the test IP list file, prepended with src/ for Pytest to work.
+IP_LIST = "src/test_files/test_ip_list.txt"
+
+# Lines to check from the test file.
+LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
+         "do eiusmod tempor", "incididunt ut labore et dolore magna "
+         "aliqua. Ut enim ad minim veniam, quis",
+         "nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
+         "commodo consequat.", "Duis aute irure dolor in reprehenderit "
+         "in voluptate velit esse cillum dolore",
+         "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non"
+         " proident, sunt", "in culpa qui officia deserunt mollit anim id"
+         " est laborum."]
 
 # The login prompt a user usually sees with SSH/Telnet.
 LOGIN_PROMPT = "login:"
@@ -104,9 +127,11 @@ PASSWORD_PROMPT = "Password:"
 PASSWORD_PROMPT_WEB = "password:"
 
 # TODO: The way passwords are handled needs to be heavily revised
-#  (super insecure)
+#  (super insecure), also maybe delete this redundant string commented below?
 # The default password file being used by scripts.
-PASSWORDS_FILE = "passwords.txt"
+# PASSWORDS_FILE = "passwords.txt"
+# List of dummy passwords
+PASSWORDS_LIST = "password_list.txt"
 
 # Parameters were used incorrectly, so we're telling the user what to do.
 PARAMETER_MISUSE = "Parameter misuse, check help text below"
@@ -120,11 +145,6 @@ PING = "ping"
 
 # The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
-
-# TODO: On top of moving this prompt to UI, there should be no difference in
-#  the prompt, avoid confusion.
-# A different password prompt following the previous one.
-RSA_PROMPT_AGAIN = "Please type in this password again: "
 
 # The help prompt for the end user.
 PLS_HELP = "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
@@ -149,12 +169,23 @@ PLS_HELP = "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
            + ARGUMENT_PORTS + " 22 " + ARGUMENT_USERNAME + " root " + \
            ARGUMENT_PWS_FILENAME + " passwords.txt"
 
+# A string just for tests.
+RANDOM_STRING = "tests"
+
 # Newline character, mostly used to mimic an enter key press.
 RETURN_OR_NEWLINE = "\n"
+
+# Root user string.
+ROOT = "root"
 
 # RSA specific password prompt.
 RSA_AND_PROMPT = "Please type in this password below and say yes to any " \
                  "RSA key prompts: "
+
+# TODO: On top of moving this prompt to UI, there should be no difference in
+#  the prompt, avoid confusion.
+# A different password prompt following the previous one.
+RSA_PROMPT_AGAIN = "Please type in this password again: "
 
 # Specifies that the script has been propagated over a port (use debug for
 # specific port number).
@@ -165,6 +196,9 @@ SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
 
 # Just an SSH strings, memory saving measures again.
 SSH = "SSH"
+
+# SSH and Telnet port specification
+SSH_AND_TELNET_PORTS = "22,23"
 
 # Same as above just lowercase, needed in some instances.
 SSH_LOWERCASE = "ssh"
@@ -230,6 +264,50 @@ def adding_address_to_interface(specific_address, interface):
     """
     return "Adding " + str(specific_address) + " from interface " \
            + str(interface) + "'s subnet."
+
+
+def arguments_set_one():
+    """
+    This function contains the first set of arguments used for testing
+    purposes. This runs the script against all services and four ports
+    :return : The arguments themselves
+    """
+    return ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, \
+        ARGUMENT_PORTS, ALL_PORTS, ARGUMENT_USERNAME, \
+        ADMIN, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST
+
+
+def arguments_set_two():
+    """
+    This function contains the second set of arguments used for testing
+    purposes. This just runs the scripts against one port / service
+    :return : The arguments themselves
+    """
+    return ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT, \
+        ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST
+
+
+def arguments_set_three():
+    """
+    This function contains the third set of arguments used for testing
+    purposes, except this time it propagates a specific file over SSH
+    :return : The arguments themselves
+    """
+    return ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT, \
+        ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST, \
+        ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE
+
+
+def arguments_set_four():
+    """
+    This function contains the fourth set of arguments used for testing
+    purposes, except this time we're running the automated propagation feature
+    over SSH and Telnet
+    :return : The arguments themselves
+    """
+    return ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, \
+        SSH_AND_TELNET_PORTS, ARGUMENT_USERNAME, ROOT, \
+        ARGUMENT_PWS_FILENAME, PASSWORDS_LIST, ARGUMENT_PROPAGATE
 
 
 def cat_file(filename):
