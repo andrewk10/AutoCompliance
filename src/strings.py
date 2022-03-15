@@ -77,7 +77,7 @@ FAILED_ASSIGNING_VALUES = "Failed assigning values (maybe null)"
 FETCHING_LOCAL_INTERFACE_LIST = "Fetching local interface list..."
 
 # Name of the test text file, prepended with src/ for Pytest to work.
-FILE = "src/test_files/test_file.txt"
+FILE = "src/test_files/file.txt"
 
 # Lets the user know a file doesn't exist.
 FILE_DOES_NOT_EXIST = "A specified file does not exist"
@@ -145,29 +145,6 @@ PING = "ping"
 
 # The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
-
-# The help prompt for the end user.
-PLS_HELP = "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
-           " -> Filename for a file containing a list of " \
-           "target IP addresses\n\t" + ARGUMENT_PORTS + \
-           " -> Ports to scan on the target host" \
-           "\n\t" + ARGUMENT_USERNAME + " -> A username\n\t" + \
-           ARGUMENT_PWS_FILENAME + \
-           " -> Filename for a file containing " \
-           "a list of passwords\n\t" + ARGUMENT_SCAN_LOCAL_NETWORKS + \
-           " -> Scans the lan across all " \
-           "interfaces and creates/adds to the list of target IP addresses" \
-           "\n\t" + ARGUMENT_PROPAGATE + \
-           " -> Propagates the script onto available devices and " \
-           "executes the script using the given command\nExample usage:\n" \
-           "\t./net_attack.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
-           " my_ip_list.txt " + ARGUMENT_PORTS + " 22,23,25,80 " + \
-           ARGUMENT_USERNAME + " admin " \
-           + ARGUMENT_PWS_FILENAME + \
-           " my_password_list.txt\n\n\t./net_attack.py " + \
-           ARGUMENT_IP_ADDRESS_FILENAME + " ip_list.txt " \
-           + ARGUMENT_PORTS + " 22 " + ARGUMENT_USERNAME + " root " + \
-           ARGUMENT_PWS_FILENAME + " passwords.txt"
 
 # A string just for tests.
 RANDOM_STRING = "tests"
@@ -438,6 +415,33 @@ def netcat_writer(ip, port, filename):
     string in question
     """
     return "nc -w 3 " + str(ip) + " " + str(port) + " < " + filename
+
+
+def help_output():
+    """
+    This is the help output for when the user passes in the help parameter
+    :return: The output itself.
+    """
+    return "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
+        " -> Filename for a file containing a list of " \
+        "target IP addresses\n\t" + ARGUMENT_PORTS + \
+        " -> Ports to scan on the target host" \
+        "\n\t" + ARGUMENT_USERNAME + " -> A username\n\t" + \
+        ARGUMENT_PWS_FILENAME + \
+        " -> Filename for a file containing " \
+        "a list of passwords\n\t" + ARGUMENT_SCAN_LOCAL_NETWORKS + \
+        " -> Scans the lan across all " \
+        "interfaces and creates/adds to the list of target IP addresses" \
+        "\n\t" + ARGUMENT_PROPAGATE + \
+        " -> Propagates the script onto available devices and " \
+        "executes the script using the given command\nExample usage:\n" \
+        "\t./net_attack.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
+        " my_ip_list.txt " + ARGUMENT_PORTS + " " + ALL_PORTS + " " + \
+        ARGUMENT_USERNAME + " " + ADMIN + " " + ARGUMENT_PWS_FILENAME + \
+        " " + PASSWORDS_LIST + "\n\n\t"./net_attack.py " + \
+        ARGUMENT_IP_ADDRESS_FILENAME + " ip_list.txt " \
+        + ARGUMENT_PORTS + " 22 " + ARGUMENT_USERNAME + " root " + \
+        ARGUMENT_PWS_FILENAME + " passwords.txt"
 
 
 def run_script_command(filename, username):
