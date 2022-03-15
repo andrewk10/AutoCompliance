@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+# TODO: Make sure comments are accurate.
 """
 ===PLEASE READ===
 String functions and constants are organised alphabetically. Every string
@@ -94,6 +94,9 @@ FILENAME_PROCESSING_ERROR = "One of the filenames are invalid"
 # Letting the user know a propagation action had failed.
 IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
 
+# Letting the user know a specified IP file could not be found.
+IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
+
 # Name of the test IP list file, prepended with src/ for Pytest to work.
 IP_LIST = "src/test_files/ip_list.txt"
 
@@ -131,7 +134,7 @@ PASSWORD_PROMPT_WEB = "password:"
 # The default password file being used by scripts.
 # PASSWORDS_FILE = "passwords.txt"
 # List of dummy passwords
-PASSWORDS_LIST = "password_list.txt"
+PASSWORDS_LIST = "src/test_files/password_list.txt"
 
 # Parameters were used incorrectly, so we're telling the user what to do.
 PARAMETER_MISUSE = "Parameter misuse, check help text below"

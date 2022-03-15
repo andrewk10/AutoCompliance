@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+# TODO: Make sure comments are accurate.
 import net_propagation
 import strings
 
@@ -74,7 +74,7 @@ def test_exit_and_show_instructions(capfd):
     """
     net_propagation.exit_and_show_instructions()
     out, err = capfd.readouterr()
-    assert out == strings.PLS_HELP + "\n" + strings.EXITING + "\n"
+    assert out == strings.help_output() + "\n" + strings.EXITING + "\n"
 
 
 def test_file_error_handler(capfd):
@@ -88,4 +88,4 @@ def test_file_error_handler(capfd):
     net_propagation.file_error_handler()
     out, err = capfd.readouterr()
     assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
-           + strings.PLS_HELP + "\n" + strings.EXITING + "\n"
+           + strings.help_output() + "\n" + strings.EXITING + "\n"

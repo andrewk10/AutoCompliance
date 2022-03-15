@@ -3,7 +3,7 @@ import logging
 import net_propagation
 import strings
 import sys
-
+# TODO: Make sure comments are accurate.
 """
  - Importing logging to safely log sensitive, error or debug info.
  - Importing net_propagation for propagating across the network.
