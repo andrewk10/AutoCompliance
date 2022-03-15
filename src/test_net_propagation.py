@@ -2,6 +2,7 @@
 
 import net_propagation
 import strings
+import test_files.strings
 
 """
  - Importing net_propagation for testing.
@@ -26,8 +27,8 @@ def test_additional_actions():
     arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
                  strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
     ip = strings.BLANK_IP
-    username = strings.TEST
-    transfer_file_filename = strings.TEST
+    username = test_files.strings.RANDOM_STRING
+    transfer_file_filename = test_files.strings.RANDOM_STRING
     ports = [strings.SSH_PORT, strings.TELNET_PORT,
              strings.WEB_PORT_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHTY,
@@ -45,14 +46,14 @@ def test_append_lines_from_file_to_list():
     for readability in test results i.e. we'll be able to correlate a specific
     line with an error.
     """
-    with open(str(strings.TEST_FILENAME)) as file:
+    with open(str(test_files.strings.TEST_FILENAME)) as file:
         lines_list = net_propagation.append_lines_from_file_to_list(file)
-    assert lines_list[0] == strings.TEST_LINES[0]
-    assert lines_list[1] == strings.TEST_LINES[1]
-    assert lines_list[2] == strings.TEST_LINES[2]
-    assert lines_list[3] == strings.TEST_LINES[3]
-    assert lines_list[4] == strings.TEST_LINES[4]
-    assert lines_list[5] == strings.TEST_LINES[5]
+    assert lines_list[0] == test_files.strings.TEST_LINES[0]
+    assert lines_list[1] == test_files.strings.TEST_LINES[1]
+    assert lines_list[2] == test_files.strings.TEST_LINES[2]
+    assert lines_list[3] == test_files.strings.TEST_LINES[3]
+    assert lines_list[4] == test_files.strings.TEST_LINES[4]
+    assert lines_list[5] == test_files.strings.TEST_LINES[5]
 
 
 def test_assigning_values():
