@@ -95,7 +95,7 @@ FILENAME_PROCESSING_ERROR = "One of the filenames are invalid"
 IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
 
 # Name of the test IP list file, prepended with src/ for Pytest to work.
-IP_LIST = "src/test_files/test_ip_list.txt"
+IP_LIST = "src/test_files/ip_list.txt"
 
 # Lines to check from the test file.
 LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
@@ -435,13 +435,14 @@ def help_output():
         "\n\t" + ARGUMENT_PROPAGATE + \
         " -> Propagates the script onto available devices and " \
         "executes the script using the given command\nExample usage:\n" \
-        "\t./net_attack.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
-        " my_ip_list.txt " + ARGUMENT_PORTS + " " + ALL_PORTS + " " + \
+        "\t./main.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
+        " " + IP_LIST + " " + ARGUMENT_PORTS + " " + ALL_PORTS + " " + \
         ARGUMENT_USERNAME + " " + ADMIN + " " + ARGUMENT_PWS_FILENAME + \
-        " " + PASSWORDS_LIST + "\n\n\t"./net_attack.py " + \
-        ARGUMENT_IP_ADDRESS_FILENAME + " ip_list.txt " \
-        + ARGUMENT_PORTS + " 22 " + ARGUMENT_USERNAME + " root " + \
-        ARGUMENT_PWS_FILENAME + " passwords.txt"
+        " " + PASSWORDS_LIST + "\n\n\t./main.py " + \
+        ARGUMENT_IP_ADDRESS_FILENAME + " " + IP_LIST + " " \
+        + ARGUMENT_PORTS + " " + SSH_PORT + " " + ARGUMENT_USERNAME + " " + \
+        ROOT + " " + \
+        ARGUMENT_PWS_FILENAME + " " + PASSWORDS_LIST
 
 
 def run_script_command(filename, username):
