@@ -246,48 +246,30 @@ def adding_address_to_interface(specific_address, interface):
            + str(interface) + "'s subnet."
 
 
-def arguments_set_one():
+def arguments_sets(selection):
     """
-    This function contains the first set of arguments used for testing
-    purposes. This runs the script against all services and four ports
-    :return : The arguments themselves
+    This function contains the all sets of arguments used for testing
+    purposes
+    :param selection: The argument being called from the function
+    :return : The argument selected itself.
     """
-    return ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, \
-        ARGUMENT_PORTS, ALL_PORTS, ARGUMENT_USERNAME, \
-        ADMIN, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST
-
-
-def arguments_set_two():
-    """
-    This function contains the second set of arguments used for testing
-    purposes. This just runs the scripts against one port / service
-    :return : The arguments themselves
-    """
-    return ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT, \
-        ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST
-
-
-def arguments_set_three():
-    """
-    This function contains the third set of arguments used for testing
-    purposes, except this time it propagates a specific file over SSH
-    :return : The arguments themselves
-    """
-    return ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT, \
-        ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST, \
-        ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE
-
-
-def arguments_set_four():
-    """
-    This function contains the fourth set of arguments used for testing
-    purposes, except this time we're running the automated propagation feature
-    over SSH and Telnet
-    :return : The arguments themselves
-    """
-    return ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, \
-        SSH_AND_TELNET_PORTS, ARGUMENT_USERNAME, ROOT, \
-        ARGUMENT_PWS_FILENAME, PASSWORDS_LIST, ARGUMENT_PROPAGATE
+    arguments = {
+        # This runs the script against all services and four ports
+        0: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, ALL_PORTS,
+            ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST],
+        # This just runs the scripts against one port / service
+        1: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
+            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST],
+        # This propagates a specific file over SSH
+        2: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
+            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST,
+            ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
+        # This is running the automated propagation feature over SSH and Telnet
+        3: [ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, SSH_AND_TELNET_PORTS,
+            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST,
+            ARGUMENT_PROPAGATE]
+    }
+    return arguments.get(selection, None)
 
 
 def cat_file(filename):
