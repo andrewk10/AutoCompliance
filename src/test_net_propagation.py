@@ -62,10 +62,14 @@ def test_assigning_values():
     before it does that the bad path is checked by passing in a single argument
     with no value to get a runtime error.
     """
-    net_propagation.assigning_values(strings.arguments_sets(0))
-    net_propagation.assigning_values(strings.arguments_sets(1))
-    net_propagation.assigning_values(strings.arguments_sets(2))
-    net_propagation.assigning_values(strings.arguments_sets(3))
+    assert net_propagation.assigning_values(strings.arguments_sets(0)) is not \
+           None
+    assert net_propagation.assigning_values(strings.arguments_sets(1)) is not \
+           None
+    assert net_propagation.assigning_values(strings.arguments_sets(2)) is not \
+           None
+    assert net_propagation.assigning_values(strings.arguments_sets(3)) is not \
+           None
 
 
 def test_exit_and_show_instructions(capfd):

@@ -134,7 +134,7 @@ PASSWORD_PROMPT_WEB = "password:"
 # The default password file being used by scripts.
 # PASSWORDS_FILE = "passwords.txt"
 # List of dummy passwords
-PASSWORDS_LIST = "src/test_files/password_list.txt"
+PWDS_LIST = "src/test_files/password_list.txt"
 
 # Parameters were used incorrectly, so we're telling the user what to do.
 PARAMETER_MISUSE = "Parameter misuse, check help text below"
@@ -256,17 +256,17 @@ def arguments_sets(selection):
     arguments = {
         # This runs the script against all services and four ports
         0: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, ALL_PORTS,
-            ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST],
+            ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME, PWDS_LIST],
         # This just runs the scripts against one port / service
         1: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST],
+            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST],
         # This propagates a specific file over SSH
         2: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST,
+            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
             ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
         # This is running the automated propagation feature over SSH and Telnet
         3: [ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, SSH_AND_TELNET_PORTS,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PASSWORDS_LIST,
+            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
             ARGUMENT_PROPAGATE]
     }
     return arguments.get(selection, None)
@@ -423,11 +423,11 @@ def help_output():
         "\t./main.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
         " " + IP_LIST + " " + ARGUMENT_PORTS + " " + ALL_PORTS + " " + \
         ARGUMENT_USERNAME + " " + ADMIN + " " + ARGUMENT_PWS_FILENAME + \
-        " " + PASSWORDS_LIST + "\n\n\t./main.py " + \
+        " " + PWDS_LIST + "\n\n\t./main.py " + \
         ARGUMENT_IP_ADDRESS_FILENAME + " " + IP_LIST + " " \
         + ARGUMENT_PORTS + " " + SSH_PORT + " " + ARGUMENT_USERNAME + " " + \
         ROOT + " " + \
-        ARGUMENT_PWS_FILENAME + " " + PASSWORDS_LIST
+        ARGUMENT_PWS_FILENAME + " " + PWDS_LIST
 
 
 def run_script_command(filename, username):
