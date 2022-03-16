@@ -1,7 +1,7 @@
 scapy>=2.4.5
-ipykernel>=6.9.1
-paramiko>=2.9.2
+ipykernel
+paramiko
 scapy>=2.4.5
-pytest>=7.0.1
+pytest
 requests>=2.27.0
-coverage>=5.6b1
+coverage
