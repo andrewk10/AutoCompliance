@@ -71,6 +71,15 @@ def test_assigning_values():
     assert net_propagation.assigning_values(strings.arguments_sets(3)) is None
 
 
+def test_check_over_ssh():
+    # TODO: Mimic an SSH connection for the happy path.
+    """
+    This function tests the check_check_over_ssh function, it will always fail
+    for now until I figure out how to mock an SSH connection.
+    """
+    assert check_over_ssh(ip, port, username, password) == False
+
+
 def test_exit_and_show_instructions(capfd):
     """
     This function tests the exit_and_show_instructions function.
