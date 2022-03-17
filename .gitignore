@@ -1,3 +1,4 @@
-.idea/workspace.xml
-.idea/git_toolbox_prj.xml
-src/__pycache__
+.idea/
+**/__pycache__
+.coverage
+htmlcov/
