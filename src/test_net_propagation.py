@@ -77,7 +77,9 @@ def test_check_over_ssh():
     This function tests the check_check_over_ssh function, it will always fail
     for now until I figure out how to mock an SSH connection.
     """
-    assert check_over_ssh(ip, port, username, password) == False
+    assert net_propagation.check_over_ssh(strings.BLANK_IP, strings.SSH_PORT,
+                                          strings.ADMIN, strings.ADMIN) is \
+           True
 
 
 def test_exit_and_show_instructions(capfd):

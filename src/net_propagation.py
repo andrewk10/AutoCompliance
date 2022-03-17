@@ -3,7 +3,8 @@
 # from scapy.all import *
 # For use when adding new functionality with scapy, be sure to statically
 # import when finished, wildcard is just for convenience.
-
+from paramiko import SSHClient, RejectPolicy
+from paramiko.ssh_exception import NoValidConnectionsError
 from scapy.all import get_if_addr
 from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
@@ -11,12 +12,12 @@ from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
 from telnetlib import Telnet
 from time import sleep
-from paramiko import SSHClient, RejectPolicy
 import logging
 import requests
 import strings
 
 """
+ - Importing paramiko modules for SSH connection and exception handling.
  - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
  - Importing telnetlib for telnet operations.
  - Importing sleep to allow network processes time to complete.
@@ -127,7 +128,7 @@ def check_over_ssh(ip, port, username, password):
         client.close()
         return False
 
-    except RuntimeError:
+    except NoValidConnectionsError:
         client.close()
         return True
 
