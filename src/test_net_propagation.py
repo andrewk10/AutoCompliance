@@ -79,7 +79,7 @@ def test_check_over_ssh():
     """
     assert net_propagation.check_over_ssh(strings.BLANK_IP, strings.SSH_PORT,
                                           strings.ADMIN, strings.ADMIN) is \
-           True
+           False
 
 
 def test_exit_and_show_instructions(capfd):

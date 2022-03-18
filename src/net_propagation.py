@@ -4,7 +4,7 @@
 # For use when adding new functionality with scapy, be sure to statically
 # import when finished, wildcard is just for convenience.
 from paramiko import SSHClient, RejectPolicy
-from paramiko.ssh_exception import NoValidConnectionsError
+from paramiko.ssh_exception import NoValidConnectionsError, SSHException
 from scapy.all import get_if_addr
 from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
@@ -240,7 +240,7 @@ def connect_ssh_client(ip, port, username, password):
                                                strings.SUCCESSFUL))
         return True
 
-    except RuntimeError:
+    except SSHException:
         client.close()
         logging.debug(strings.connection_status(strings.SSH, ip, port,
                                                 strings.UNSUCCESSFUL))
