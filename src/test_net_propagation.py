@@ -28,8 +28,7 @@ def test_additional_actions():
     ip = strings.BLANK_IP
     username = strings.RANDOM_STRING
     transfer_file_filename = strings.RANDOM_STRING
-    ports = [strings.SSH_PORT, strings.TELNET_PORT,
-             strings.WEB_PORT_EIGHTY,
+    ports = [strings.SSH_PORT, strings.WEB_PORT_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
     for port in ports:
