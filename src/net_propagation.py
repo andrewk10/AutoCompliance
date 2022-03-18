@@ -23,13 +23,10 @@ import strings
  - Importing logging to safely log sensitive, error or debug info.
  - Importing requests for web based operations.
  - Importing strings for use of the external strings resources.
-"""
 
-"""
 ===PLEASE READ===
-Functions and methods are organised alphabetically with the exception of the
-main method specified last. Every function has a block comment explaining what
-it does.
+Functions and methods are organised alphabetically (or rather should be). 
+Every function has a block comment explaining what it does.
 """
 
 
