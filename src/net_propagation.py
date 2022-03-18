@@ -132,6 +132,10 @@ def check_over_ssh(ip, port, username, password):
         client.close()
         return True
 
+    except SSHException:
+        client.close()
+        return True
+
 
 def check_over_telnet(ip, port, username, password):
     """
