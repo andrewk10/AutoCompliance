@@ -111,7 +111,7 @@ LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
          " proident, sunt", "in culpa qui officia deserunt mollit anim id"
          " est laborum."]
 
-# The login prompt a user usually sees with SSH/Telnet.
+# The login prompt a user usually sees with SSH.
 LOGIN_PROMPT = "login:"
 
 # The typical ID of the loopback interface.
@@ -123,7 +123,7 @@ MAIN = "main()"
 # Just the numerical form of the number one, again, memory preservation.
 ONE = "1"
 
-# Password prompt for SSH/Telnet.
+# Password prompt for SSH.
 PASSWORD_PROMPT = "Password:"
 
 # Password prompt for web logins, rather the post ID really.
@@ -177,9 +177,6 @@ SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
 # Just an SSH strings, memory saving measures again.
 SSH = "SSH"
 
-# SSH and Telnet port specification
-SSH_AND_TELNET_PORTS = "22,23"
-
 # Same as above just lowercase, needed in some instances.
 SSH_LOWERCASE = "ssh"
 
@@ -192,19 +189,13 @@ SUCCESSFUL = "Successful"
 # The syn flag for packet crafting in Scapy
 SYN_FLAG = "S"
 
-# Telnet string for service definitions and actions.
-TELNET = "telnet"
 
-# The default port for the telnet service.
-TELNET_PORT = "23"
+# Letting the user know a file couldn't be transferred over SSH default port.
+TRANSFER_FAILURE_SSH = "File couldn't be transferred over port 22 / SSH"
 
-# Letting the user know a file couldn't be transferred over telnet or SSH
-# default ports.
-TRANSFER_FAILURE_SSH_TELNET = "File couldn't be transferred over port 22 or 23"
-
-# Letting the user know a file could be transferred over telnet or SSH
-# default ports.
-TRANSFER_SUCCESS_SSH_TELNET = "File transferred over port 22 or 23"
+# Letting the user know a file could be transferred over port 22 / SSH default
+# ports.
+TRANSFER_SUCCESS_SSH = "File transferred over port 22 / SSH"
 
 # Unsuccessful statement to be used with services and actions.
 UNSUCCESSFUL = "Unsuccessful"
@@ -264,8 +255,8 @@ def arguments_sets(selection):
         2: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
             ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
             ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
-        # This is running the automated propagation feature over SSH and Telnet
-        3: [ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, SSH_AND_TELNET_PORTS,
+        # This is running the automated propagation feature over SSH.
+        3: [ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, SSH_PORT,
             ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
             ARGUMENT_PROPAGATE]
     }
@@ -378,9 +369,9 @@ def ip_reachability(ip, reachable):
 
 def netcat_listener(port, filename):
     """
-    This function will create a netcat listener on the device we have a telnet
+    This function will create a netcat listener on the device we have a netcat
     link to
-    :param port: The port on which the telnet listener will operate
+    :param port: The port on which the netcat listener will operate
     :param filename: The filename of the file we're moving using the listener
     parameter
     :return "nc -l -p " + str(port) + " > " + filename: The string in question
@@ -391,9 +382,9 @@ def netcat_listener(port, filename):
 def netcat_writer(ip, port, filename):
     """
     This function will create a netcat writer to write a file to a device we
-    have a telnet link to
-    :param ip: Machine with the telnet listener we are writing to
-    :param port: The port on which the telnet writer will operate
+    have a netcat link to
+    :param ip: Machine with the netcat listener we are writing to
+    :param port: The port on which the netcat writer will operate
     :param filename: The filename of the file we're moving using the writer
     parameter
     :return "nc -w 3 " + str(ip) + " " + str(port) + " < " + filename: The

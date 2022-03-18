@@ -1,7 +1,7 @@
 scapy>=2.4.5
 ipykernel
 paramiko
-scapy>=2.4.5
 pytest
 requests>=2.27.0
 coverage
+pyinstaller
