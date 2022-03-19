@@ -15,7 +15,7 @@ def test_additional_actions():
     """
     arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
                  strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
-    ip = strings.BLANK_IP
+    ip = strings.TEST_IP
     username = strings.RANDOM_STRING
     transfer_file_filename = strings.RANDOM_STRING
     ports = [strings.SSH_PORT, strings.WEB_PORT_EIGHTY,
@@ -65,7 +65,7 @@ def test_check_over_ssh():
     This function tests the check_check_over_ssh function, it will always fail
     for now until I figure out how to mock an SSH connection.
     """
-    assert net_propagation.check_over_ssh(strings.BLANK_IP, strings.SSH_PORT,
+    assert net_propagation.check_over_ssh(strings.TEST_IP, strings.SSH_PORT,
                                           strings.ADMIN, strings.ADMIN) is \
            True
 

