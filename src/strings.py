@@ -1,11 +1,4 @@
 #!/usr/bin/python3
-# TODO: Make sure comments are accurate.
-"""
-===PLEASE READ===
-String functions and constants are organised alphabetically. Every string
-function has a block comment explaining what it does and where it's used and
-every string constant has a comment describing its use.
-"""
 
 # Admin user string.
 ADMIN = "admin"
@@ -132,8 +125,6 @@ PASSWORD_PROMPT = "Password:"
 # Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
 
-# TODO: The way passwords are handled needs to be heavily revised
-#  (super insecure), also maybe delete this redundant string commented below?
 # The default password file being used by scripts.
 # PASSWORDS_FILE = "passwords.txt"
 # List of dummy passwords
@@ -165,8 +156,6 @@ ROOT = "root"
 RSA_AND_PROMPT = "Please type in this password below and say yes to any " \
                  "RSA key prompts: "
 
-# TODO: On top of moving this prompt to UI, there should be no difference in
-#  the prompt, avoid confusion.
 # A different password prompt following the previous one.
 RSA_PROMPT_AGAIN = "Please type in this password again: "
 

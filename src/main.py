@@ -1,20 +1,13 @@
 #!/usr/bin/python3
-import logging
-import net_propagation
-import strings
-import sys
-# TODO: Make sure comments are accurate.
-"""
- - Importing logging to safely log sensitive, error or debug info.
- - Importing net_propagation for propagating across the network.
- - Importing strings for use of the external strings resources.
- - Importing sys to make OS calls and use OS level utilities.
-"""
 
-"""
-===PLEASE READ===
-This main function itself has more  specific, low level commenting.
-"""
+# Importing logging to safely log sensitive, error or debug info.
+import logging
+# Importing net_propagation for propagating across the network.
+import net_propagation
+# Importing strings for use of the external strings resources.
+import strings
+# Importing sys to make OS calls and use OS level utilities.
+import sys
 
 
 def main():
@@ -82,8 +75,7 @@ def main():
             sys.exit(-1)
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
-    # example.
-    # TODO: Find a way to fix the duplicates issue, instead of this workaround.
+    # example. This would be a user error, we're just handling that.
     ip_list = list(dict.fromkeys(ip_list))
     # Removing IPs from the IP list that can't be pinged from the host machine
     # of the script.

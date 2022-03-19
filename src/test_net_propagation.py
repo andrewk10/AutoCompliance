@@ -1,19 +1,9 @@
 #!/usr/bin/python3
-# TODO: Make sure comments are accurate.
+
+# Importing net_propagation for testing.
 import net_propagation
+# Importing strings for common string resources.
 import strings
-
-"""
- - Importing net_propagation for testing.
- - Importing strings for common string resources.
-"""
-
-"""
-===PLEASE READ===
-Test functions are organised alphabetically. The tests here pertain to
-net_propagation.py. Every test function has a block comment explaining what it
-does.
-"""
 
 
 def test_additional_actions():
@@ -71,7 +61,6 @@ def test_assigning_values():
 
 
 def test_check_over_ssh():
-    # TODO: Mimic an SSH connection for the happy path.
     """
     This function tests the check_check_over_ssh function, it will always fail
     for now until I figure out how to mock an SSH connection.

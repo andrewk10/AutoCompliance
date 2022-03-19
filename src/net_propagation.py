@@ -1,33 +1,23 @@
 #!/usr/bin/python3
-# TODO: Make sure comments are accurate.
-# from scapy.all import *
-# For use when adding new functionality with scapy, be sure to statically
-# import when finished, wildcard is just for convenience.
+
+# Importing paramiko modules for SSH connection and exception handling.
 from paramiko import SSHClient, RejectPolicy
 from paramiko.ssh_exception import NoValidConnectionsError, SSHException
+# Importing modules from scapy for Packet Crafting and Sending / Sniffing.
 from scapy.all import get_if_addr
 from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
 from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
+# from scapy.all import *
+# Importing sleep to allow network processes time to complete.
 from time import sleep
+# Importing logging to safely log sensitive, error or debug info.
 import logging
+# Importing requests for web based operations.
 import requests
+# Importing strings for use of the external strings resources.
 import strings
-
-"""
- - Importing paramiko modules for SSH connection and exception handling.
- - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
- - Importing sleep to allow network processes time to complete.
- - Importing from paramiko for ssh operations.
- - Importing logging to safely log sensitive, error or debug info.
- - Importing requests for web based operations.
- - Importing strings for use of the external strings resources.
-
-===PLEASE READ===
-Functions and methods are organised alphabetically (or rather should be). 
-Every function has a block comment explaining what it does.
-"""
 
 
 def additional_actions(arguments, ip, port, username,
@@ -272,8 +262,6 @@ def file_not_exist(ip, port, username, password):
     :param password: Password being used as part of checking the file
     :return check_over_ssh(ip, port, username, password):
     """
-    # TODO: Find other means for checking a file does not exist (used to use
-    #  telnet here)
     return check_over_ssh(ip, port, username, password)
 
 
@@ -286,8 +274,9 @@ def gathering_local_ips(ip_list):
     """
     logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
     local_interfaces = get_if_list()
+    if strings.LOOPBACK in local_interfaces:
+        local_interfaces = local_interfaces.remove(strings.LOOPBACK)
     for interface in local_interfaces:
-        # TODO: Maybe remove the loopback interface before running for loop?
         if str(interface) != strings.LOOPBACK:
             logging.info(strings.fetching_ips_for_interface(interface))
             ip_list.extend(cycle_through_subnet(ip_list, interface))
@@ -346,10 +335,6 @@ def propagate_script(ip, port, login_string):
     try:
         if file_not_exist(ip, port, login_string_split[0],
                           login_string_split[1]):
-            # TODO: Need feedback from the end user, should be worked into
-            #  the UI itself. Not a dedicated print statement.
-            # TODO: Find other means for propagating a script, used to have
-            #  telnet here too but now it's just SSH)
             print(strings.RSA_AND_PROMPT)
             os.system(strings.scp_command_string(port,
                                                  login_string_split[0],
@@ -486,8 +471,6 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
         os.system(strings.scp_command_string(port, login_string_split[0],
                                              ip, transfer_file_filename))
         return True
-    # TODO: Find other means for transferring a file, used to have
-    #  telnet here too but now it's just SSH)
     except ConnectionRefusedError:
         return False
 
