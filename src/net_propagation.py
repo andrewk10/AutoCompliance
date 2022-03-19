@@ -372,9 +372,8 @@ def propagate_script(ip, port, login_string):
                         os.path.basename(__file__)))
                     client.close()
                     return True
-                else:
-                    client.close()
-                    return False
+                client.close()
+                return False
 
             except RuntimeError:
                 client.close()
@@ -440,10 +439,9 @@ def send_post_request_with_login(ip, port, username, password):
         logging.info(strings.connection_status(strings.WEB, ip, port,
                                                strings.SUCCESSFUL))
         return str(username) + strings.COLON + str(password)
-    else:
-        logging.debug(strings.connection_status(strings.WEB, ip, port,
-                                                strings.UNSUCCESSFUL))
-        return None
+    logging.debug(strings.connection_status(strings.WEB, ip, port,
+                                            strings.UNSUCCESSFUL))
+    return None
 
 
 def sign_in_service(ip, port, username, password_list):
@@ -548,8 +546,7 @@ def try_sign_in(ip, port, target_username, password_list):
     if sign_in_details:
         logging.info(strings.working_username_password(service))
         return str(sign_in_details), service
-    else:
-        logging.debug(strings.IMPOSSIBLE_ACTION)
+    logging.debug(strings.IMPOSSIBLE_ACTION)
     return None, service
 
 
