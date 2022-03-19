@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 # Importing paramiko modules for SSH connection and exception handling.
+import pipes
+
 from paramiko import SSHClient, RejectPolicy
 from paramiko.ssh_exception import NoValidConnectionsError, SSHException
 # Importing modules from scapy for Packet Crafting and Sending / Sniffing.
@@ -105,8 +107,8 @@ def check_over_ssh(ip, port, username, password):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.exec_command(strings.touch_file(os.path.basename(__file__)))
-        if str(client.exec_command("cat src/net_propagation.py")[1])\
-                .__len__() < 1:
+        if str(client.exec_command(pipes.quote(
+                "cat src/net_propagation.py"))[1]).__len__() < 1:
             client.close()
             return True
         client.close()
