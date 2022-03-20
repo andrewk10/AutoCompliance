@@ -118,8 +118,8 @@ def check_over_ssh(ip, port, username, password):
                     strings.MAIN_FILENAME)))[1]).__len__() < 1:
                 client.close()
                 return True
-            else:
-                logging.error(strings.SANITATION_FAILED)
+
+        logging.error(strings.SANITATION_FAILED)
         client.close()
         return False
 
