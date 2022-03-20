@@ -111,6 +111,7 @@ def check_over_ssh(ip, port, username, password):
                                             touch_file(strings.MAIN_FILENAME)))
         else:
             logging.error(strings.SANITATION_FAILED)
+            client.close()
             return False
         if strings.cat_file(strings.MAIN_FILENAME) == "cat main.py":
             if str(client.exec_command(pipes.quote(strings.cat_file(
@@ -119,7 +120,6 @@ def check_over_ssh(ip, port, username, password):
                 return True
             else:
                 logging.error(strings.SANITATION_FAILED)
-                return False
         client.close()
         return False
 
@@ -374,6 +374,7 @@ def propagate_script(ip, port, login_string):
                         strings.run_script_command()))
                 else:
                     logging.error(strings.SANITATION_FAILED)
+                    client.close()
                     return False
                 client.close()
                 return True
