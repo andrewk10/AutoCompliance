@@ -1,20 +1,13 @@
 #!/usr/bin/python3
+
+# Importing logging to safely log sensitive, error or debug info.
 import logging
+# Importing net_propagation for propagating across the network.
 import net_propagation
+# Importing strings for use of the external strings resources.
 import strings
+# Importing sys to make OS calls and use OS level utilities.
 import sys
-
-"""
- - Importing logging to safely log sensitive, error or debug info.
- - Importing net_propagation for propagating across the network.
- - Importing strings for use of the external strings resources.
- - Importing sys to make OS calls and use OS level utilities.
-"""
-
-"""
-===PLEASE READ===
-This main function itself has more  specific, low level commenting.
-"""
 
 
 def main():
@@ -33,8 +26,18 @@ def main():
     transfer_file_filename = strings.BLANK_STRING
 
     # Validating and assigning values based on arguments passed in.
-    ip_list, target_ports, target_username, passwords_filename = \
-        net_propagation.checking_arguments(arguments)
+    valid_values = net_propagation.checking_arguments(arguments)
+    # If they are valid values...
+    if valid_values is None:
+        # Show the user instructions and exit gracefully.
+        net_propagation.exit_and_show_instructions()
+        sys.exit(-1)
+
+    # Else...
+    else:
+        # Assign them...
+        ip_list, target_ports, target_username, passwords_filename = \
+            valid_values
 
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
@@ -72,8 +75,7 @@ def main():
             sys.exit(-1)
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
-    # example.
-    # TODO: Find a way to fix the duplicates issue, instead of this workaround.
+    # example. This would be a user error, we're just handling that.
     ip_list = list(dict.fromkeys(ip_list))
     # Removing IPs from the IP list that can't be pinged from the host machine
     # of the script.

