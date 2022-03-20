@@ -179,6 +179,9 @@ LOOPBACK = "lo"
 # The main function call.
 MAIN = "main()"
 
+# The main filename
+MAIN_FILENAME = "main.py"
+
 # The main script.
 MAIN_SCRIPT = "./main.py"
 
@@ -243,6 +246,9 @@ RSA_AND_PROMPT = "Please type in this password below and say yes to any " \
 
 # A different password prompt following the previous one.
 RSA_PROMPT_AGAIN = "Please type in this password again: "
+
+# The error when an SSH command has been tampered with.
+SANITATION_FAILED = "SSH command did not pass sanitation checks"
 
 # SCP Command String.
 SCP_COMMAND = "scp -P"
