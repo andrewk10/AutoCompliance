@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# The adding string.
+ADDING = "Adding"
+
 # Admin user string.
 ADMIN = "admin"
 
@@ -33,11 +36,23 @@ ARGUMENT_HELP_SHORT = "-h"
 # Argument to denote the need for further help, just the long version.
 ARGUMENT_HELP_LONG = "--help"
 
+# Just a little arrow for CLI output.
+ARROW = "->"
+
 # Prompt to let people know arguments are being assigned for testing.
 ASSIGNING_ARGUMENTS = "Assigning arguments as part of test"
 
 # Just the '@' symbol
 AT_SYMBOL = "@"
+
+# String to describe the username argument under help
+A_USERNAME = "A username"
+
+# Letting the user know we can't read an IP list from a specific file.
+CAN_NOT_READ_IP_LIST = "IP list cannot be read from filename:"
+
+# cat command
+CAT = "cat"
 
 # A string that states that the IP and port pair is closed.
 CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
@@ -54,14 +69,23 @@ DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
 # A string that states a file wasn't transferred.
 DO_NOT_TRANSFER = "Requirement to transfer file not specified, skipping..."
 
+# Just three dots at the end of a sentence.
+ELLIPSES = "..."
+
 # A string for specifying encoding for ascii.
 ENCODE_ASCII = "ascii"
+
+# A string which specifically states something is example usage.
+EXAMPLE_USAGE = "Example usage:"
 
 # An exiting prompt.
 EXITING = "Exiting..."
 
 # Prompts the user that values couldn't be assigned
 FAILED_ASSIGNING_VALUES = "Failed assigning values (maybe null)"
+
+# Fetching IP for a given interface message
+FETCHING_INTERFACE_IPS = "Fetching IPs for interface"
 
 # Prompts the user that their fetching the local interface list.
 FETCHING_LOCAL_INTERFACE_LIST = "Fetching local interface list..."
@@ -72,8 +96,18 @@ FILE = "src/test_files/file.txt"
 # Lets the user know a file doesn't exist.
 FILE_DOES_NOT_EXIST = "A specified file does not exist"
 
+# Lets the user know that a file is present on the host.
+FILE_PRESENT_ON_HOST = "A file is already present on this host:"
+
+# String for the help output.
+FILENAME_LIST_IP_ADDRESSES = "Filename for a file containing a list of " \
+                             "target IP addresses"
+
 # Lets the user know there's an open port on a specific IP address.
 FOUND_OPEN_IP_PORT_PAIR = "Found an open IP address and port pair"
+
+# Just simply says "from interface"
+FROM_INTERFACE = "from interface"
 
 # Full stop string, memory saving again, reducing redundant assigns.
 FULL_STOP = "."
@@ -81,14 +115,39 @@ FULL_STOP = "."
 # There's a problem with parsing a file with a given filename.
 FILENAME_PROCESSING_ERROR = "One of the filenames are invalid"
 
+# String for defining the passwords filename argument under help.
+FILENAME_PWS_FILE = "Filename for a file containing a list of passwords"
+
+# Greater than symbol.
+GREATER_THAN = ">"
+
+# The help string for the propagation argument definition in help output.
+HELP_STRING_PROPAGATION = "Propagates the script onto available devices and " \
+                          "executes the script using the given command"
+
+# Home directory string.
+HOME_DIR = ":~/"
+
+# HTTPS String for start of URLs.
+HTTPS_STRING = "https://"
+
 # Letting the user know a propagation action had failed.
 IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
+
+# Specifying that something is from an interface's subnet.
+INTERFACE_SUBNET = "'s subnet."
 
 # Letting the user know a specified IP file could not be found.
 IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
 
 # Name of the test IP list file, prepended with src/ for Pytest to work.
 IP_LIST = "src/test_files/ip_list.txt"
+
+# Let the suse know that we're checking to see if the IP address is reachable.
+IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
+
+# The less than symbol.
+LESS_THAN = "<"
 
 # Lines to check from the test file.
 LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
@@ -101,8 +160,18 @@ LINES = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed "
          " proident, sunt", "in culpa qui officia deserunt mollit anim id"
          " est laborum."]
 
+# The string that defines the local scan argument in the help output.
+LOCAL_SCAN_STRING_HELP = "Scans the lan across all interfaces and " \
+                         "creates/adds to the list of target IP addresses"
+
+# Login PHP string, generally used with web logins.
+LOGIN_PHP = "/login.php"
+
 # The login prompt a user usually sees with SSH.
 LOGIN_PROMPT = "login:"
+
+# Login to string, another string building constant.
+LOGIN_TO = "login to"
 
 # The typical ID of the loopback interface.
 LOOPBACK = "lo"
@@ -111,10 +180,25 @@ LOOPBACK = "lo"
 MAIN = "main()"
 
 # The main script.
-MAIN_SCRIPT = "main.py"
+MAIN_SCRIPT = "./main.py"
+
+# Netcat listener, with a specified port, the command.
+NETCAT_LISTENER_PORT_COMMAND = "nc -l -p"
+
+# Netcat writer with a 3-second timeout time, command.
+NETCAT_WRITER_COMMAND = "nc -w 3"
 
 # The name of the net propagation script.
 NET_PROPAGATION = "src/net_propagation.py"
+
+# Newline character, mostly used to mimic an enter key press.
+NEWLINE = "\n"
+
+# Two newline and tab special characters.
+NEWLINE_NEWLINE_TAB = "\n\n\t"
+
+# The newline and tab special characters.
+NEWLINE_TAB = "\n\t"
 
 # Just the numerical form of the number one, again, memory preservation.
 ONE = "1"
@@ -127,6 +211,9 @@ PASSWORD_PROMPT_WEB = "password:"
 
 # List of dummy passwords
 PWDS_LIST = "src/test_files/password_list.txt"
+
+# Parameters string for help test.
+PARAMETERS = "Parameters:"
 
 # Parameters were used incorrectly, so we're telling the user what to do.
 PARAMETER_MISUSE = "Parameter misuse, check help text below"
@@ -141,11 +228,11 @@ PING = "ping"
 # The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
 
+# String for the help text.
+PORTS_TO_SCAN = "Ports to scan on the target host"
+
 # A string just for tests.
 RANDOM_STRING = "tests"
-
-# Newline character, mostly used to mimic an enter key press.
-RETURN_OR_NEWLINE = "\n"
 
 # Root user string.
 ROOT = "root"
@@ -188,6 +275,9 @@ SYN_FLAG = "S"
 # Test IP addresses.
 TEST_IP = "192.168.1.1"
 
+# The string used for the touch command
+TOUCH_COMMAND = "touch"
+
 # Letting the user know a file couldn't be transferred over SSH default port.
 TRANSFER_FAILURE_SSH = "File couldn't be transferred over port 22 / SSH"
 
@@ -198,8 +288,20 @@ TRANSFER_SUCCESS_SSH = "File transferred over port 22 / SSH"
 # Unsuccessful statement to be used with services and actions.
 UNSUCCESSFUL = "Unsuccessful"
 
+USERNAME_IN_PWS = "using the specified username with a password in the " \
+                  "passwords file."
+
 # The username prompt that comes with web login POST requests.
 USERNAME_PROMPT_WEB = "username:"
+
+# Letting the user know something was found.
+WAS_FOUND = "was found."
+
+# A string stating that something was not reachable
+WAS_NOT_REACHABLE = "was not reachable"
+
+# A string stating that something was reachable
+WAS_REACHABLE = "was reachable"
 
 # Just a web string to define services and actions.
 WEB = "web"
@@ -219,6 +321,9 @@ WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT = "8888"
 # Welcome to string, used for a lot of the prompts.
 WELCOME_TO = "Welcome to"
 
+# Letting the user know about a working username and password.
+WORKING_USERNAME_PASS = "A working username and password for"
+
 
 def adding_address_to_interface(specific_address, interface):
     """
@@ -231,8 +336,8 @@ def adding_address_to_interface(specific_address, interface):
     :return "Adding " + str(specific_address) + " from interface "
     + str(interface) + "'s subnet.": The string in question
     """
-    return "Adding " + str(specific_address) + " from interface " \
-           + str(interface) + "'s subnet."
+    return ADDING + SPACE + str(specific_address) + SPACE + \
+        FROM_INTERFACE + SPACE + str(interface) + INTERFACE_SUBNET
 
 
 def arguments_sets(selection):
@@ -267,7 +372,7 @@ def cat_file(filename):
     :param filename: The filename of the file we want to touch
     :return "cat " + filename: The completed cat command
     """
-    return "cat " + filename
+    return CAT + SPACE + filename
 
 
 def checking_ip_reachable(ip):
@@ -278,7 +383,7 @@ def checking_ip_reachable(ip):
     :return "Checking if the following ip address is reachable: " + str(ip):
     The string in question
     """
-    return "Checking if the following ip address is reachable: " + str(ip)
+    return IS_IP_REACHABLE + SPACE + str(ip)
 
 
 def connection_status(service, ip, port, status):
@@ -286,11 +391,8 @@ def connection_status(service, ip, port, status):
     This function creates the connection status string dependent
     on the context given by the arguments passed into it.
     """
-    string = str(status) + " " + str(service) + " login to " + str(ip) + ":" \
-        + str(port) \
-        + " using the specified username with a password in the " \
-          "passwords file."
-    return string
+    return str(status) + SPACE + str(service) + SPACE + LOGIN_TO + SPACE + \
+        str(ip) + COLON + str(port) + SPACE + USERNAME_IN_PWS
 
 
 def fetching_ips_for_interface(interface):
@@ -301,7 +403,7 @@ def fetching_ips_for_interface(interface):
     :return "Fetching IPs for interface " + str(interface) + "...": The string
     in question
     """
-    return "Fetching IPs for interface " + str(interface) + "..."
+    return FETCHING_INTERFACE_IPS + SPACE + str(interface) + ELLIPSES
 
 
 def file_present_on_host(ip):
@@ -311,7 +413,7 @@ def file_present_on_host(ip):
     :return "A file is already present on this host: " + str(ip): The string
     in question
     """
-    return "A file is already present on this host: " + str(ip)
+    return FILE_PRESENT_ON_HOST + SPACE + str(ip)
 
 
 def scp_command_string(port, username, target_ip, filename):
@@ -324,7 +426,7 @@ def scp_command_string(port, username, target_ip, filename):
     :return: The SSH copy command
     """
     return SCP_COMMAND + SPACE + str(port) + SPACE + filename + SPACE + \
-        username + AT_SYMBOL + target_ip + ":~/"
+        username + AT_SYMBOL + target_ip + HOME_DIR
 
 
 def touch_file(filename):
@@ -333,7 +435,7 @@ def touch_file(filename):
     :param filename: The filename of the file we want to touch
     :return: The completed touch command
     """
-    return "touch " + filename
+    return TOUCH_COMMAND + SPACE + filename
 
 
 def ip_list_not_read(filename):
@@ -342,10 +444,9 @@ def ip_list_not_read(filename):
     a particular filename
     :param filename: The filename of the file that can't have an ip list
     derived from it
-    :return "IP list cannot be read from filename: " + filename: The string in
-    question
+    :return: The string in question
     """
-    return "IP list cannot be read from filename: " + filename
+    return CAN_NOT_READ_IP_LIST + SPACE + filename
 
 
 def ip_reachability(ip, reachable):
@@ -359,8 +460,8 @@ def ip_reachability(ip, reachable):
     reachable
     """
     if reachable:
-        return str(ip) + " was reachable."
-    return str(ip) + " was not reachable."
+        return str(ip) + SPACE + WAS_REACHABLE + FULL_STOP
+    return str(ip) + SPACE + WAS_NOT_REACHABLE + FULL_STOP
 
 
 def netcat_listener(port, filename):
@@ -370,9 +471,10 @@ def netcat_listener(port, filename):
     :param port: The port on which the netcat listener will operate
     :param filename: The filename of the file we're moving using the listener
     parameter
-    :return "nc -l -p " + str(port) + " > " + filename: The string in question
+    :return: The string in question
     """
-    return "nc -l -p " + str(port) + " > " + filename
+    return NETCAT_LISTENER_PORT_COMMAND + SPACE + str(port) + SPACE + \
+        GREATER_THAN + SPACE + filename
 
 
 def netcat_writer(ip, port, filename):
@@ -383,10 +485,10 @@ def netcat_writer(ip, port, filename):
     :param port: The port on which the netcat writer will operate
     :param filename: The filename of the file we're moving using the writer
     parameter
-    :return "nc -w 3 " + str(ip) + " " + str(port) + " < " + filename: The
-    string in question
+    :return: The string in question
     """
-    return "nc -w 3 " + str(ip) + " " + str(port) + " < " + filename
+    return NETCAT_WRITER_COMMAND + SPACE + str(ip) + SPACE + str(port) + \
+        SPACE + LESS_THAN + SPACE + filename
 
 
 def help_output():
@@ -394,27 +496,23 @@ def help_output():
     This is the help output for when the user passes in the help parameter
     :return: The output itself.
     """
-    return "Parameters:\n\t" + ARGUMENT_IP_ADDRESS_FILENAME + \
-        " -> Filename for a file containing a list of " \
-        "target IP addresses\n\t" + ARGUMENT_PORTS + \
-        " -> Ports to scan on the target host" \
-        "\n\t" + ARGUMENT_USERNAME + " -> A username\n\t" + \
-        ARGUMENT_PWS_FILENAME + \
-        " -> Filename for a file containing " \
-        "a list of passwords\n\t" + ARGUMENT_SCAN_LOCAL_NETWORKS + \
-        " -> Scans the lan across all " \
-        "interfaces and creates/adds to the list of target IP addresses" \
-        "\n\t" + ARGUMENT_PROPAGATE + \
-        " -> Propagates the script onto available devices and " \
-        "executes the script using the given command\nExample usage:\n" \
-        "\t./main.py " + ARGUMENT_IP_ADDRESS_FILENAME + \
-        " " + IP_LIST + " " + ARGUMENT_PORTS + " " + ALL_PORTS + " " + \
-        ARGUMENT_USERNAME + " " + ADMIN + " " + ARGUMENT_PWS_FILENAME + \
-        " " + PWDS_LIST + "\n\n\t./main.py " + \
-        ARGUMENT_IP_ADDRESS_FILENAME + " " + IP_LIST + " " \
-        + ARGUMENT_PORTS + " " + SSH_PORT + " " + ARGUMENT_USERNAME + " " + \
-        ROOT + " " + \
-        ARGUMENT_PWS_FILENAME + " " + PWDS_LIST
+    return PARAMETERS + NEWLINE_TAB + ARGUMENT_IP_ADDRESS_FILENAME + SPACE + \
+        ARROW + SPACE + FILENAME_LIST_IP_ADDRESSES + NEWLINE_TAB + \
+        ARGUMENT_PORTS + SPACE + ARROW + SPACE + PORTS_TO_SCAN + \
+        NEWLINE_TAB + ARGUMENT_USERNAME + SPACE + ARROW + SPACE + \
+        A_USERNAME + NEWLINE_TAB + ARGUMENT_PWS_FILENAME + SPACE + ARROW + \
+        SPACE + FILENAME_PWS_FILE + NEWLINE_TAB + \
+        ARGUMENT_SCAN_LOCAL_NETWORKS + SPACE + ARROW + SPACE + \
+        LOCAL_SCAN_STRING_HELP + NEWLINE_TAB + ARGUMENT_PROPAGATE + SPACE + \
+        ARROW + SPACE + HELP_STRING_PROPAGATION + NEWLINE + EXAMPLE_USAGE + \
+        NEWLINE_TAB + MAIN_SCRIPT + SPACE + ARGUMENT_IP_ADDRESS_FILENAME + \
+        SPACE + IP_LIST + SPACE + ARGUMENT_PORTS + SPACE + ALL_PORTS + \
+        SPACE + ARGUMENT_USERNAME + SPACE + ADMIN + SPACE + \
+        ARGUMENT_PWS_FILENAME + SPACE + PWDS_LIST + NEWLINE_NEWLINE_TAB + \
+        MAIN_SCRIPT + ARGUMENT_IP_ADDRESS_FILENAME + SPACE + IP_LIST + \
+        SPACE + ARGUMENT_PORTS + SPACE + SSH_PORT + SPACE + \
+        ARGUMENT_USERNAME + SPACE + ROOT + SPACE + ARGUMENT_PWS_FILENAME + \
+        SPACE + PWDS_LIST
 
 
 def run_script_command():
@@ -423,9 +521,9 @@ def run_script_command():
     over any service
     :return: The command itself
     """
-    return MAIN_SCRIPT + " " + ARGUMENT_SCAN_LOCAL_NETWORKS + " " + \
-        ARGUMENT_PORTS + " " + SSH_PORT + " " + ARGUMENT_USERNAME + " " + \
-        ROOT + " " + ARGUMENT_PWS_FILENAME + PWDS_LIST + " " + \
+    return MAIN_SCRIPT + SPACE + ARGUMENT_SCAN_LOCAL_NETWORKS + SPACE + \
+        ARGUMENT_PORTS + SPACE + SSH_PORT + SPACE + ARGUMENT_USERNAME + \
+        SPACE + ROOT + SPACE + ARGUMENT_PWS_FILENAME + PWDS_LIST + SPACE + \
         ARGUMENT_PROPAGATE
 
 
@@ -434,9 +532,9 @@ def web_login_url(ip, port):
     This function will build the web login url string
     :param ip: The IP of the machine running the web service
     :param port: The port the web service is running on
-    :return "https://" + ip + ":" + port + "/login.php": The string itself
+    :return: The string itself
     """
-    return "https://" + ip + ":" + port + "/login.php"
+    return HTTPS_STRING + ip + COLON + port + LOGIN_PHP
 
 
 def working_username_password(service):
@@ -445,8 +543,6 @@ def working_username_password(service):
      a specific service
     :param service: Service for which there is a working username and password
     combination
-    :return "A working username and password for " + str(service) +
-    " was found.": The string itself
+    :return: The string itself
     """
-    return "A working username and password for " + str(service) + \
-           " was found."
+    return WORKING_USERNAME_PASS + SPACE + str(service) + SPACE + WAS_FOUND
