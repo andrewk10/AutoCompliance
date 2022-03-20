@@ -107,6 +107,9 @@ LOOPBACK = "lo"
 # The main function call.
 MAIN = "main()"
 
+# The main script.
+MAIN_SCRIPT = "main.py"
+
 # The name of the net propagation script.
 NET_PROPAGATION = "src/net_propagation.py"
 
@@ -119,8 +122,6 @@ PASSWORD_PROMPT = "Password:"
 # Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
 
-# The default password file being used by scripts.
-# PASSWORDS_FILE = "passwords.txt"
 # List of dummy passwords
 PWDS_LIST = "src/test_files/password_list.txt"
 
@@ -159,6 +160,9 @@ SCRIPT_PROPAGATED = "Script propagated over this port"
 
 # Specifies that the script hasn't been propagated over a port.
 SCRIPT_NOT_PROPAGATED = "Script couldn't be propagated over this port"
+
+# Just a space, yep, really.
+SPACE = " "
 
 # Just an SSH strings, memory saving measures again.
 SSH = "SSH"
@@ -311,10 +315,9 @@ def scp_command_string(port, username, target_ip, filename):
     :param username: The username for the SSH login
     :param target_ip: The IP address of the machine we are copying too
     :param filename: The name of the file to be copied across by SSH
-    :return "scp -P " + str(port) + " " + filename + " " + username + "@" \
-           + target_ip + ":~/": The SSH copy command
+    :return: The SSH copy command
     """
-    return "scp -P " + str(port) + " " + filename + " " + username + "@" \
+    return "scp -P " + str(port) + SPACE + filename + SPACE + username + "@" \
            + target_ip + ":~/"
 
 
@@ -322,10 +325,9 @@ def touch_file(filename):
     """
     This function creates a command for touching a specific file
     :param filename: The filename of the file we want to touch
-    :return command: The completed touch command
+    :return: The completed touch command
     """
-    command = "touch " + filename
-    return command
+    return "touch " + filename
 
 
 def ip_list_not_read(filename):
@@ -413,11 +415,12 @@ def run_script_command():
     """
     This function will run the propagation script on another target machine
     over any service
-    :return "net_propagation.py -L -p 22 -u " + username + " -f
-    passwords.txt
-    -P": The command itself
+    :return: The command itself
     """
-    return NET_PROPAGATION + " -L -p 22 -u " + ROOT + " -f passwords.txt -P"
+    return MAIN_SCRIPT + " " + ARGUMENT_SCAN_LOCAL_NETWORKS + " " + \
+        ARGUMENT_PORTS + " " + SSH_PORT + " " + ARGUMENT_USERNAME + " " + \
+        ROOT + " " + ARGUMENT_PWS_FILENAME + PWDS_LIST + " " + \
+        ARGUMENT_PROPAGATE
 
 
 def web_login_url(ip, port):
