@@ -36,6 +36,9 @@ ARGUMENT_HELP_LONG = "--help"
 # Prompt to let people know arguments are being assigned for testing.
 ASSIGNING_ARGUMENTS = "Assigning arguments as part of test"
 
+# Just the '@' symbol
+AT_SYMBOL = "@"
+
 # A string that states that the IP and port pair is closed.
 CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
 
@@ -153,6 +156,9 @@ RSA_AND_PROMPT = "Please type in this password below and say yes to any " \
 
 # A different password prompt following the previous one.
 RSA_PROMPT_AGAIN = "Please type in this password again: "
+
+# SCP Command String.
+SCP_COMMAND = "scp -P"
 
 # Specifies that the script has been propagated over a port (use debug for
 # specific port number).
@@ -317,8 +323,8 @@ def scp_command_string(port, username, target_ip, filename):
     :param filename: The name of the file to be copied across by SSH
     :return: The SSH copy command
     """
-    return "scp -P " + str(port) + SPACE + filename + SPACE + username + "@" \
-           + target_ip + ":~/"
+    return SCP_COMMAND + SPACE + str(port) + SPACE + filename + SPACE + \
+        username + AT_SYMBOL + target_ip + ":~/"
 
 
 def touch_file(filename):
