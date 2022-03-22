@@ -12,7 +12,7 @@ import sys
 
 def main():
     """
-    This main function is what initially runs when AutoCompliance runs.
+    This main function is just for demo purposes.
     """
     # These arguments are passed in by the end user.
     arguments = sys.argv
