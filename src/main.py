@@ -18,12 +18,12 @@ def main():
     arguments = sys.argv
 
     # If there is no arguments then just print the help menu and exit.
-    if arguments.__len__():
+    if arguments.__len__() == 0:
         net_propagation.exit_and_show_instructions()
         sys.exit(-1)
 
     # Just initialising this for use later.
-    transfer_file_filename = strings.BLANK_STRING
+    transfer_file_filename = strings.SPACE
 
     # Validating and assigning values based on arguments passed in.
     valid_values = net_propagation.checking_arguments(arguments)
