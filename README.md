@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/andrewk10/autocompliance/badge)](https://www.codefactor.io/repository/github/andrewk10/autocompliance)
+
 # AutoCompliance
 Automating the Implementation of a Cybersecurity Governance, Risk and Compliance Programme using Distributed Ledger Technologies
 
