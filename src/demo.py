@@ -10,9 +10,9 @@ import strings
 import sys
 
 
-def main():
+def demo():
     """
-    This main function is just for demo purposes.
+    This demo function is just for demo purposes.
     """
     # These arguments are passed in by the end user.
     arguments = sys.argv
@@ -93,4 +93,4 @@ def main():
                                        arguments)
 
 
-main()
+demo()
