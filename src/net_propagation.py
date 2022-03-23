@@ -159,8 +159,11 @@ def checking_arguments(arguments):
             arguments):
         try:
             values = assigning_values(arguments)
-            if values is not None:
+            if values is not None and arguments.__contains__(
+                    strings.ARGUMENT_SCAN_LOCAL_NETWORKS) is False:
                 return values[0], values[1], values[2], values[3]
+            elif arguments.__contains__(strings.ARGUMENT_SCAN_LOCAL_NETWORKS):
+                return strings.SPACE
             logging.error(strings.FAILED_ASSIGNING_VALUES)
             return None
         except RuntimeError:
@@ -255,7 +258,10 @@ def cycle_through_subnet(ip_list, interface):
         if not ip_list.__contains__(specific_address):
             logging.info(strings.adding_address_to_interface(specific_address,
                                                              interface))
-            ip_list.append(specific_address)
+            if ip_list is not strings.SPACE:
+                ip_list.append(specific_address)
+            else:
+                ip_list = [specific_address]
         last_byte = last_byte + 1
     return ip_list
 
@@ -290,12 +296,12 @@ def gathering_local_ips(ip_list):
     """
     logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
     local_interfaces = get_if_list()
-    if strings.LOOPBACK in local_interfaces:
-        local_interfaces = local_interfaces.remove(strings.LOOPBACK)
+    # if strings.LOOPBACK in local_interfaces:
+    #     local_interfaces = local_interfaces.remove(strings.LOOPBACK)
     for interface in local_interfaces:
         if str(interface) != strings.LOOPBACK:
             logging.info(strings.fetching_ips_for_interface(interface))
-            ip_list.extend(cycle_through_subnet(ip_list, interface))
+            ip_list = (cycle_through_subnet(ip_list, interface))
     return ip_list
 
 

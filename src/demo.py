@@ -22,19 +22,25 @@ def demo():
         net_propagation.exit_and_show_instructions()
         sys.exit(-1)
 
-    # Just initialising this for use later.
+    # Just initialising these for use later.
     transfer_file_filename = strings.SPACE
+    ip_list = strings.SPACE
+    passwords_filename = strings.SPACE
+    target_ports = strings.SPACE
+    target_username = strings.SPACE
 
     # Validating and assigning values based on arguments passed in.
     valid_values = net_propagation.checking_arguments(arguments)
     # If they are valid values...
-    if valid_values is None:
+    if valid_values is None and \
+            arguments.__contains__(strings.ARGUMENT_SCAN_LOCAL_NETWORKS) is \
+            False:
         # Show the user instructions and exit gracefully.
         net_propagation.exit_and_show_instructions()
         sys.exit(-1)
 
     # Else...
-    else:
+    elif arguments.__contains__(strings.ARGUMENT_SCAN_LOCAL_NETWORKS) is False:
         # Assign them...
         ip_list, target_ports, target_username, passwords_filename = \
             valid_values
@@ -43,7 +49,7 @@ def demo():
     # local scan will extend the current ip_list.
     if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
         logging.info(strings.PERFORMING_LOCAL_SCAN)
-        ip_list.extend(net_propagation.gathering_local_ips(ip_list))
+        ip_list = net_propagation.gathering_local_ips(ip_list)
 
     try:
         # Here I made sure the user actually gave a valid file for the
