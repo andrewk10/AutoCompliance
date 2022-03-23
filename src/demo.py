@@ -61,13 +61,13 @@ def demo():
     # If the user wants to transfer a file, this stuff should be done...
     if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments:
         try:
-            # Again making sure the transfer file actually exits, just like
-            # the password file above.
-            net_propagation.validate_file_exists(transfer_file_filename)
             # If it does though we assign the filename to the name out of scope
             # above.
             transfer_file_filename = arguments[arguments.index(
                 strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE) + 1]
+            # Again making sure the transfer file actually exits, just like
+            # the password file above.
+            net_propagation.validate_file_exists(transfer_file_filename)
         except RuntimeError:
             # File doesn't exist, throw an error and give the user a chance to
             # try again.
