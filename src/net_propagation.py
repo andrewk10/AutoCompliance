@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
+# Import path to check for the existence of files and file paths.
+from os import path
 # Importing paramiko modules for SSH connection and exception handling.
-import pipes
-
 from paramiko import SSHClient, RejectPolicy
 from paramiko.ssh_exception import NoValidConnectionsError, SSHException
 # Importing modules from scapy for Packet Crafting and Sending / Sniffing.
@@ -16,6 +16,8 @@ from scapy.utils import subprocess, os
 from time import sleep
 # Importing logging to safely log sensitive, error or debug info.
 import logging
+# Importing pipes for the piping for certain processes
+import pipes
 # Importing requests for web based operations.
 import requests
 # Importing strings for use of the external strings resources.
@@ -641,6 +643,6 @@ def validate_file_exists(filename):
     gracefully
     :param filename: The name of the file we wish to ensure exists
     """
-    if not os.path.isfile(filename):
+    if not path.exists(filename):
         logging.error(strings.FILE_DOES_NOT_EXIST)
         exit_and_show_instructions()
