@@ -45,7 +45,7 @@ ASSIGNING_ARGUMENTS = "Assigning arguments as part of test"
 # Just the '@' symbol
 AT_SYMBOL = "@"
 
-# String to describe the username argument under help
+# String tdescribe the username argument under help
 A_USERNAME = "A username"
 
 # Letting the user know we can't read an IP list from a specific file.
@@ -329,6 +329,44 @@ WELCOME_TO = "Welcome to"
 
 # Letting the user know about a working username and password.
 WORKING_USERNAME_PASS = "A working username and password for"
+
+# This is the program description for the cli help menu.
+DESCRIPTION = "Automating the Implementation of a " \
+              "Cybersecurity Governance, Risk and " \
+              "Compliance Programme using Distributed " \
+              "Ledger Technologies"
+
+# Help text and option name for the file option.
+FILE_OPT_SHORT = "-f"
+FILE_OPT_LONG = "--file"
+FILE_HELP = "Filename for a file containing a list of passwords"
+
+# Help text and option name for the port option.
+PORT_OPT_SHOT = "-p"
+PORT_OPT_LONG = "--port"
+PORT_HELP = "Ports to scan on the target host"
+
+# Help text and option name for the target option.
+TARGET_OPT_SHORT = "-t"
+TARGET_OPT_LONG = "--target"
+TARGET_HELP = "Filename for a file containing a list of target IP addresses"
+
+# Help text and option name for the username option.
+USERNAME_OPT_SHORT = "-u"
+USERNAME_OPT_LONG = "-u"
+USERNAME_HELP = "A Username"
+
+# Help text and option name for the lan scan option.
+LAN_OPT_SHORT = "-L"
+LAN_OPT_LONG = "--lan"
+LAN_HELP = "Scans the lan across all interfaces and " \
+            "creates/adds to the list of target IP addresses"
+
+# Help text and option name for the propagate option.
+PROP_OPT_SHOT = "-P"
+PROP_OPT_LONG = "--propagate"
+PROP_HELP = "Propagates the script onto available devices " \
+            "and executes the script using the given command"
 
 
 def adding_address_to_interface(specific_address, interface):
