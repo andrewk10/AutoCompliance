@@ -31,16 +31,14 @@ def demo():
 
     # Validating and assigning values based on arguments passed in.
     valid_values = net_propagation.checking_arguments(arguments)
-    # If they are valid values...
-    if valid_values is None and \
-            arguments.__contains__(strings.ARGUMENT_SCAN_LOCAL_NETWORKS) is \
-            False:
+    # If they are invalid values...
+    if valid_values is None:
         # Show the user instructions and exit gracefully.
         net_propagation.exit_and_show_instructions()
         sys.exit(-1)
 
     # Else...
-    elif arguments.__contains__(strings.ARGUMENT_SCAN_LOCAL_NETWORKS) is False:
+    else:
         # Assign them...
         ip_list, target_ports, target_username, passwords_filename = \
             valid_values

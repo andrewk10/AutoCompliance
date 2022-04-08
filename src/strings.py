@@ -54,6 +54,10 @@ CAN_NOT_READ_IP_LIST = "IP list cannot be read from filename:"
 # cat command
 CAT = "cat"
 
+# Let the user know there's something wrong with the file paths provided.
+CHECK_FILE_PATHS = "There's something wrong with the file paths provided, " \
+                   "please review them and try again."
+
 # A string that states that the IP and port pair is closed.
 CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
 

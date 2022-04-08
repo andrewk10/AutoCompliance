@@ -88,6 +88,21 @@ def assigning_values(arguments):
             logging.error(strings.ip_list_not_read(ip_addresses_filename))
             return None
 
+    if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
+        try:
+            target_ports = arguments[
+                arguments.index(strings.ARGUMENT_PORTS) + 1]
+            target_username = \
+                arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
+            passwords_filename = \
+                arguments[arguments.index(strings.ARGUMENT_PWS_FILENAME)
+                          + 1]
+            return strings.SPACE, target_ports, target_username, \
+                   passwords_filename
+        except RuntimeError:
+            logging.error(strings.CHECK_FILE_PATHS)
+            return None
+
 
 def check_over_ssh(ip, port, username, password):
     """
@@ -159,11 +174,11 @@ def checking_arguments(arguments):
             arguments):
         try:
             values = assigning_values(arguments)
-            if values is not None and arguments.__contains__(
-                    strings.ARGUMENT_SCAN_LOCAL_NETWORKS) is False:
+            if values is not None and strings.ARGUMENT_SCAN_LOCAL_NETWORKS \
+                    not in arguments:
                 return values[0], values[1], values[2], values[3]
-            elif arguments.__contains__(strings.ARGUMENT_SCAN_LOCAL_NETWORKS):
-                return strings.SPACE
+            elif strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
+                return strings.SPACE, values[1], values[2], values[3]
             logging.error(strings.FAILED_ASSIGNING_VALUES)
             return None
         except RuntimeError:
