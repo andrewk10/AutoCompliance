@@ -8,71 +8,77 @@ import net_propagation
 import strings
 # Importing sys to make OS calls and use OS level utilities.
 import sys
+# Importing argparse for command-line option parsing
+import argparse
 
 
 def main():
-    """
-    This main function is what initially runs when AutoCompliance runs.
-    """
-    # These arguments are passed in by the end user.
-    arguments = sys.argv
+    parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
 
-    # If there is no arguments then just print the help menu and exit.
-    if arguments.__len__():
-        net_propagation.exit_and_show_instructions()
-        sys.exit(-1)
+    # Adding the file option to the parser.
+    parser.add_argument(
+                    strings.FILE_OPT_SHORT, strings.FILE_OPT_LONG,
+                    help=strings.FILE_HELP)
 
-    # Just initialising this for use later.
-    transfer_file_filename = strings.BLANK_STRING
+    # Adding the port option to the parser.
+    parser.add_argument(
+                    strings.PORT_OPT_SHOT, strings.PORT_OPT_LONG,
+                    help=strings.PORT_HELP)
 
-    # Validating and assigning values based on arguments passed in.
-    valid_values = net_propagation.checking_arguments(arguments)
-    # If they are valid values...
-    if valid_values is None:
-        # Show the user instructions and exit gracefully.
-        net_propagation.exit_and_show_instructions()
-        sys.exit(-1)
+    # Adding the target option to the parser.
+    parser.add_argument(
+                    strings.TARGET_OPT_SHORT, strings.TARGET_OPT_LONG,
+                    help=strings.TARGET_HELP)
 
-    # Else...
-    else:
-        # Assign them...
-        ip_list, target_ports, target_username, passwords_filename = \
-            valid_values
+    # Adding the username option to the parser.
+    parser.add_argument(
+                    strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
+                    help=strings.USERNAME_HELP)
 
-    # The end user specified a local scan must be executed, the result of the
-    # local scan will extend the current ip_list.
-    if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
+    # Adding the lan option to the parser.
+    parser.add_argument(
+                    strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG,
+                    help=strings.LAN_HELP)
+
+    # Adding the propagate option to the parser.
+    parser.add_argument(
+                    strings.PROP_OPT_SHOT, strings.PROP_OPT_LONG,
+                    help=strings.PROP_HELP)
+
+    args = parser.parse_args()
+
+    # Defining ip_list var for the ip list.
+    ip_list = []
+    # Defining password_list var.
+    password_list = []
+    # Defining transfer_file_filename var.
+    transfer_file_filename = ''
+    # Defining username, ports
+    target_username = ''
+    ports = ''
+
+    if args.target:
+        # Extending the ip_list with the ip list.
+        ip_list.extend(net_propagation.convert_file_to_list(args.target))
+
+    # Check if the lan option was provided.
+    # If so then extend the ip_list.
+    if args.lan:
         logging.info(strings.PERFORMING_LOCAL_SCAN)
         ip_list.extend(net_propagation.gathering_local_ips(ip_list))
 
-    try:
-        # Here I made sure the user actually gave a valid file for the
-        # passwords list. If they have...
-        net_propagation.validate_file_exists(passwords_filename)
-        # A list of passwords is created.
-        password_list = \
-            net_propagation.convert_file_to_list(passwords_filename)
-    except RuntimeError:
-        # File doesn't exist, alert the user and exit gracefully, so
-        # they can possibly fix their mistake.
-        net_propagation.file_error_handler()
-        sys.exit(-1)
+    if args.file:
+        password_list = net_propagation.convert_file_to_list(args.file)
 
-    # If the user wants to transfer a file, this stuff should be done...
-    if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments:
-        try:
-            # Again making sure the transfer file actually exits, just like
-            # the password file above.
-            net_propagation.validate_file_exists(transfer_file_filename)
-            # If it does though we assign the filename to the name out of scope
-            # above.
-            transfer_file_filename = arguments[arguments.index(
-                strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE) + 1]
-        except RuntimeError:
-            # File doesn't exist, throw an error and give the user a chance to
-            # try again.
-            net_propagation.file_error_handler()
-            sys.exit(-1)
+    if args.propagate:
+        transfer_file_filename = args.propagate
+
+    if args.port:
+        ports = args.port
+
+    if args.u:
+        target_username = args.u
+
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
     # example. This would be a user error, we're just handling that.
@@ -82,7 +88,7 @@ def main():
     ip_list = net_propagation.remove_unreachable_ips(ip_list)
     # Getting a list of ports by splitting the target ports specified by the
     # user on the comma.
-    ports = target_ports.split(strings.COMMA)
+    ports = ports.split(strings.COMMA)
     # Cycling through every IP in the IP list...
     for ip in ip_list:
         # And then using all user specified ports against that specific IP...
@@ -90,7 +96,8 @@ def main():
             # Try to spread using services and actions.
             net_propagation.try_action(ip, port, target_username,
                                        password_list, transfer_file_filename,
-                                       arguments)
+                                       sys.args)
 
 
-main()
+if __name__ == "__main__":
+    main()

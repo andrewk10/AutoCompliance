@@ -48,6 +48,9 @@ AT_SYMBOL = "@"
 # String tdescribe the username argument under help
 A_USERNAME = "A username"
 
+# Blank String
+BLANK_STRING = ''
+
 # Letting the user know we can't read an IP list from a specific file.
 CAN_NOT_READ_IP_LIST = "IP list cannot be read from filename:"
 
