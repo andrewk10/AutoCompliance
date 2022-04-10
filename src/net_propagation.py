@@ -64,8 +64,10 @@ def assigning_values(arguments):
     :return target_ports: The selection of ports to target
     :return target_username: The username that will be used for actions
     :return passwords_filename: The filename of the passwords file
-    :return None: If a runtime error occurs
+    :return None: If an error occurs
     """
+    # Out of scope initialisation for return later.
+    ip_list = None
     if strings.ARGUMENT_IP_ADDRESS_FILENAME in arguments:
         try:
             ip_addresses_filename = \
@@ -74,19 +76,25 @@ def assigning_values(arguments):
         except RuntimeError:
             logging.error(strings.IP_FILENAME_NOT_FOUND)
             return None
-        try:
-            ip_list = convert_file_to_list(ip_addresses_filename)
-            target_ports = arguments[
-                arguments.index(strings.ARGUMENT_PORTS) + 1]
-            target_username = \
-                arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
-            passwords_filename = \
-                arguments[arguments.index(strings.ARGUMENT_PWS_FILENAME)
-                          + 1]
-            return ip_list, target_ports, target_username, passwords_filename
-        except RuntimeError:
-            logging.error(strings.ip_list_not_read(ip_addresses_filename))
+        ip_list = convert_file_to_list(ip_addresses_filename)
+        if ip_list is None:
             return None
+    try:
+        target_ports = arguments[
+            arguments.index(strings.ARGUMENT_PORTS) + 1]
+        target_username = \
+            arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
+        if path.exists(arguments[arguments.index(
+                strings.ARGUMENT_PWS_FILENAME) + 1]):
+            passwords_filename = arguments[arguments.index(
+                strings.ARGUMENT_PWS_FILENAME) + 1]
+            return ip_list, target_ports, target_username, \
+                passwords_filename
+        logging.error(strings.FILE_DOES_NOT_EXIST)
+        return None
+    except ValueError:
+        logging.error(strings.MISSING_ARGUMENT)
+        return None
 
     if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
         try:
@@ -98,7 +106,7 @@ def assigning_values(arguments):
                 arguments[arguments.index(strings.ARGUMENT_PWS_FILENAME)
                           + 1]
             return strings.SPACE, target_ports, target_username, \
-                   passwords_filename
+                passwords_filename
         except RuntimeError:
             logging.error(strings.CHECK_FILE_PATHS)
             return None
@@ -249,9 +257,13 @@ def convert_file_to_list(filename):
     list
     :return file_as_list: The list of the lines from the file
     """
-    with open(str(filename)) as file:
-        file_as_list = append_lines_from_file_to_list(file)
-    return file_as_list
+    try:
+        with open(filename) as file:
+            file_as_list = append_lines_from_file_to_list(file)
+        return file_as_list
+    except FileNotFoundError:
+        logging.error(strings.FILE_DOES_NOT_EXIST)
+        return None
 
 
 def cycle_through_subnet(ip_list, interface):

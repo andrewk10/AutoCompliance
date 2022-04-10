@@ -107,6 +107,9 @@ FILE_PRESENT_ON_HOST = "A file is already present on this host:"
 FILENAME_LIST_IP_ADDRESSES = "Filename for a file containing a list of " \
                              "target IP addresses"
 
+# String for forcing a fail for tests.
+FORCE_FAIL = "This Should Work"
+
 # Lets the user know there's an open port on a specific IP address.
 FOUND_OPEN_IP_PORT_PAIR = "Found an open IP address and port pair"
 
@@ -146,6 +149,9 @@ IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
 
 # Name of the test IP list file, prepended with src/ for Pytest to work.
 IP_LIST = "src/test_files/ip_list.txt"
+
+# Name of the short test IP list file, prepended with src/ for Pytest to work.
+IP_LIST_SHORT = "src/test_files/ip_list_short.txt"
 
 # Let the suse know that we're checking to see if the IP address is reachable.
 IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
@@ -189,6 +195,10 @@ MAIN_FILENAME = "main.py"
 # The main script.
 MAIN_SCRIPT = "./main.py"
 
+# A string to let the user know a necessary argument is missing.
+MISSING_ARGUMENT = "Missing a mandatory argument, ensure arguments are used " \
+                   "correctly"
+
 # Netcat listener, with a specified port, the command.
 NETCAT_LISTENER_PORT_COMMAND = "nc -l -p"
 
@@ -217,7 +227,10 @@ PASSWORD_PROMPT = "Password:"
 PASSWORD_PROMPT_WEB = "password:"
 
 # List of dummy passwords
-PWDS_LIST = "src/test_files/password_list.txt"
+PWDS_LIST = "src/test_files/passwords_list.txt"
+
+# Shorter list of dummy passwords
+PWDS_LIST_SHORT = "src/test_files/passwords_list_short.txt"
 
 # Parameters string for help test.
 PARAMETERS = "Parameters:"
@@ -359,19 +372,40 @@ def arguments_sets(selection):
     """
     arguments = {
         # This runs the script against all services and four ports
-        0: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, ALL_PORTS,
-            ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME, PWDS_LIST],
+        0: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
+            ALL_PORTS, ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME,
+            PWDS_LIST_SHORT],
         # This just runs the scripts against one port / service
-        1: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST],
+        1: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
+            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
+            PWDS_LIST_SHORT],
         # This propagates a specific file over SSH
-        2: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
-            ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
+        2: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
+            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
+            PWDS_LIST_SHORT, ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
         # This is running the automated propagation feature over SSH.
         3: [ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
-            ARGUMENT_PROPAGATE]
+            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST_SHORT,
+            ARGUMENT_PROPAGATE],
+
+        # This fails to run the script against all services and four ports
+        # because the passwords file filename is invalid.
+        4: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
+            ALL_PORTS, ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME,
+            FORCE_FAIL],
+        # This fails to run the scripts against one port / service because the
+        # OP list filename is invalid.
+        5: [ARGUMENT_IP_ADDRESS_FILENAME, FORCE_FAIL, ARGUMENT_PORTS,
+            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
+            PWDS_LIST_SHORT],
+        # This fails the propagation of a specific file over SSH because
+        # parameter misuse.
+        6: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, PWDS_LIST_SHORT,
+            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
+            PWDS_LIST_SHORT, ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
+        # This fails in general as no arguments are specified.
+        7: [FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL,
+            FORCE_FAIL, FORCE_FAIL, FORCE_FAIL],
     }
     return arguments.get(selection, None)
 
