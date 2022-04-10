@@ -96,21 +96,6 @@ def assigning_values(arguments):
         logging.error(strings.MISSING_ARGUMENT)
         return None
 
-    if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
-        try:
-            target_ports = arguments[
-                arguments.index(strings.ARGUMENT_PORTS) + 1]
-            target_username = \
-                arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
-            passwords_filename = \
-                arguments[arguments.index(strings.ARGUMENT_PWS_FILENAME)
-                          + 1]
-            return strings.SPACE, target_ports, target_username, \
-                passwords_filename
-        except RuntimeError:
-            logging.error(strings.CHECK_FILE_PATHS)
-            return None
-
 
 def check_over_ssh(ip, port, username, password):
     """
