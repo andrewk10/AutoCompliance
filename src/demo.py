@@ -24,10 +24,6 @@ def demo():
 
     # Just initialising these for use later.
     transfer_file_filename = strings.SPACE
-    ip_list = strings.SPACE
-    passwords_filename = strings.SPACE
-    target_ports = strings.SPACE
-    target_username = strings.SPACE
 
     # Validating and assigning values based on arguments passed in.
     valid_values = net_propagation.checking_arguments(arguments)
