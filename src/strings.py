@@ -202,6 +202,10 @@ MAIN = "main()"
 MISSING_ARGUMENT = "Missing a mandatory argument, ensure arguments are used " \
                    "correctly"
 
+# A string to let the user know a necessary argument is missing.
+MISSING_ARGUMENT = "Missing a mandatory argument, ensure arguments are used " \
+                   "correctly"
+
 # Netcat listener, with a specified port, the command.
 NETCAT_LISTENER_PORT_COMMAND = "nc -l -p"
 
