@@ -10,9 +10,9 @@ import strings
 import sys
 
 
-def main():
+def demo():
     """
-    This main function is what initially runs when AutoCompliance runs.
+    This demo function is just for demo purposes.
     """
     # These arguments are passed in by the end user.
     arguments = sys.argv
@@ -22,12 +22,12 @@ def main():
         net_propagation.exit_and_show_instructions()
         sys.exit(-1)
 
-    # Just initialising this for use later.
-    transfer_file_filename = strings.BLANK_STRING
+    # Just initialising these for use later.
+    transfer_file_filename = strings.SPACE
 
     # Validating and assigning values based on arguments passed in.
     valid_values = net_propagation.checking_arguments(arguments)
-    # If they are valid values...
+    # If they are invalid values...
     if valid_values is None:
         # Show the user instructions and exit gracefully.
         net_propagation.exit_and_show_instructions()
@@ -43,7 +43,7 @@ def main():
     # local scan will extend the current ip_list.
     if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
         logging.info(strings.PERFORMING_LOCAL_SCAN)
-        ip_list.extend(net_propagation.gathering_local_ips(ip_list))
+        ip_list = net_propagation.gathering_local_ips(ip_list)
 
     try:
         # Here I made sure the user actually gave a valid file for the
@@ -61,13 +61,13 @@ def main():
     # If the user wants to transfer a file, this stuff should be done...
     if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments:
         try:
-            # Again making sure the transfer file actually exits, just like
-            # the password file above.
-            net_propagation.validate_file_exists(transfer_file_filename)
             # If it does though we assign the filename to the name out of scope
             # above.
             transfer_file_filename = arguments[arguments.index(
                 strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE) + 1]
+            # Again making sure the transfer file actually exits, just like
+            # the password file above.
+            net_propagation.validate_file_exists(transfer_file_filename)
         except RuntimeError:
             # File doesn't exist, throw an error and give the user a chance to
             # try again.
@@ -92,5 +92,5 @@ def main():
                                        password_list, transfer_file_filename,
                                        arguments)
 
-if __name__ == "__main__":
-    main()
+
+demo()

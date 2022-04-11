@@ -51,13 +51,15 @@ def test_assigning_values():
     before it does that the bad path is checked by passing in a single argument
     with no value to get a runtime error.
     """
-    assert net_propagation.assigning_values(strings.arguments_sets(0)) is not \
-           None
-    assert net_propagation.assigning_values(strings.arguments_sets(1)) is not \
-           None
-    assert net_propagation.assigning_values(strings.arguments_sets(2)) is not \
-           None
-    assert net_propagation.assigning_values(strings.arguments_sets(3)) is None
+    num_arguments = 8
+    happy_path_range = 4
+    for arguments_selection in range(num_arguments):
+        if arguments_selection < happy_path_range:
+            assert net_propagation.assigning_values(
+                strings.arguments_sets(arguments_selection)) is not None
+        else:
+            assert net_propagation.assigning_values(
+                strings.arguments_sets(arguments_selection)) is None
 
 
 def test_check_over_ssh():
@@ -68,6 +70,18 @@ def test_check_over_ssh():
     assert net_propagation.check_over_ssh(strings.TEST_IP, strings.SSH_PORT,
                                           strings.ADMIN, strings.ADMIN) is \
            True
+
+
+def test_convert_file_to_list():
+    """
+    This function tests the convert_file_to_list function, it does this by
+    passing in one valid filename and one invalid filename.
+    """
+    assert net_propagation.convert_file_to_list(strings.IP_LIST_SHORT) is not \
+           None
+    assert net_propagation.convert_file_to_list(strings.PWDS_LIST_SHORT) is \
+           not None
+    assert net_propagation.convert_file_to_list(strings.TEST_IP) is None
 
 
 def test_exit_and_show_instructions(capfd):

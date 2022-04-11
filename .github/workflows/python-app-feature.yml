@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ 14-finish-test_net_propagationpy-and-add-proper-logging ]
+    branches: [ update/adding_argparser ]
   pull_request:
-    branches: [ 14-finish-test_net_propagationpy-and-add-proper-logging ]
+    branches: [ update/adding_argparser ]
 
 jobs:
   build:
