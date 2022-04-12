@@ -4,6 +4,8 @@
 import net_propagation
 # Importing strings for common string resources.
 import strings
+# Importing strings_functions for string building functions.
+import strings_functions
 
 
 def test_additional_actions():
@@ -56,10 +58,11 @@ def test_assigning_values():
     for arguments_selection in range(num_arguments):
         if arguments_selection < happy_path_range:
             assert net_propagation.assigning_values(
-                strings.arguments_sets(arguments_selection)) is not None
+                strings_functions.arguments_sets(arguments_selection)) is not \
+                   None
         else:
             assert net_propagation.assigning_values(
-                strings.arguments_sets(arguments_selection)) is None
+                strings_functions.arguments_sets(arguments_selection)) is None
 
 
 def test_check_over_ssh():
@@ -94,7 +97,8 @@ def test_exit_and_show_instructions(capfd):
     """
     net_propagation.exit_and_show_instructions()
     out, err = capfd.readouterr()
-    assert out == strings.help_output() + "\n" + strings.EXITING + "\n"
+    assert out == strings_functions.help_output() + "\n" + strings.EXITING + \
+           "\n"
 
 
 def test_file_error_handler(capfd):
@@ -108,4 +112,4 @@ def test_file_error_handler(capfd):
     net_propagation.file_error_handler()
     out, err = capfd.readouterr()
     assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
-           + strings.help_output() + "\n" + strings.EXITING + "\n"
+           + strings_functions.help_output() + "\n" + strings.EXITING + "\n"
