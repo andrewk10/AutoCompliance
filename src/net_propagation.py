@@ -174,7 +174,8 @@ def checking_arguments(arguments):
             if values is not None and strings.ARGUMENT_SCAN_LOCAL_NETWORKS \
                     not in arguments:
                 return values[0], values[1], values[2], values[3]
-            if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
+            if values is not None and strings.ARGUMENT_SCAN_LOCAL_NETWORKS in \
+                    arguments:
                 return strings.SPACE, values[1], values[2], values[3]
             logging.error(strings.FAILED_ASSIGNING_VALUES)
             return None
