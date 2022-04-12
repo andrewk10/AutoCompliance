@@ -22,7 +22,7 @@ def demo():
         net_propagation.exit_and_show_instructions()
         sys.exit(-1)
 
-    # Just initialising these for use later.
+    # Just initialising this for use later.
     transfer_file_filename = strings.SPACE
 
     # Validating and assigning values based on arguments passed in.

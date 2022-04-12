@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# The adding string.
+# A string that just states "Adding".
 ADDING = "Adding"
 
 # Admin user string.
@@ -66,6 +66,12 @@ COLON = ":"
 
 # A string that just denotes the use of a comma, same "idea" as above.
 COMMA = ","
+
+# The demo filename
+DEMO_SCRIPT_FILENAME = "demo.py"
+
+# The main script.
+DEMO_SCRIPT_PATH = "./demo.py"
 
 # A string that states a script wasn't propagated.
 DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
@@ -153,7 +159,7 @@ IP_LIST = "src/test_files/ip_list.txt"
 # Name of the short test IP list file, prepended with src/ for Pytest to work.
 IP_LIST_SHORT = "src/test_files/ip_list_short.txt"
 
-# Let the suse know that we're checking to see if the IP address is reachable.
+# Let the user know that we're checking to see if the IP address is reachable.
 IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
 
 # The less than symbol.
@@ -180,17 +186,11 @@ LOGIN_PHP = "/login.php"
 # The login prompt a user usually sees with SSH.
 LOGIN_PROMPT = "login:"
 
-# Login to string, another string building constant.
+# "Login to" string, another string building constant.
 LOGIN_TO = "login to"
 
 # The typical ID of the loopback interface.
 LOOPBACK = "lo"
-
-# The main function call.
-MAIN = "main()"
-
-# The main filename
-MAIN_FILENAME = "main.py"
 
 # The main script.
 MAIN_SCRIPT = "./main.py"

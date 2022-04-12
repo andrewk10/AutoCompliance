@@ -11,6 +11,7 @@ from scapy.interfaces import get_if_list
 from scapy.layers.inet import IP, TCP
 from scapy.sendrecv import sr
 from scapy.utils import subprocess, os
+# Try to import modules uniquely, otherwise use scapy.all in the meantime
 # from scapy.all import *
 # Importing sleep to allow network processes time to complete.
 from time import sleep
@@ -36,9 +37,9 @@ def additional_actions(arguments, ip, port, username,
     :param username: The username for the transfer action
     :param transfer_file_filename: Filename for the file to be transferred
     """
-    try_transferring_file(arguments, ip, port, username,
-                          transfer_file_filename)
-    try_propagating(arguments, ip, port, username)
+    transferring_file(arguments, ip, port, username,
+                      transfer_file_filename)
+    propagating(arguments, ip, port, username)
 
 
 def append_lines_from_file_to_list(file):
@@ -116,16 +117,19 @@ def check_over_ssh(ip, port, username, password):
         client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
-        if strings.touch_file(strings.MAIN_FILENAME) == "touch main.py":
+        # Hardcoded checks to avoid injection
+        if strings.touch_file(strings.DEMO_SCRIPT_FILENAME) == "touch demo.py":
             client.exec_command(pipes.quote(strings.
-                                            touch_file(strings.MAIN_FILENAME)))
+                                            touch_file(strings.
+                                                       DEMO_SCRIPT_FILENAME)))
         else:
             logging.error(strings.SANITATION_FAILED)
             client.close()
             return False
-        if strings.cat_file(strings.MAIN_FILENAME) == "cat main.py":
+        # Hardcoded checks to avoid injection
+        if strings.cat_file(strings.DEMO_SCRIPT_FILENAME) == "cat demo.py":
             if str(client.exec_command(pipes.quote(strings.cat_file(
-                    strings.MAIN_FILENAME)))[1]).__len__() < 1:
+                    strings.DEMO_SCRIPT_FILENAME)))[1]).__len__() < 1:
                 client.close()
                 return True
 
@@ -149,7 +153,7 @@ def check_over_ssh(ip, port, username, password):
 def checking_arguments(arguments):
     """
     This function checks if the arguments are appropriately given and if
-    they're not it calls the help function and kicks them out. There's also a
+    they're not it calls the help function and gracefully exits. There's also a
     check for the help argument itself. It'll try to assign the values if the
     proper arguments are given, and they're valid
     :param arguments: Arguments passed in by the user themselves
@@ -353,11 +357,11 @@ def is_reachable_ip(ip):
 def propagate_script(ip, port, login_string):
     """
     This function is responsible for propagating the network_attack.py to a
-    previously bruteforce machine. It will only run when the user specifies
-    using the appropriate argument and when the port being bruteforce is 22
-    (SSH), it will also check to ensure the script isn't  already present on
-    the target. It goes about propagating the script in different ways
-    depending on if an SSH port is specified
+    previously accessed machine. It will only run when the user specifies
+    using the appropriate argument and when the port being used is 22 (SSH),
+    it will also check to ensure the script isn't  already present on the
+    target. It goes about propagating the script in different ways depending on
+    if an SSH port is specified
     :param ip: The IP address we wish to propagate the script to
     :param port: The port through which we'll propagate the script
     :param login_string: This string contains the username and password for the
@@ -386,7 +390,7 @@ def propagate_script(ip, port, login_string):
                 client.connect(hostname=str(ip), port=int(port),
                                username=str(login_string_split[0]),
                                password=str(login_string_split[1]))
-                if strings.run_script_command() == "./main.py -L -p 22 -u " \
+                if strings.run_script_command() == "./demo.py -L -p 22 -u " \
                                                    "root -f " \
                                                    "src/test_files/" \
                                                    "passwords_list.txt -P":
@@ -491,7 +495,7 @@ def sign_in_service(ip, port, username, password_list):
 def transfer_file(ip, port, login_string, transfer_file_filename):
     """
     This function will transfer a given file if the end user has provided the
-    appropriate argument, and only when bruteforce login details are found for
+    appropriate argument, and only when machine login details are found for
     either tenet or SSH. It handles the transfer of this file differently
     depending on whether the port value given is an SSH port
     :param ip: The IP address to which the file should be transferred
@@ -544,7 +548,7 @@ def try_sign_in(ip, port, target_username, password_list):
     """
     This function will try to sign in to a specific service depending on the
     port supplied. If it gets a successful login then it will return the login
-    details and the service used, otherwise it returns null as the login
+    details and the service used, otherwise it returns none as the login
     details along with the service used
     :param ip: Target IP address for an action
     :param port: Target port over which to carry out an action
@@ -604,10 +608,10 @@ def try_password_for_service(ip, port, username, password):
         return False
 
 
-def try_propagating(arguments, ip, port, bruteforce):
+def propagating(arguments, ip, port, login_details):
     """
-    This function attempts propagation of the network_attack.py script over
-    the network. If it succeeds we alert the user and let them know what
+    This function attempts propagation of the network_propagation.py script
+    over the network. If it succeeds we alert the user and let them know what
     service was successful. If it is unsuccessful then we let the user know it
     was unsuccessful and over what service. Should the user have never asked
     for the script to be propagated over the network then we let them know this
@@ -615,10 +619,10 @@ def try_propagating(arguments, ip, port, bruteforce):
     :param arguments: The arguments passed in by the user themselves
     :param ip: The IP address we wish to propagate to
     :param port: The port we're propagating through
-    :param bruteforce: The username and password string combo
+    :param login_details: The username and password string combo
     """
     if strings.ARGUMENT_PROPAGATE in arguments and (port == strings.SSH_PORT):
-        propagated = propagate_script(ip, port, bruteforce)
+        propagated = propagate_script(ip, port, login_details)
         if propagated:
             logging.info(strings.SCRIPT_PROPAGATED)
         else:
@@ -627,8 +631,8 @@ def try_propagating(arguments, ip, port, bruteforce):
         logging.info(strings.DO_NOT_PROPAGATE)
 
 
-def try_transferring_file(arguments, ip, port, bruteforce,
-                          transfer_file_filename):
+def transferring_file(arguments, ip, port, login_details,
+                      transfer_file_filename):
     """
     This function attempts transferring a user specified file across the
     network. If it succeeds we alert the user and let them know transferring
@@ -639,12 +643,12 @@ def try_transferring_file(arguments, ip, port, bruteforce,
     :param arguments: The arguments passed in by the user themselves
     :param ip: The IP address we wish to propagate to
     :param port: The port we're propagating through
-    :param bruteforce: The username and password string combo
+    :param login_details: The username and password string combo
     :param transfer_file_filename: The filename of the file we wish to transfer
     """
     if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments and \
             (str(port) == strings.SSH_PORT):
-        transferred = transfer_file(ip, port, bruteforce,
+        transferred = transfer_file(ip, port, login_details,
                                     transfer_file_filename)
         if transferred:
             logging.info(strings.TRANSFER_SUCCESS_SSH)
