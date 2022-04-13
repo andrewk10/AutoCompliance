@@ -129,6 +129,17 @@ def file_present_on_host(ip):
     return strings.FILE_PRESENT_ON_HOST + strings.SPACE + str(ip)
 
 
+def filename_processing_error(filename):
+    """
+    A processing error printout for a specific filename.
+    :param filename: The filename of the file we're struggling to process
+    combination
+    :return: The string itself
+    """
+    return strings.FILENAME_PROCESSING_ERROR + strings.COLON + \
+        strings.SPACE + filename
+
+
 def scp_command_string(port, username, target_ip, filename):
     """
     This function creates and SSH copy string for an OS command

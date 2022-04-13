@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Importing file for file based functionality
+import file
 # Importing net_propagation for testing.
 import net_propagation
 # Importing strings for common string resources.
@@ -15,17 +17,18 @@ def test_additional_actions():
     test uses the bad path in both to run through once. Good paths are tested
     in the two functions own tests.
     """
+    transfer_file = file.File(strings.RANDOM_STRING)
+    propagation_script = file.File(strings.RANDOM_STRING)
     arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
                  strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
     ip = strings.TEST_IP
     username = strings.RANDOM_STRING
-    transfer_file_filename = strings.RANDOM_STRING
     ports = [strings.SSH_PORT, strings.WEB_PORT_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
     for port in ports:
-        net_propagation.additional_actions(arguments, ip, port, username,
-                                           transfer_file_filename)
+        net_propagation.additional_actions(transfer_file, propagation_script,
+                                           arguments, ip, port, username)
 
 
 def test_append_lines_from_file_to_list():
@@ -36,8 +39,8 @@ def test_append_lines_from_file_to_list():
     for readability in test results i.e. we'll be able to correlate a specific
     line with an error.
     """
-    with open(str(strings.FILE)) as file:
-        lines_list = net_propagation.append_lines_from_file_to_list(file)
+    test_file = file.File(strings.FILE)
+    lines_list = test_file.append_lines_from_file_to_list()
     assert lines_list[0] == strings.LINES[0]
     assert lines_list[1] == strings.LINES[1]
     assert lines_list[2] == strings.LINES[2]
@@ -70,9 +73,10 @@ def test_check_over_ssh():
     This function tests the check_check_over_ssh function, it will always fail
     for now until I figure out how to mock an SSH connection.
     """
-    assert net_propagation.check_over_ssh(strings.TEST_IP, strings.SSH_PORT,
-                                          strings.ADMIN, strings.ADMIN) is \
-           True
+    test_file = file.File(strings.FILE)
+    assert net_propagation.check_over_ssh(test_file.filename, strings.TEST_IP,
+                                          strings.SSH_PORT, strings.ADMIN,
+                                          strings.ADMIN) is True
 
 
 def test_convert_file_to_list():
@@ -80,11 +84,12 @@ def test_convert_file_to_list():
     This function tests the convert_file_to_list function, it does this by
     passing in one valid filename and one invalid filename.
     """
-    assert net_propagation.convert_file_to_list(strings.IP_LIST_SHORT) is not \
-           None
-    assert net_propagation.convert_file_to_list(strings.PWDS_LIST_SHORT) is \
-           not None
-    assert net_propagation.convert_file_to_list(strings.TEST_IP) is None
+    test_file = file.File(strings.IP_LIST_SHORT)
+    assert test_file.convert_file_to_list() is not None
+    test_file = file.File(strings.PWDS_LIST_SHORT)
+    assert test_file.convert_file_to_list() is not None
+    test_file = file.File(strings.TEST_IP)
+    assert test_file.convert_file_to_list() is None
 
 
 def test_exit_and_show_instructions(capfd):
@@ -109,7 +114,8 @@ def test_file_error_handler(capfd):
     fail this test for us
     :param capfd: Parameter needed to capture log output.
     """
-    net_propagation.file_error_handler()
+    test_file = file.File(strings.FILE)
+    test_file.file_error_handler()
     out, err = capfd.readouterr()
     assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
            + strings_functions.help_output() + "\n" + strings.EXITING + "\n"
