@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 # Importing file for file based functionality
+import logging
+
 import file
 # Importing net_propagation for testing.
 import net_propagation
@@ -117,5 +119,5 @@ def test_file_error_handler(capfd):
     test_file = file.File(strings.FILE)
     test_file.file_error_handler()
     out, err = capfd.readouterr()
-    assert out == strings.FILENAME_PROCESSING_ERROR + "\n" \
-           + strings_functions.help_output() + "\n" + strings.EXITING + "\n"
+    assert out == strings_functions.help_output() + "\n" + strings.EXITING + \
+           "\n"

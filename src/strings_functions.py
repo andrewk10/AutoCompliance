@@ -140,27 +140,38 @@ def filename_processing_error(filename):
         strings.SPACE + filename
 
 
-def scp_command_string(port, username, target_ip, filename):
+def help_output():
     """
-    This function creates and SSH copy string for an OS command
-    :param port: Port over which we are running the SSH copy
-    :param username: The username for the SSH login
-    :param target_ip: The IP address of the machine we are copying too
-    :param filename: The name of the file to be copied across by SSH
-    :return: The SSH copy command
+    This is the help output for when the user passes in the help parameter
+    :return: The output itself.
     """
-    return strings.SCP_COMMAND + strings.SPACE + str(port) + strings.SPACE + \
-        filename + strings.SPACE + username + strings.AT_SYMBOL + target_ip + \
-        strings.HOME_DIR
-
-
-def touch_file(filename):
-    """
-    This function creates a command for touching a specific file
-    :param filename: The filename of the file we want to touch
-    :return: The completed touch command
-    """
-    return strings.TOUCH_COMMAND + strings.SPACE + filename
+    return strings.PARAMETERS + strings.NEWLINE_TAB + \
+        strings.ARGUMENT_IP_ADDRESS_FILENAME + strings.SPACE + \
+        strings.ARROW + strings.SPACE + strings.FILENAME_LIST_IP_ADDRESSES + \
+        strings.NEWLINE_TAB + strings.ARGUMENT_PORTS + strings.SPACE + \
+        strings.ARROW + strings.SPACE + strings.PORTS_TO_SCAN + \
+        strings.NEWLINE_TAB + strings.ARGUMENT_USERNAME + strings.SPACE + \
+        strings.ARROW + strings.SPACE + strings.A_USERNAME + \
+        strings.NEWLINE_TAB + strings.ARGUMENT_PWS_FILENAME + strings.SPACE + \
+        strings.ARROW + strings.SPACE + strings.FILENAME_PWS_FILE + \
+        strings.NEWLINE_TAB + strings.ARGUMENT_SCAN_LOCAL_NETWORKS + \
+        strings.SPACE + strings.ARROW + strings.SPACE + \
+        strings.LOCAL_SCAN_STRING_HELP + strings.NEWLINE_TAB + \
+        strings.ARGUMENT_PROPAGATE + strings.SPACE + strings.ARROW + \
+        strings.SPACE + strings.HELP_STRING_PROPAGATION + strings.NEWLINE + \
+        strings.EXAMPLE_USAGE + strings.NEWLINE_TAB + strings.MAIN_SCRIPT + \
+        strings.SPACE + strings.ARGUMENT_IP_ADDRESS_FILENAME + \
+        strings.SPACE + strings.IP_LIST + strings.SPACE + \
+        strings.ARGUMENT_PORTS + strings.SPACE + strings.ALL_PORTS + \
+        strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
+        strings.ADMIN + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
+        strings.SPACE + strings.PWDS_LIST + strings.NEWLINE_NEWLINE_TAB + \
+        strings.MAIN_SCRIPT + strings.ARGUMENT_IP_ADDRESS_FILENAME + \
+        strings.SPACE + strings.IP_LIST + strings.SPACE + \
+        strings.ARGUMENT_PORTS + strings.SPACE + strings.SSH_PORT + \
+        strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
+        strings.ROOT + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
+        strings.SPACE + strings.PWDS_LIST
 
 
 def ip_list_not_read(filename):
@@ -219,40 +230,6 @@ def netcat_writer(ip, port, filename):
         strings.SPACE + filename
 
 
-def help_output():
-    """
-    This is the help output for when the user passes in the help parameter
-    :return: The output itself.
-    """
-    return strings.PARAMETERS + strings.NEWLINE_TAB + \
-        strings.ARGUMENT_IP_ADDRESS_FILENAME + strings.SPACE + \
-        strings.ARROW + strings.SPACE + strings.FILENAME_LIST_IP_ADDRESSES + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_PORTS + strings.SPACE + \
-        strings.ARROW + strings.SPACE + strings.PORTS_TO_SCAN + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_USERNAME + strings.SPACE + \
-        strings.ARROW + strings.SPACE + strings.A_USERNAME + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_PWS_FILENAME + strings.SPACE + \
-        strings.ARROW + strings.SPACE + strings.FILENAME_PWS_FILE + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_SCAN_LOCAL_NETWORKS + \
-        strings.SPACE + strings.ARROW + strings.SPACE + \
-        strings.LOCAL_SCAN_STRING_HELP + strings.NEWLINE_TAB + \
-        strings.ARGUMENT_PROPAGATE + strings.SPACE + strings.ARROW + \
-        strings.SPACE + strings.HELP_STRING_PROPAGATION + strings.NEWLINE + \
-        strings.EXAMPLE_USAGE + strings.NEWLINE_TAB + strings.MAIN_SCRIPT + \
-        strings.SPACE + strings.ARGUMENT_IP_ADDRESS_FILENAME + \
-        strings.SPACE + strings.IP_LIST + strings.SPACE + \
-        strings.ARGUMENT_PORTS + strings.SPACE + strings.ALL_PORTS + \
-        strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
-        strings.ADMIN + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
-        strings.SPACE + strings.PWDS_LIST + strings.NEWLINE_NEWLINE_TAB + \
-        strings.MAIN_SCRIPT + strings.ARGUMENT_IP_ADDRESS_FILENAME + \
-        strings.SPACE + strings.IP_LIST + strings.SPACE + \
-        strings.ARGUMENT_PORTS + strings.SPACE + strings.SSH_PORT + \
-        strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
-        strings.ROOT + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
-        strings.SPACE + strings.PWDS_LIST
-
-
 def run_script_command():
     """
     This function will run the propagation script on another target machine
@@ -265,6 +242,29 @@ def run_script_command():
         strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
         strings.ROOT + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
         strings.PWDS_LIST + strings.SPACE + strings.ARGUMENT_PROPAGATE
+
+
+def scp_command_string(port, username, target_ip, filename):
+    """
+    This function creates and SSH copy string for an OS command
+    :param port: Port over which we are running the SSH copy
+    :param username: The username for the SSH login
+    :param target_ip: The IP address of the machine we are copying too
+    :param filename: The name of the file to be copied across by SSH
+    :return: The SSH copy command
+    """
+    return strings.SCP_COMMAND + strings.SPACE + str(port) + strings.SPACE + \
+        filename + strings.SPACE + username + strings.AT_SYMBOL + target_ip + \
+        strings.HOME_DIR
+
+
+def touch_file(filename):
+    """
+    This function creates a command for touching a specific file
+    :param filename: The filename of the file we want to touch
+    :return: The completed touch command
+    """
+    return strings.TOUCH_COMMAND + strings.SPACE + filename
 
 
 def web_login_url(ip, port):
