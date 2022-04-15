@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
 # Importing file for file based functionality
-import logging
-
 import file
 # Importing net_propagation for testing.
 import net_propagation
