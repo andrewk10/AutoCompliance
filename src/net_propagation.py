@@ -169,12 +169,12 @@ class NetPropagation:
         logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
         local_interfaces = get_if_list()
         if strings.LOOPBACK in local_interfaces:
-            local_interfaces = local_interfaces.remove(strings.LOOPBACK)
+            local_interfaces.remove(strings.LOOPBACK)
         for interface in local_interfaces:
-            if str(interface) != strings.LOOPBACK:
-                logging.info(strings_functions.fetching_ips_for_interface(
-                    interface))
-                self.ip_list = self.cycle_through_subnet()
+            self.interface = interface
+            logging.info(strings_functions.fetching_ips_for_interface(
+                interface))
+            self.ip_list = self.cycle_through_subnet()
         return self.ip_list
 
     def is_reachable_ip(self):
@@ -268,7 +268,6 @@ class NetPropagation:
         """
         This function will try and ping every IP in the IP list and if it
         doesn't receive a response it will then remove that IP from the IP list
-        :param ip_list: The list of IP Addresses to check
         :return new_ip_list: The revised list of IP addresses with invalid
         addresses removed.
         """

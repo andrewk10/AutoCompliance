@@ -17,18 +17,19 @@ def test_additional_actions():
     test uses the bad path in both to run through once. Good paths are tested
     in the two functions own tests.
     """
+    propagator = net_propagation.NetPropagation(
+        strings.RANDOM_STRING, None, strings.TEST_IP, None, None, None, None)
     transfer_file = file.File(strings.RANDOM_STRING)
     propagation_script = file.File(strings.RANDOM_STRING)
     arguments = [strings.ARGUMENT_IP_ADDRESS_FILENAME,
                  strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE]
-    ip = strings.TEST_IP
-    username = strings.RANDOM_STRING
     ports = [strings.SSH_PORT, strings.WEB_PORT_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHTY,
              strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
     for port in ports:
-        net_propagation.additional_actions(transfer_file, propagation_script,
-                                           arguments, ip, port, username)
+        propagator.port = port
+        propagator.additional_actions(transfer_file, propagation_script,
+                                      arguments)
 
 
 def test_append_lines_from_file_to_list():
@@ -49,34 +50,17 @@ def test_append_lines_from_file_to_list():
     assert lines_list[5] == strings.LINES[5]
 
 
-def test_assigning_values():
-    """
-    This function tests the assigning_values function in the net_propagation
-    script. It uses example arguments to do this stored in strings.py, but
-    before it does that the bad path is checked by passing in a single argument
-    with no value to get a runtime error.
-    """
-    num_arguments = 8
-    happy_path_range = 4
-    for arguments_selection in range(num_arguments):
-        if arguments_selection < happy_path_range:
-            assert net_propagation.assigning_values(
-                strings_functions.arguments_sets(arguments_selection)) is not \
-                   None
-        else:
-            assert net_propagation.assigning_values(
-                strings_functions.arguments_sets(arguments_selection)) is None
-
-
 def test_check_over_ssh():
     """
     This function tests the check_check_over_ssh function, it will always fail
-    for now until I figure out how to mock an SSH connection.
+    for now until I figure out how to mock a file present across an SSH
+    connection.
     """
     test_file = file.File(strings.FILE)
-    assert net_propagation.check_over_ssh(test_file.filename, strings.TEST_IP,
-                                          strings.SSH_PORT, strings.ADMIN,
-                                          strings.ADMIN) is True
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.SSH_PORT, None,
+        None, None)
+    assert propagator.check_over_ssh(test_file.filename) is True
 
 
 def test_convert_file_to_list():
@@ -90,20 +74,6 @@ def test_convert_file_to_list():
     assert test_file.convert_file_to_list() is not None
     test_file = file.File(strings.TEST_IP)
     assert test_file.convert_file_to_list() is None
-
-
-def test_exit_and_show_instructions(capfd):
-    """
-    This function tests the exit_and_show_instructions function.
-    Should just run straight through no problem hence why all this function
-    does is run that function and check what shows up in the console, errors or
-    exceptions will fail this test for us
-    :param capfd: Parameter needed to capture log output.
-    """
-    net_propagation.exit_and_show_instructions()
-    out, err = capfd.readouterr()
-    assert out == strings_functions.help_output() + "\n" + strings.EXITING + \
-           "\n"
 
 
 def test_file_error_handler(capfd):

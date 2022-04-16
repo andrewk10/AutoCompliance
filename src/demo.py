@@ -11,8 +11,6 @@ import logging
 import net_propagation
 # Importing strings for use of the external strings resources.
 import strings
-# Importing strings_functions for string building functions.
-import strings_functions
 # Importing sys to make OS calls and use OS level utilities.
 import sys
 
@@ -26,7 +24,7 @@ def demo():
 
     # If there is no arguments then just print the help menu and exit.
     if arguments.__len__() == 0:
-        exit_and_show_instructions()
+        demo_functions.exit_and_show_instructions()
         sys.exit(-1)
 
     # Just initialising this for use later.
@@ -38,7 +36,7 @@ def demo():
     # If they are invalid values...
     if valid_values is None:
         # Show the user instructions and exit gracefully.
-        exit_and_show_instructions()
+        demo_functions.exit_and_show_instructions()
         sys.exit(-1)
 
     # Else...
@@ -111,14 +109,6 @@ def demo():
             propagation_script = file.File(strings.DEMO_SCRIPT_FILENAME)
             # Try to spread using services and actions.
             propagator.try_action(transfer_file, propagation_script, arguments)
-
-
-def exit_and_show_instructions():
-    """
-    This function will print the help screen and show an exit prompt.
-    """
-    print(strings_functions.help_output())
-    print(strings.EXITING)
 
 
 demo()

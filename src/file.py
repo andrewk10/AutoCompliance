@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 
+# Importing demo_functions for the demo specific functionality.
+import demo_functions
 # Importing logging to safely log sensitive, error or debug info.
 import logging
+# For net_propagation related functionality.
+import net_propagation
 # Import os for path checking and command execution.
 import os
 # Importing strings for use of the external strings resources.
 import strings
 # Importing strings_functions for string building functions.
 import strings_functions
-# For net_propagation related functionality.
-import net_propagation
 
 
 class File:
@@ -82,7 +84,7 @@ class File:
         """
         logging.error(strings_functions.filename_processing_error(
             self.filename))
-        net_propagation.exit_and_show_instructions()
+        demo_functions.exit_and_show_instructions()
 
     def file_not_exist(self, ip, port, username, password):
         """
@@ -94,8 +96,9 @@ class File:
         :param password: Password being used as part of checking the file
         :return check_over_ssh(ip, port, username, password):
         """
-        return net_propagation.check_over_ssh(self.filename, ip, port,
-                                              username, password)
+        propagator = net_propagation.NetPropagation(username, password, ip,
+                                                    port, None, None, None)
+        return propagator.check_over_ssh(self.filename)
 
     def transfer_file(self, ip, port, login_string):
         """
@@ -113,10 +116,8 @@ class File:
         login_string_split = login_string.split(strings.COLON)
         try:
             print(strings.RSA_AND_PROMPT)
-            os.system(strings_functions.scp_command_string(port,
-                                                           login_string_split[
-                                                               0],
-                                                           ip, self.filename))
+            os.system(strings_functions.scp_command_string(
+                port, login_string_split[0], ip, self.filename))
             return True
         except ConnectionRefusedError:
             return False
@@ -129,4 +130,4 @@ class File:
         """
         if not os.path.exists(self.filename):
             logging.error(strings.FILE_DOES_NOT_EXIST)
-            net_propagation.exit_and_show_instructions()
+            demo_functions.exit_and_show_instructions()

@@ -7,6 +7,8 @@ import file
 import logging
 # Importing strings for use of the external strings resources.
 import strings
+# Importing strings_functions for string building functions.
+import strings_functions
 
 
 class DemoFunctions:
@@ -103,3 +105,11 @@ class DemoFunctions:
         else:
             logging.error(strings.PARAMETER_MISUSE)
             return None
+
+
+def exit_and_show_instructions():
+    """
+    This function will print the help screen and show an exit prompt.
+    """
+    print(strings_functions.help_output())
+    print(strings.EXITING)
