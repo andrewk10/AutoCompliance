@@ -9,33 +9,6 @@ ADMIN = "admin"
 # All ports list, for utilising all services in the scripts.
 ALL_PORTS = "22,23,25,80"
 
-# Argument to denote the filename of the IP address file.
-ARGUMENT_IP_ADDRESS_FILENAME = "-t"
-
-# Argument to denote the set of ports to use.
-ARGUMENT_PORTS = "-p"
-
-# Argument to denote the username for each of the actions.
-ARGUMENT_USERNAME = "-u"
-
-# Argument to denote the filename of the passwords file.
-ARGUMENT_PWS_FILENAME = "-f"
-
-# Argument to denote the need to propagate the running script.
-ARGUMENT_PROPAGATE = "-P"
-
-# Argument to denote the need to scan the local network.
-ARGUMENT_SCAN_LOCAL_NETWORKS = "-L"
-
-# Argument to denote the use of a specific file given the filename propagation.
-ARGUMENT_SPECIFIC_PROPAGATION_FILE = "-d"
-
-# Argument to denote the need for further help.
-ARGUMENT_HELP_SHORT = "-h"
-
-# Argument to denote the need for further help, just the long version.
-ARGUMENT_HELP_LONG = "--help"
-
 # Just a little arrow for CLI output.
 ARROW = "->"
 
@@ -71,12 +44,6 @@ COLON = ":"
 COMMA = ","
 
 # The demo filename
-DEMO_SCRIPT_FILENAME = "demo.py"
-
-# The main script.
-DEMO_SCRIPT_PATH = "./demo.py"
-
-# The main filename
 DEMO_SCRIPT_FILENAME = "demo.py"
 
 # The demo script path.
@@ -206,10 +173,6 @@ MAIN_SCRIPT = "./main.py"
 
 # The main function call.
 MAIN = "main()"
-
-# A string to let the user know a necessary argument is missing.
-MISSING_ARGUMENT = "Missing a mandatory argument, ensure arguments are used " \
-                   "correctly"
 
 # A string to let the user know a necessary argument is missing.
 MISSING_ARGUMENT = "Missing a mandatory argument, ensure arguments are used " \
@@ -369,37 +332,65 @@ DESCRIPTION = "Automating the Implementation of a " \
               "Compliance Programme using Distributed " \
               "Ledger Technologies"
 
-# Help text and option name for the file option.
-FILE_OPT_SHORT = "-f"
-FILE_OPT_LONG = "--file"
-FILE_HELP = "Filename for a file containing a list of passwords"
+# Short option name for the password file option.
+PW_FILE_OPT_SHORT = "-f"
+# Option name for the password file option.
+PW_FILE_OPT_LONG = "--file"
+# Help text for the password file option.
+PW_FILE_HELP = "Filename for a file containing a list of passwords"
 
-# Help text and option name for the port option.
-PORT_OPT_SHOT = "-p"
+# Short option name for the port option.
+PORT_OPT_SHORT = "-p"
+# Option name for the port option.
 PORT_OPT_LONG = "--port"
+# Help text for the port option.
 PORT_HELP = "Ports to scan on the target host"
 
-# Help text and option name for the target option.
-TARGET_OPT_SHORT = "-t"
-TARGET_OPT_LONG = "--target"
-TARGET_HELP = "Filename for a file containing a list of target IP addresses"
+# Short option name for the target IP option.
+IP_FILE_OPT_SHORT = "-t"
+# Option name for the target IP option.
+IP_FILE_OPT_LONG = "--target"
+# Help text for the target IP option.
+IP_FILE_HELP = "Filename for a file containing a list of target IP " \
+                   "addresses"
 
-# Help text and option name for the username option.
+# Short option name for the username option.
 USERNAME_OPT_SHORT = "-u"
-USERNAME_OPT_LONG = "-u"
-USERNAME_HELP = "A Username"
+# Option name for the username option.
+USERNAME_OPT_LONG = "--username"
+# Help text for the username option.
+USERNAME_HELP = "A Username on which we wish to run network propagation " \
+                "actions against"
 
-# Help text and option name for the lan scan option.
+# Short option name for the LAN scan option.
 LAN_OPT_SHORT = "-L"
+# Option name for the LAN scan option.
 LAN_OPT_LONG = "--lan"
+# Help text for the LAN scan option.
 LAN_HELP = "Scans the lan across all interfaces and " \
             "creates/adds to the list of target IP addresses"
 
-# Help text and option name for the propagate option.
-PROP_OPT_SHOT = "-P"
+# Short option name for the propagate option.
+PROP_OPT_SHORT = "-P"
+# Option name for the propagate option.
 PROP_OPT_LONG = "--propagate"
+# Help text for the propagate option.
 PROP_HELP = "Propagates the script onto available devices " \
             "and executes the script using the given command"
+
+# Short option name for propagate a file option.
+PROP_FILE_OPT_SHORT = "-d"
+# Option name for propagate a file option.
+PROP_FILE_OPT_LONG = "--deliver"
+# Help text for the propagate option.
+PROP_FILE_HELP = "Propagates the provided file onto available devices"
+
+# Short option name for help.
+HELP_OPT_SHORT = "-h"
+# Option name for help.
+HELP_OPT_LONG = "--help"
+# Help text for... the help.
+HELP_HELP = "Guidance regarding how to utilise the demo back-end"
 
 
 def adding_address_to_interface(specific_address, interface):
@@ -426,37 +417,37 @@ def arguments_sets(selection):
     """
     arguments = {
         # This runs the script against all services and four ports
-        0: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
-            ALL_PORTS, ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME,
+        0: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            ALL_PORTS, USERNAME_OPT_SHORT, ADMIN, PW_FILE_OPT_SHORT,
             PWDS_LIST_SHORT],
         # This just runs the scripts against one port / service
-        1: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
-            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
+        1: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
             PWDS_LIST_SHORT],
         # This propagates a specific file over SSH
-        2: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
-            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
-            PWDS_LIST_SHORT, ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
+        2: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT, PROP_FILE_OPT_SHORT, FILE],
         # This is running the automated propagation feature over SSH.
-        3: [ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST_SHORT,
-            ARGUMENT_PROPAGATE],
+        3: [LAN_OPT_SHORT, PORT_OPT_SHORT, SSH_PORT,
+            USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT, PWDS_LIST_SHORT,
+            PROP_OPT_SHORT],
 
         # This fails to run the script against all services and four ports
         # because the passwords file filename is invalid.
-        4: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, ARGUMENT_PORTS,
-            ALL_PORTS, ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME,
+        4: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            ALL_PORTS, USERNAME_OPT_SHORT, ADMIN, PW_FILE_OPT_SHORT,
             FORCE_FAIL],
         # This fails to run the scripts against one port / service because the
         # OP list filename is invalid.
-        5: [ARGUMENT_IP_ADDRESS_FILENAME, FORCE_FAIL, ARGUMENT_PORTS,
-            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
+        5: [IP_FILE_OPT_SHORT, FORCE_FAIL, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
             PWDS_LIST_SHORT],
         # This fails the propagation of a specific file over SSH because
         # parameter misuse.
-        6: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST_SHORT, PWDS_LIST_SHORT,
-            SSH_PORT, ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME,
-            PWDS_LIST_SHORT, ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
+        6: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PWDS_LIST_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT, PROP_FILE_OPT_SHORT, FILE],
         # This fails in general as no arguments are specified.
         7: [FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL,
             FORCE_FAIL, FORCE_FAIL, FORCE_FAIL],
@@ -594,23 +585,23 @@ def help_output():
     This is the help output for when the user passes in the help parameter
     :return: The output itself.
     """
-    return PARAMETERS + NEWLINE_TAB + ARGUMENT_IP_ADDRESS_FILENAME + SPACE + \
+    return PARAMETERS + NEWLINE_TAB + IP_FILE_OPT_SHORT + SPACE + \
         ARROW + SPACE + FILENAME_LIST_IP_ADDRESSES + NEWLINE_TAB + \
-        ARGUMENT_PORTS + SPACE + ARROW + SPACE + PORTS_TO_SCAN + \
-        NEWLINE_TAB + ARGUMENT_USERNAME + SPACE + ARROW + SPACE + \
-        A_USERNAME + NEWLINE_TAB + ARGUMENT_PWS_FILENAME + SPACE + ARROW + \
+        PORT_OPT_SHORT + SPACE + ARROW + SPACE + PORTS_TO_SCAN + \
+        NEWLINE_TAB + USERNAME_OPT_SHORT + SPACE + ARROW + SPACE + \
+        A_USERNAME + NEWLINE_TAB + PW_FILE_OPT_SHORT + SPACE + ARROW + \
         SPACE + FILENAME_PWS_FILE + NEWLINE_TAB + \
-        ARGUMENT_SCAN_LOCAL_NETWORKS + SPACE + ARROW + SPACE + \
-        LOCAL_SCAN_STRING_HELP + NEWLINE_TAB + ARGUMENT_PROPAGATE + SPACE + \
+        LAN_OPT_SHORT + SPACE + ARROW + SPACE + \
+        LOCAL_SCAN_STRING_HELP + NEWLINE_TAB + PROP_OPT_SHORT + SPACE + \
         ARROW + SPACE + HELP_STRING_PROPAGATION + NEWLINE + EXAMPLE_USAGE + \
         NEWLINE_TAB + DEMO_SCRIPT_PATH + SPACE + \
-        ARGUMENT_IP_ADDRESS_FILENAME + SPACE + IP_LIST + SPACE + \
-        ARGUMENT_PORTS + SPACE + ALL_PORTS + SPACE + ARGUMENT_USERNAME + \
-        SPACE + ADMIN + SPACE + ARGUMENT_PWS_FILENAME + SPACE + PWDS_LIST + \
+        IP_FILE_OPT_SHORT + SPACE + IP_LIST + SPACE + \
+        PORT_OPT_SHORT + SPACE + ALL_PORTS + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ADMIN + SPACE + PW_FILE_OPT_SHORT + SPACE + PWDS_LIST + \
         NEWLINE_NEWLINE_TAB + DEMO_SCRIPT_PATH + \
-        ARGUMENT_IP_ADDRESS_FILENAME + SPACE + IP_LIST + SPACE + \
-        ARGUMENT_PORTS + SPACE + SSH_PORT + SPACE + ARGUMENT_USERNAME + \
-        SPACE + ROOT + SPACE + ARGUMENT_PWS_FILENAME + SPACE + PWDS_LIST
+        IP_FILE_OPT_SHORT + SPACE + IP_LIST + SPACE + \
+        PORT_OPT_SHORT + SPACE + SSH_PORT + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ROOT + SPACE + PW_FILE_OPT_SHORT + SPACE + PWDS_LIST
 
 
 def run_script_command():
@@ -619,10 +610,10 @@ def run_script_command():
     over any service
     :return: The command itself
     """
-    return DEMO_SCRIPT_PATH + SPACE + ARGUMENT_SCAN_LOCAL_NETWORKS + SPACE + \
-        ARGUMENT_PORTS + SPACE + SSH_PORT + SPACE + ARGUMENT_USERNAME + \
-        SPACE + ROOT + SPACE + ARGUMENT_PWS_FILENAME + PWDS_LIST + SPACE + \
-        ARGUMENT_PROPAGATE
+    return DEMO_SCRIPT_PATH + SPACE + LAN_OPT_SHORT + SPACE + \
+        PORT_OPT_SHORT + SPACE + SSH_PORT + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ROOT + SPACE + PW_FILE_OPT_SHORT + PWDS_LIST + SPACE + \
+        PROP_OPT_SHORT
 
 
 def web_login_url(ip, port):

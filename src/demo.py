@@ -11,6 +11,8 @@ import logging
 import net_propagation
 # Importing strings for use of the external strings resources.
 import strings
+# Importing sys to handle arguments
+import sys
 # Importing argparse for command-line option parsing
 import argparse
 
@@ -20,40 +22,49 @@ def demo():
     This demo function is just for demo purposes.
     """
     parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
-
-    # If there is no arguments then just print the help menu and exit.
-    if arguments.__len__() == 0:
-        demo_functions.exit_and_show_instructions()
-        sys.exit(-1)
+    # Adding the target option to the parser.
+    parser.add_argument(
+        strings.IP_FILE_OPT_SHORT, strings.IP_FILE_OPT_LONG,
+        default='localhost', dest='target', help=strings.IP_FILE_HELP, type=str)
+    # Adding the username option to the parser.
+    parser.add_argument(
+        strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
+        help=strings.USERNAME_HELP)
     # Adding the file option to the parser.
     parser.add_argument(
-                    strings.FILE_OPT_SHORT, strings.FILE_OPT_LONG,
-                    help=strings.FILE_HELP)
+        strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
+        help=strings.PW_FILE_HELP)
+    # Adding the port option to the parser.
+    parser.add_argument(
+        strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
+        help=strings.PORT_HELP)
+    # Adding the lan option to the parser.
+    parser.add_argument(
+        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG,
+        help=strings.LAN_HELP)
+    # Adding the propagate option to the parser.
+    parser.add_argument(
+        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG,
+        help=strings.PROP_HELP)
+    args = parser.parse_args()
+
+    # If there is no arguments then just print the help menu and exit.
+    if not len(sys.argv) > 1:
+        demo_functions.exit_and_show_instructions()
+        sys.exit(-1)
+
 
     # Just initialising this for use later.
     transfer_file = strings.SPACE
-    # Adding the port option to the parser.
-    parser.add_argument(
-                    strings.PORT_OPT_SHOT, strings.PORT_OPT_LONG,
-                    help=strings.PORT_HELP)
 
     # Validating and assigning values based on arguments passed in.
-    demo_functionality = demo_functions.DemoFunctions(arguments)
+    demo_functionality = demo_functions.DemoFunctions(parser)
     valid_values = demo_functionality.checking_arguments()
     # If they are invalid values...
     if valid_values is None:
         # Show the user instructions and exit gracefully.
         demo_functions.exit_and_show_instructions()
         sys.exit(-1)
-    # Adding the target option to the parser.
-    parser.add_argument(
-                    strings.TARGET_OPT_SHORT, strings.TARGET_OPT_LONG,
-                    help=strings.TARGET_HELP)
-
-    # Adding the username option to the parser.
-    parser.add_argument(
-                    strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
-                    help=strings.USERNAME_HELP)
 
     # Creating a net_propagation object.
     propagator = net_propagation.NetPropagation(target_username, None, None,
@@ -62,15 +73,7 @@ def demo():
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
     if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
-    # Adding the lan option to the parser.
-    parser.add_argument(
-                    strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG,
-                    help=strings.LAN_HELP)
 
-    # Adding the propagate option to the parser.
-    parser.add_argument(
-                    strings.PROP_OPT_SHOT, strings.PROP_OPT_LONG,
-                    help=strings.PROP_HELP)
 
     args = parser.parse_args()
 
