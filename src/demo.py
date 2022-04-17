@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-
 # Importing demo_functions for demo specific functionality.
 import demo_functions
 # Importing file for working with files.
@@ -22,43 +21,41 @@ def demo():
     This demo function is just for demo purposes.
     """
     parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
-    # Adding the target option to the parser.
+    # Adding the target  file option to the parser.
     parser.add_argument(
         strings.IP_FILE_OPT_SHORT, strings.IP_FILE_OPT_LONG,
-        default='localhost', dest='target', help=strings.IP_FILE_HELP, type=str)
+        dest='target', help=strings.IP_FILE_HELP, type=str)
     # Adding the username option to the parser.
     parser.add_argument(
         strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
-        help=strings.USERNAME_HELP)
-    # Adding the file option to the parser.
+        dest='username', help=strings.USERNAME_HELP, type=str)
+    # Adding the password file option to the parser.
     parser.add_argument(
         strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
-        help=strings.PW_FILE_HELP)
+        dest="password_file", help=strings.PW_FILE_HELP, type=str)
     # Adding the port option to the parser.
     parser.add_argument(
         strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
-        help=strings.PORT_HELP)
+        dest='ports', help=strings.PORT_HELP, type=str)
     # Adding the lan option to the parser.
     parser.add_argument(
         strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG,
-        help=strings.LAN_HELP)
+        dest='lan', help=strings.LAN_HELP, type=str)
     # Adding the propagate option to the parser.
     parser.add_argument(
         strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG,
-        help=strings.PROP_HELP)
-    args = parser.parse_args()
+        dest='propagate', help=strings.PROP_HELP, type=str)
+    arguments = parser.parse_args()
 
     # If there is no arguments then just print the help menu and exit.
     if not len(sys.argv) > 1:
         demo_functions.exit_and_show_instructions()
         sys.exit(-1)
 
-
-    # Just initialising this for use later.
-    transfer_file = strings.SPACE
+    propagator = net_propagation.NetPropagation('', '', '', '', '', [], [])
 
     # Validating and assigning values based on arguments passed in.
-    demo_functionality = demo_functions.DemoFunctions(parser)
+    demo_functionality = demo_functions.DemoFunctions(arguments)
     valid_values = demo_functionality.checking_arguments()
     # If they are invalid values...
     if valid_values is None:
@@ -66,39 +63,21 @@ def demo():
         demo_functions.exit_and_show_instructions()
         sys.exit(-1)
 
-    # Creating a net_propagation object.
-    propagator = net_propagation.NetPropagation(target_username, None, None,
-                                                None, None, ip_list, None)
-
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
-    if strings.ARGUMENT_SCAN_LOCAL_NETWORKS in arguments:
-
-
-    args = parser.parse_args()
-
-    # Defining ip_list var for the ip list.
-    ip_list = []
-    # Defining password_list var.
-    password_list = []
-    # Defining transfer_file_filename var.
-    transfer_file_filename = ''
-    # Defining username, ports
-    target_username = ''
-    ports = ''
-
-    if args.target:
+    if arguments.target:
         # Extending the ip_list with the ip list.
-        ip_list.extend(net_propagation.convert_file_to_list(args.target))
+        propagator.ip_list.extend(net_propagation.convert_file_to_list(
+            arguments.target))
 
     # Check if the lan option was provided.
     # If so then extend the ip_list.
-    if args.lan:
+    if arguments.lan:
         logging.info(strings.PERFORMING_LOCAL_SCAN)
         propagator.ip_list = propagator.gathering_local_ips()
 
     # Creating the password file.
-    password_file = file.File(strings.PWDS_LIST_SHORT)
+    password_file = file.File(arguments.password_file)
     try:
         # Here I made sure the user actually gave a valid file for the
         # passwords list. If they have...
@@ -111,11 +90,9 @@ def demo():
         # they can possibly fix their mistake.
         password_file.file_error_handler()
         sys.exit(-1)
-    if args.file:
-        password_list = net_propagation.convert_file_to_list(args.file)
 
     # If the user wants to transfer a file, this stuff should be done...
-    if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments:
+    if arguments.propagate:
         try:
             # If it does though we assign the filename to the name out of scope
             # above.

