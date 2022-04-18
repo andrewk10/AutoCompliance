@@ -49,6 +49,12 @@ DEMO_SCRIPT_FILENAME = "demo.py"
 # The demo script path.
 DEMO_SCRIPT_PATH = "./demo.py"
 
+# This is the program description for the cli help menu.
+DESCRIPTION = "Automating the Implementation of a " \
+              "Cybersecurity Governance, Risk and " \
+              "Compliance Programme using Distributed " \
+              "Ledger Technologies"
+
 # A string that states a script wasn't propagated.
 DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
 
@@ -110,6 +116,15 @@ FILENAME_PWS_FILE = "Filename for a file containing a list of passwords"
 # Greater than symbol.
 GREATER_THAN = ">"
 
+# Help text for... the help.
+HELP_HELP = "Guidance regarding how to utilise the demo back-end"
+
+# Short option name for help.
+HELP_OPT_SHORT = "-h"
+
+# Option name for help.
+HELP_OPT_LONG = "--help"
+
 # The help string for the propagation argument definition in help output.
 HELP_STRING_PROPAGATION = "Propagates the script onto available devices and " \
                           "executes the script using the given command"
@@ -126,6 +141,16 @@ IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
 # Specifying that something is from an interface's subnet.
 INTERFACE_SUBNET = "'s subnet."
 
+# Help text for the target IP option.
+IP_FILE_HELP = "Filename for a file containing a list of target IP " \
+                   "addresses"
+
+# Short option name for the target IP option.
+IP_FILE_OPT_SHORT = "-t"
+
+# Option name for the target IP option.
+IP_FILE_OPT_LONG = "--target"
+
 # Letting the user know a specified IP file could not be found.
 IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
 
@@ -137,6 +162,16 @@ IP_LIST_SHORT = "src/test_files/ip_list_short.txt"
 
 # Let the user know that we're checking to see if the IP address is reachable.
 IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
+
+# Help text for the LAN scan option.
+LAN_HELP = "Scans the lan across all interfaces and " \
+            "creates/adds to the list of target IP addresses"
+
+# Short option name for the LAN scan option.
+LAN_OPT_SHORT = "-L"
+
+# Option name for the LAN scan option.
+LAN_OPT_LONG = "--lan"
 
 # The less than symbol.
 LESS_THAN = "<"
@@ -205,6 +240,15 @@ PASSWORD_PROMPT = "Password:"
 # Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
 
+# Short option name for the password file option.
+PW_FILE_OPT_SHORT = "-f"
+
+# Option name for the password file option.
+PW_FILE_OPT_LONG = "--file"
+
+# Help text for the password file option.
+PW_FILE_HELP = "Filename for a file containing a list of passwords"
+
 # List of dummy passwords
 PWDS_LIST = "src/test_files/passwords_list.txt"
 
@@ -227,8 +271,36 @@ PING = "ping"
 # The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
 
+# Short option name for the port option.
+PORT_OPT_SHORT = "-p"
+
+# Option name for the port option.
+PORT_OPT_LONG = "--port"
+
+# Help text for the port option.
+PORT_HELP = "Ports to scan on the target host"
+
 # String for the help text.
 PORTS_TO_SCAN = "Ports to scan on the target host"
+
+# Help text for the propagate option.
+PROP_HELP = "Propagates the script onto available devices " \
+            "and executes the script using the given command"
+
+# Option name for the propagate option.
+PROP_OPT_LONG = "--propagate"
+
+# Short option name for the propagate option.
+PROP_OPT_SHORT = "-P"
+
+# Help text for the propagate option.
+PROP_FILE_HELP = "Propagates the provided file onto available devices"
+
+# Option name for propagate a file option.
+PROP_FILE_OPT_LONG = "--deliver"
+
+# Short option name for propagate a file option.
+PROP_FILE_OPT_SHORT = "-d"
 
 # A string just for tests.
 RANDOM_STRING = "tests"
@@ -290,8 +362,18 @@ TRANSFER_SUCCESS_SSH = "File transferred over port 22 / SSH"
 # Unsuccessful statement to be used with services and actions.
 UNSUCCESSFUL = "Unsuccessful"
 
+# Help text for the username option.
+USERNAME_HELP = "A Username on which we wish to run network propagation " \
+                "actions against"
+
 USERNAME_IN_PWS = "using the specified username with a password in the " \
                   "passwords file."
+
+# Short option name for the username option.
+USERNAME_OPT_SHORT = "-u"
+
+# Option name for the username option.
+USERNAME_OPT_LONG = "--username"
 
 # The username prompt that comes with web login POST requests.
 USERNAME_PROMPT_WEB = "username:"
@@ -325,72 +407,6 @@ WELCOME_TO = "Welcome to"
 
 # Letting the user know about a working username and password.
 WORKING_USERNAME_PASS = "A working username and password for"
-
-# This is the program description for the cli help menu.
-DESCRIPTION = "Automating the Implementation of a " \
-              "Cybersecurity Governance, Risk and " \
-              "Compliance Programme using Distributed " \
-              "Ledger Technologies"
-
-# Short option name for the password file option.
-PW_FILE_OPT_SHORT = "-f"
-# Option name for the password file option.
-PW_FILE_OPT_LONG = "--file"
-# Help text for the password file option.
-PW_FILE_HELP = "Filename for a file containing a list of passwords"
-
-# Short option name for the port option.
-PORT_OPT_SHORT = "-p"
-# Option name for the port option.
-PORT_OPT_LONG = "--port"
-# Help text for the port option.
-PORT_HELP = "Ports to scan on the target host"
-
-# Short option name for the target IP option.
-IP_FILE_OPT_SHORT = "-t"
-# Option name for the target IP option.
-IP_FILE_OPT_LONG = "--target"
-# Help text for the target IP option.
-IP_FILE_HELP = "Filename for a file containing a list of target IP " \
-                   "addresses"
-
-# Short option name for the username option.
-USERNAME_OPT_SHORT = "-u"
-# Option name for the username option.
-USERNAME_OPT_LONG = "--username"
-# Help text for the username option.
-USERNAME_HELP = "A Username on which we wish to run network propagation " \
-                "actions against"
-
-# Short option name for the LAN scan option.
-LAN_OPT_SHORT = "-L"
-# Option name for the LAN scan option.
-LAN_OPT_LONG = "--lan"
-# Help text for the LAN scan option.
-LAN_HELP = "Scans the lan across all interfaces and " \
-            "creates/adds to the list of target IP addresses"
-
-# Short option name for the propagate option.
-PROP_OPT_SHORT = "-P"
-# Option name for the propagate option.
-PROP_OPT_LONG = "--propagate"
-# Help text for the propagate option.
-PROP_HELP = "Propagates the script onto available devices " \
-            "and executes the script using the given command"
-
-# Short option name for propagate a file option.
-PROP_FILE_OPT_SHORT = "-d"
-# Option name for propagate a file option.
-PROP_FILE_OPT_LONG = "--deliver"
-# Help text for the propagate option.
-PROP_FILE_HELP = "Propagates the provided file onto available devices"
-
-# Short option name for help.
-HELP_OPT_SHORT = "-h"
-# Option name for help.
-HELP_OPT_LONG = "--help"
-# Help text for... the help.
-HELP_HELP = "Guidance regarding how to utilise the demo back-end"
 
 
 def adding_address_to_interface(specific_address, interface):

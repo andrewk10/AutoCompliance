@@ -55,8 +55,7 @@ class File:
         :param port: The port we're propagating through
         :param login_details: The username and password string combo
         """
-        if strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE in arguments and \
-                (str(port) == strings.SSH_PORT):
+        if arguments.propagate_file and (str(port) == strings.SSH_PORT):
             transferred = self.transfer_file(ip, port, login_details)
             if transferred:
                 logging.info(strings.TRANSFER_SUCCESS_SSH)

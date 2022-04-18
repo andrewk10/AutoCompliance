@@ -20,6 +20,7 @@ def demo():
     """
     This demo function is just for demo purposes.
     """
+    # Argument parser for handling arguments.
     parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
     # Adding the target  file option to the parser.
     parser.add_argument(
@@ -49,7 +50,12 @@ def demo():
     parser.add_argument(
         strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
         dest='propagate_file', help=strings.PROP_FILE_HELP, type=str)
+
+    # Parsing the arguments.
     arguments = parser.parse_args()
+
+    # Initialising this for possible later use
+    transfer_file = strings.SPACE
 
     # If there is no arguments then just print the help menu and exit.
     if not len(sys.argv) > 1:
@@ -128,9 +134,6 @@ def demo():
             propagation_script = file.File(strings.DEMO_SCRIPT_FILENAME)
             # Try to spread using services and actions.
             propagator.try_action(transfer_file, propagation_script, arguments)
-            net_propagation.try_action(ip, port, target_username,
-                                       password_list, transfer_file_filename,
-                                       parser.parse_args())
 
 
 if __name__ == "__demo__":
