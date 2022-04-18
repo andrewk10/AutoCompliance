@@ -92,6 +92,17 @@ class NetPropagation:
                 client.close()
                 return True
 
+        except NoValidConnectionsError:
+            client.close()
+            return True
+
+        except TimeoutError:
+            client.close()
+            return True
+
+        except SSHException:
+            client.close()
+            return True
 
     def connect_ssh_client(self):
         """
@@ -233,6 +244,16 @@ class NetPropagation:
                         logging.error(strings.SANITATION_FAILED)
                         client.close()
                         return False
+                    return True
+                except RuntimeError:
+                    client.close()
+                    return False
+
+            else:
+                logging.debug(strings_functions.file_present_on_host(self.ip))
+                return False
+        except RuntimeError:
+            return False
 
     def propagating(self, script, arguments):
         """
@@ -245,7 +266,7 @@ class NetPropagation:
         :param script: The script that needs to be propagated and spread
         :param arguments: The arguments passed in by the user themselves
         """
-        if strings.ARGUMENT_PROPAGATE in arguments and (
+        if arguments.propagate and (
                 self.port == strings.SSH_PORT):
             propagated = self.propagate_script(script)
             if propagated:
@@ -259,8 +280,6 @@ class NetPropagation:
         """
         This function will try and ping every IP in the IP list and if it
         doesn't receive a response it will then remove that IP from the IP list
-        :return new_ip_list: The revised list of IP addresses with invalid
-        addresses removed.
         """
         new_ip_list = []
         for ip in self.ip_list:
@@ -268,7 +287,7 @@ class NetPropagation:
             logging.info(strings_functions.checking_ip_reachable(self.ip))
             if self.is_reachable_ip():
                 new_ip_list.append(self.ip)
-        return new_ip_list
+        self.ip_list = new_ip_list
 
     def scan_port(self):
         """

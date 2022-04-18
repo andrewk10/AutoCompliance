@@ -45,6 +45,10 @@ def demo():
     parser.add_argument(
         strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG,
         dest='propagate', help=strings.PROP_HELP, type=str)
+    # Adding the transfer file option to the parser.
+    parser.add_argument(
+        strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
+        dest='propagate_file', help=strings.PROP_FILE_HELP, type=str)
     arguments = parser.parse_args()
 
     # If there is no arguments then just print the help menu and exit.
@@ -63,12 +67,12 @@ def demo():
         demo_functions.exit_and_show_instructions()
         sys.exit(-1)
 
+    ip_file = file.File(arguments.target)
     # The end user specified a local scan must be executed, the result of the
     # local scan will extend the current ip_list.
     if arguments.target:
         # Extending the ip_list with the ip list.
-        propagator.ip_list.extend(net_propagation.convert_file_to_list(
-            arguments.target))
+        propagator.ip_list.extend(ip_file.convert_file_to_list())
 
     # Check if the lan option was provided.
     # If so then extend the ip_list.
@@ -91,34 +95,19 @@ def demo():
         password_file.file_error_handler()
         sys.exit(-1)
 
-    # If the user wants to transfer a file, this stuff should be done...
+    # If the user wants to transfer a file, then we do the following...
     if arguments.propagate:
         try:
-            # If it does though we assign the filename to the name out of scope
-            # above.
-            transfer_file_filename = arguments[arguments.index(
-                strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE) + 1]
             # Again making sure the transfer file actually exits, just like
             # the password file above.
-            transfer_file = file.File(transfer_file_filename)
+            transfer_file = file.File(arguments.propagate_file)
             transfer_file.validate_file_exists()
         except RuntimeError:
             # File doesn't exist, throw an error and give the user a chance to
             # try again.
-            transfer_file_filename = arguments[arguments.index(
-                strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE) + 1]
-            transfer_file = file.File(transfer_file_filename)
+            transfer_file = file.File(arguments.propagate_file)
             transfer_file.file_error_handler()
             sys.exit(-1)
-
-    if args.propagate:
-        transfer_file_filename = args.propagate
-
-    if args.port:
-        ports = args.port
-
-    if args.u:
-        target_username = args.u
 
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
@@ -126,10 +115,10 @@ def demo():
     propagator.ip_list = list(dict.fromkeys(propagator.ip_list))
     # Removing IPs from the IP list that can't be pinged from the host machine
     # of the script.
-    propagator.ip_list = propagator.remove_unreachable_ips()
+    propagator.remove_unreachable_ips()
     # Getting a list of ports by splitting the target ports specified by the
     # user on the comma.
-    ports = ports.split(strings.COMMA)
+    ports = arguments.ports.split(strings.COMMA)
     # Cycling through every IP in the IP list...
     for ip in propagator.ip_list:
         # And then using all user specified ports against that specific IP...
