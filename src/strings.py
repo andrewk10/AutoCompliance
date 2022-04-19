@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# The adding string.
+# A string that just states "Adding".
 ADDING = "Adding"
 
 # Admin user string.
@@ -8,33 +8,6 @@ ADMIN = "admin"
 
 # All ports list, for utilising all services in the scripts.
 ALL_PORTS = "22,23,25,80"
-
-# Argument to denote the filename of the IP address file.
-ARGUMENT_IP_ADDRESS_FILENAME = "-t"
-
-# Argument to denote the set of ports to use.
-ARGUMENT_PORTS = "-p"
-
-# Argument to denote the username for each of the actions.
-ARGUMENT_USERNAME = "-u"
-
-# Argument to denote the filename of the passwords file.
-ARGUMENT_PWS_FILENAME = "-f"
-
-# Argument to denote the need to propagate the running script.
-ARGUMENT_PROPAGATE = "-P"
-
-# Argument to denote the need to scan the local network.
-ARGUMENT_SCAN_LOCAL_NETWORKS = "-L"
-
-# Argument to denote the use of a specific file given the filename propagation.
-ARGUMENT_SPECIFIC_PROPAGATION_FILE = "-d"
-
-# Argument to denote the need for further help.
-ARGUMENT_HELP_SHORT = "-h"
-
-# Argument to denote the need for further help, just the long version.
-ARGUMENT_HELP_LONG = "--help"
 
 # Just a little arrow for CLI output.
 ARROW = "->"
@@ -48,11 +21,18 @@ AT_SYMBOL = "@"
 # String to describe the username argument under help
 A_USERNAME = "A username"
 
+# Blank String
+BLANK_STRING = ''
+
 # Letting the user know we can't read an IP list from a specific file.
 CAN_NOT_READ_IP_LIST = "IP list cannot be read from filename:"
 
 # cat command
 CAT = "cat"
+
+# Let the user know there's something wrong with the file paths provided.
+CHECK_FILE_PATHS = "There's something wrong with the file paths provided, " \
+                   "please review them and try again."
 
 # A string that states that the IP and port pair is closed.
 CLOSED_IP_PORT_PAIR = "This IP address and port pair is closed"
@@ -62,6 +42,18 @@ COLON = ":"
 
 # A string that just denotes the use of a comma, same "idea" as above.
 COMMA = ","
+
+# The demo filename
+DEMO_SCRIPT_FILENAME = "demo.py"
+
+# The demo script path.
+DEMO_SCRIPT_PATH = "./demo.py"
+
+# This is the program description for the cli help menu.
+DESCRIPTION = "Automating the Implementation of a " \
+              "Cybersecurity Governance, Risk and " \
+              "Compliance Programme using Distributed " \
+              "Ledger Technologies"
 
 # A string that states a script wasn't propagated.
 DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
@@ -103,6 +95,9 @@ FILE_PRESENT_ON_HOST = "A file is already present on this host:"
 FILENAME_LIST_IP_ADDRESSES = "Filename for a file containing a list of " \
                              "target IP addresses"
 
+# String for forcing a fail for tests.
+FORCE_FAIL = "This Should Work"
+
 # Lets the user know there's an open port on a specific IP address.
 FOUND_OPEN_IP_PORT_PAIR = "Found an open IP address and port pair"
 
@@ -121,6 +116,15 @@ FILENAME_PWS_FILE = "Filename for a file containing a list of passwords"
 # Greater than symbol.
 GREATER_THAN = ">"
 
+# Help text for... the help.
+HELP_HELP = "Guidance regarding how to utilise the demo back-end"
+
+# Short option name for help.
+HELP_OPT_SHORT = "-h"
+
+# Option name for help.
+HELP_OPT_LONG = "--help"
+
 # The help string for the propagation argument definition in help output.
 HELP_STRING_PROPAGATION = "Propagates the script onto available devices and " \
                           "executes the script using the given command"
@@ -137,14 +141,37 @@ IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
 # Specifying that something is from an interface's subnet.
 INTERFACE_SUBNET = "'s subnet."
 
+# Help text for the target IP option.
+IP_FILE_HELP = "Filename for a file containing a list of target IP " \
+                   "addresses"
+
+# Short option name for the target IP option.
+IP_FILE_OPT_SHORT = "-t"
+
+# Option name for the target IP option.
+IP_FILE_OPT_LONG = "--target"
+
 # Letting the user know a specified IP file could not be found.
 IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
 
 # Name of the test IP list file, prepended with src/ for Pytest to work.
 IP_LIST = "src/test_files/ip_list.txt"
 
-# Let the suse know that we're checking to see if the IP address is reachable.
+# Name of the short test IP list file, prepended with src/ for Pytest to work.
+IP_LIST_SHORT = "src/test_files/ip_list_short.txt"
+
+# Let the user know that we're checking to see if the IP address is reachable.
 IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
+
+# Help text for the LAN scan option.
+LAN_HELP = "Scans the lan across all interfaces and " \
+            "creates/adds to the list of target IP addresses"
+
+# Short option name for the LAN scan option.
+LAN_OPT_SHORT = "-L"
+
+# Option name for the LAN scan option.
+LAN_OPT_LONG = "--lan"
 
 # The less than symbol.
 LESS_THAN = "<"
@@ -170,20 +197,21 @@ LOGIN_PHP = "/login.php"
 # The login prompt a user usually sees with SSH.
 LOGIN_PROMPT = "login:"
 
-# Login to string, another string building constant.
+# "Login to" string, another string building constant.
 LOGIN_TO = "login to"
 
 # The typical ID of the loopback interface.
 LOOPBACK = "lo"
 
+# The main script.
+MAIN_SCRIPT = "./main.py"
+
 # The main function call.
 MAIN = "main()"
 
-# The main filename
-MAIN_FILENAME = "main.py"
-
-# The main script.
-MAIN_SCRIPT = "./main.py"
+# A string to let the user know a necessary argument is missing.
+MISSING_ARGUMENT = "Missing a mandatory argument, ensure arguments are used " \
+                   "correctly"
 
 # Netcat listener, with a specified port, the command.
 NETCAT_LISTENER_PORT_COMMAND = "nc -l -p"
@@ -212,8 +240,20 @@ PASSWORD_PROMPT = "Password:"
 # Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
 
+# Short option name for the password file option.
+PW_FILE_OPT_SHORT = "-f"
+
+# Option name for the password file option.
+PW_FILE_OPT_LONG = "--file"
+
+# Help text for the password file option.
+PW_FILE_HELP = "Filename for a file containing a list of passwords"
+
 # List of dummy passwords
-PWDS_LIST = "src/test_files/password_list.txt"
+PWDS_LIST = "src/test_files/passwords_list.txt"
+
+# Shorter list of dummy passwords
+PWDS_LIST_SHORT = "src/test_files/passwords_list_short.txt"
 
 # Parameters string for help test.
 PARAMETERS = "Parameters:"
@@ -231,8 +271,36 @@ PING = "ping"
 # The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
 
+# Short option name for the port option.
+PORT_OPT_SHORT = "-p"
+
+# Option name for the port option.
+PORT_OPT_LONG = "--port"
+
+# Help text for the port option.
+PORT_HELP = "Ports to scan on the target host"
+
 # String for the help text.
 PORTS_TO_SCAN = "Ports to scan on the target host"
+
+# Help text for the propagate option.
+PROP_HELP = "Propagates the script onto available devices " \
+            "and executes the script using the given command"
+
+# Option name for the propagate option.
+PROP_OPT_LONG = "--propagate"
+
+# Short option name for the propagate option.
+PROP_OPT_SHORT = "-P"
+
+# Help text for the propagate option.
+PROP_FILE_HELP = "Propagates the provided file onto available devices"
+
+# Option name for propagate a file option.
+PROP_FILE_OPT_LONG = "--deliver"
+
+# Short option name for propagate a file option.
+PROP_FILE_OPT_SHORT = "-d"
 
 # A string just for tests.
 RANDOM_STRING = "tests"
@@ -294,8 +362,18 @@ TRANSFER_SUCCESS_SSH = "File transferred over port 22 / SSH"
 # Unsuccessful statement to be used with services and actions.
 UNSUCCESSFUL = "Unsuccessful"
 
+# Help text for the username option.
+USERNAME_HELP = "A Username on which we wish to run network propagation " \
+                "actions against"
+
 USERNAME_IN_PWS = "using the specified username with a password in the " \
                   "passwords file."
+
+# Short option name for the username option.
+USERNAME_OPT_SHORT = "-u"
+
+# Option name for the username option.
+USERNAME_OPT_LONG = "--username"
 
 # The username prompt that comes with web login POST requests.
 USERNAME_PROMPT_WEB = "username:"
@@ -355,19 +433,40 @@ def arguments_sets(selection):
     """
     arguments = {
         # This runs the script against all services and four ports
-        0: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, ALL_PORTS,
-            ARGUMENT_USERNAME, ADMIN, ARGUMENT_PWS_FILENAME, PWDS_LIST],
+        0: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            ALL_PORTS, USERNAME_OPT_SHORT, ADMIN, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT],
         # This just runs the scripts against one port / service
-        1: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST],
+        1: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT],
         # This propagates a specific file over SSH
-        2: [ARGUMENT_IP_ADDRESS_FILENAME, IP_LIST, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
-            ARGUMENT_SPECIFIC_PROPAGATION_FILE, FILE],
+        2: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT, PROP_FILE_OPT_SHORT, FILE],
         # This is running the automated propagation feature over SSH.
-        3: [ARGUMENT_SCAN_LOCAL_NETWORKS, ARGUMENT_PORTS, SSH_PORT,
-            ARGUMENT_USERNAME, ROOT, ARGUMENT_PWS_FILENAME, PWDS_LIST,
-            ARGUMENT_PROPAGATE]
+        3: [LAN_OPT_SHORT, PORT_OPT_SHORT, SSH_PORT,
+            USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT, PWDS_LIST_SHORT,
+            PROP_OPT_SHORT],
+
+        # This fails to run the script against all services and four ports
+        # because the passwords file filename is invalid.
+        4: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            ALL_PORTS, USERNAME_OPT_SHORT, ADMIN, PW_FILE_OPT_SHORT,
+            FORCE_FAIL],
+        # This fails to run the scripts against one port / service because the
+        # OP list filename is invalid.
+        5: [IP_FILE_OPT_SHORT, FORCE_FAIL, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT],
+        # This fails the propagation of a specific file over SSH because
+        # parameter misuse.
+        6: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PWDS_LIST_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT, PROP_FILE_OPT_SHORT, FILE],
+        # This fails in general as no arguments are specified.
+        7: [FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL,
+            FORCE_FAIL, FORCE_FAIL, FORCE_FAIL],
     }
     return arguments.get(selection, None)
 
@@ -502,23 +601,23 @@ def help_output():
     This is the help output for when the user passes in the help parameter
     :return: The output itself.
     """
-    return PARAMETERS + NEWLINE_TAB + ARGUMENT_IP_ADDRESS_FILENAME + SPACE + \
+    return PARAMETERS + NEWLINE_TAB + IP_FILE_OPT_SHORT + SPACE + \
         ARROW + SPACE + FILENAME_LIST_IP_ADDRESSES + NEWLINE_TAB + \
-        ARGUMENT_PORTS + SPACE + ARROW + SPACE + PORTS_TO_SCAN + \
-        NEWLINE_TAB + ARGUMENT_USERNAME + SPACE + ARROW + SPACE + \
-        A_USERNAME + NEWLINE_TAB + ARGUMENT_PWS_FILENAME + SPACE + ARROW + \
+        PORT_OPT_SHORT + SPACE + ARROW + SPACE + PORTS_TO_SCAN + \
+        NEWLINE_TAB + USERNAME_OPT_SHORT + SPACE + ARROW + SPACE + \
+        A_USERNAME + NEWLINE_TAB + PW_FILE_OPT_SHORT + SPACE + ARROW + \
         SPACE + FILENAME_PWS_FILE + NEWLINE_TAB + \
-        ARGUMENT_SCAN_LOCAL_NETWORKS + SPACE + ARROW + SPACE + \
-        LOCAL_SCAN_STRING_HELP + NEWLINE_TAB + ARGUMENT_PROPAGATE + SPACE + \
+        LAN_OPT_SHORT + SPACE + ARROW + SPACE + \
+        LOCAL_SCAN_STRING_HELP + NEWLINE_TAB + PROP_OPT_SHORT + SPACE + \
         ARROW + SPACE + HELP_STRING_PROPAGATION + NEWLINE + EXAMPLE_USAGE + \
-        NEWLINE_TAB + MAIN_SCRIPT + SPACE + ARGUMENT_IP_ADDRESS_FILENAME + \
-        SPACE + IP_LIST + SPACE + ARGUMENT_PORTS + SPACE + ALL_PORTS + \
-        SPACE + ARGUMENT_USERNAME + SPACE + ADMIN + SPACE + \
-        ARGUMENT_PWS_FILENAME + SPACE + PWDS_LIST + NEWLINE_NEWLINE_TAB + \
-        MAIN_SCRIPT + ARGUMENT_IP_ADDRESS_FILENAME + SPACE + IP_LIST + \
-        SPACE + ARGUMENT_PORTS + SPACE + SSH_PORT + SPACE + \
-        ARGUMENT_USERNAME + SPACE + ROOT + SPACE + ARGUMENT_PWS_FILENAME + \
-        SPACE + PWDS_LIST
+        NEWLINE_TAB + DEMO_SCRIPT_PATH + SPACE + \
+        IP_FILE_OPT_SHORT + SPACE + IP_LIST + SPACE + \
+        PORT_OPT_SHORT + SPACE + ALL_PORTS + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ADMIN + SPACE + PW_FILE_OPT_SHORT + SPACE + PWDS_LIST + \
+        NEWLINE_NEWLINE_TAB + DEMO_SCRIPT_PATH + \
+        IP_FILE_OPT_SHORT + SPACE + IP_LIST + SPACE + \
+        PORT_OPT_SHORT + SPACE + SSH_PORT + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ROOT + SPACE + PW_FILE_OPT_SHORT + SPACE + PWDS_LIST
 
 
 def run_script_command():
@@ -527,10 +626,10 @@ def run_script_command():
     over any service
     :return: The command itself
     """
-    return MAIN_SCRIPT + SPACE + ARGUMENT_SCAN_LOCAL_NETWORKS + SPACE + \
-        ARGUMENT_PORTS + SPACE + SSH_PORT + SPACE + ARGUMENT_USERNAME + \
-        SPACE + ROOT + SPACE + ARGUMENT_PWS_FILENAME + PWDS_LIST + SPACE + \
-        ARGUMENT_PROPAGATE
+    return DEMO_SCRIPT_PATH + SPACE + LAN_OPT_SHORT + SPACE + \
+        PORT_OPT_SHORT + SPACE + SSH_PORT + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ROOT + SPACE + PW_FILE_OPT_SHORT + PWDS_LIST + SPACE + \
+        PROP_OPT_SHORT
 
 
 def web_login_url(ip, port):
