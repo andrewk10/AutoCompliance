@@ -33,7 +33,7 @@ def demo():
     # Adding the password file option to the parser.
     parser.add_argument(
         strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
-        dest="password_file", help=strings.PW_FILE_HELP, type=str)
+        dest="pw_file", help=strings.PW_FILE_HELP, type=str)
     # Adding the port option to the parser.
     parser.add_argument(
         strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
@@ -87,18 +87,18 @@ def demo():
         propagator.ip_list = propagator.gathering_local_ips()
 
     # Creating the password file.
-    password_file = file.File(arguments.password_file)
+    pw_file = file.File(arguments.pw_file)
     try:
         # Here I made sure the user actually gave a valid file for the
         # passwords list. If they have...
-        password_file.validate_file_exists()
+        pw_file.validate_file_exists()
         # A list of passwords is created.
-        propagator.password_list = password_file.convert_file_to_list()
+        propagator.password_list = pw_file.convert_file_to_list()
 
     except RuntimeError:
         # File doesn't exist, alert the user and exit gracefully, so
         # they can possibly fix their mistake.
-        password_file.file_error_handler()
+        pw_file.file_error_handler()
         sys.exit(-1)
 
     # If the user wants to transfer a file, then we do the following...
