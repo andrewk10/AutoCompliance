@@ -19,6 +19,6 @@ src/test_files/passwords_list_short.txt -d src/test_files/file.txt
 
 # Running the propagation script across SSH but acquiring IPs through a local
 # scan and then subsequently self propagating.
-echo "Running the propagation script across SSH and Telnet but acquiring IPs \
-through a local scan and then subsequently self propagating."
+echo "Running the propagation script across SSH but acquiring IPs through a \
+local scan and then subsequently self propagating."
 ./src/demo.py -L -p 22 -u root -f src/test_files/passwords_list_short.txt -P

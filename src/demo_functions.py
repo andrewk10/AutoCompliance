@@ -63,8 +63,7 @@ class DemoFunctions:
         :return None: If the values can't be assigned.
         """
         if (self.arguments.target or self.arguments.lan) and \
-                self.arguments.ports and self.arguments.username and \
-                len(self.arguments) >= 8 and not self.arguments.help:
+                self.arguments.ports and self.arguments.username:
             try:
                 values = self.assigning_values()
                 if values is not None and not self.arguments.lan:

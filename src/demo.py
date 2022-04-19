@@ -40,12 +40,12 @@ def demo():
         dest='ports', help=strings.PORT_HELP, type=str)
     # Adding the lan option to the parser.
     parser.add_argument(
-        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG,
-        dest='lan', help=strings.LAN_HELP, type=str)
+        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG, action='store_true',
+        help=strings.LAN_HELP)
     # Adding the propagate option to the parser.
     parser.add_argument(
-        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG,
-        dest='propagate', help=strings.PROP_HELP, type=str)
+        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG, action='store_true',
+        help=strings.PROP_HELP)
     # Adding the transfer file option to the parser.
     parser.add_argument(
         strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
@@ -102,7 +102,7 @@ def demo():
         sys.exit(-1)
 
     # If the user wants to transfer a file, then we do the following...
-    if arguments.propagate:
+    if arguments.propagate_file:
         try:
             # Again making sure the transfer file actually exits, just like
             # the password file above.
@@ -136,5 +136,5 @@ def demo():
             propagator.try_action(transfer_file, propagation_script, arguments)
 
 
-if __name__ == "__demo__":
+if __name__ == "__main__":
     demo()
