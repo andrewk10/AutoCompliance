@@ -51,6 +51,22 @@ class NetPropagation:
         self.ip_list = ip_list
         self.password_list = password_list
 
+    def additional_actions(self, transfer_file, propagation_script, arguments):
+        """
+        This function passes the appropriate arguments to and runs the
+        transferring file and propagating functions, these functions contain
+        the check to stop them from being run if the appropriate arguments
+        aren't used
+        :param transfer_file: The file that will be transferred upon user
+        request
+        :param propagation_script: The script that will be propagated upon user
+        request
+        :param arguments: Arguments passed in by the user themselves
+        """
+        transfer_file.check_transfer_file(arguments, self.ip, self.port,
+                                          self.username)
+        self.propagating(propagation_script, arguments)
+
     def check_over_ssh(self, filename):
         """
         This function checks if a given file is already located at the target
@@ -75,10 +91,6 @@ class NetPropagation:
                     filename)))[1]).__len__() < 1:
                 client.close()
                 return True
-
-            logging.error(strings.SANITATION_FAILED)
-            client.close()
-            return False
 
         except NoValidConnectionsError:
             client.close()
@@ -232,11 +244,11 @@ class NetPropagation:
                         logging.error(strings.SANITATION_FAILED)
                         client.close()
                         return False
-                    client.close()
                     return True
                 except RuntimeError:
                     client.close()
                     return False
+
             else:
                 logging.debug(strings_functions.file_present_on_host(self.ip))
                 return False
@@ -254,7 +266,7 @@ class NetPropagation:
         :param script: The script that needs to be propagated and spread
         :param arguments: The arguments passed in by the user themselves
         """
-        if strings.ARGUMENT_PROPAGATE in arguments and (
+        if arguments.propagate and (
                 self.port == strings.SSH_PORT):
             propagated = self.propagate_script(script)
             if propagated:
@@ -268,8 +280,6 @@ class NetPropagation:
         """
         This function will try and ping every IP in the IP list and if it
         doesn't receive a response it will then remove that IP from the IP list
-        :return new_ip_list: The revised list of IP addresses with invalid
-        addresses removed.
         """
         new_ip_list = []
         for ip in self.ip_list:
@@ -277,7 +287,7 @@ class NetPropagation:
             logging.info(strings_functions.checking_ip_reachable(self.ip))
             if self.is_reachable_ip():
                 new_ip_list.append(self.ip)
-        return new_ip_list
+        self.ip_list = new_ip_list
 
     def scan_port(self):
         """
@@ -364,15 +374,12 @@ class NetPropagation:
         combination
         """
         try:
-            connect_service_switch = {
-                strings.SSH_PORT: lambda: self.connect_ssh_client(),
-                strings.WEB_PORT_EIGHTY: lambda: self.connect_web(),
-                strings.WEB_PORT_EIGHTY_EIGHTY: lambda: self.connect_web(),
-                strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: lambda:
-                self.connect_web(),
-            }
-            connect_service = connect_service_switch.get(str(self.port))
-            if connect_service():
+            if self.port is strings.SSH_PORT and self.connect_ssh_client():
+                return str(self.username) + strings.COLON + str(self.password)
+            if (self.port is strings.WEB_PORT_EIGHTY or self.port is
+                strings.WEB_PORT_EIGHTY_EIGHTY or self.port is
+                strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT) and \
+                    self.connect_web():
                 return str(self.username) + strings.COLON + str(self.password)
             return False
 
@@ -404,19 +411,3 @@ class NetPropagation:
             return str(sign_in_details), service
         logging.debug(strings.IMPOSSIBLE_ACTION)
         return None, service
-
-    def additional_actions(self, transfer_file, propagation_script, arguments):
-        """
-        This function passes the appropriate arguments to and runs the
-        transferring file and propagating functions, these functions contain
-        the check to stop them from being run if the appropriate arguments
-        aren't used
-        :param transfer_file: The file that will be transferred upon user
-        request
-        :param propagation_script: The script that will be propagated upon user
-        request
-        :param arguments: Arguments passed in by the user themselves
-        """
-        transfer_file.check_transfer_file(arguments, self.ip, self.port,
-                                          self.username)
-        self.propagating(propagation_script, arguments)

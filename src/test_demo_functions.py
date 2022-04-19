@@ -6,6 +6,8 @@ import demo_functions
 import strings
 # Importing strings_functions for string building functions.
 import strings_functions
+# Importing argparse for mocking argument parsing.
+import argparse
 
 
 def test_assigning_values():
@@ -15,15 +17,54 @@ def test_assigning_values():
     before it does that the bad path is checked by passing in a single argument
     with no value to get a runtime error.
     """
-    num_arguments = 8
-    happy_path_range = 4
-    for arguments_selection in range(num_arguments):
-        assigner = demo_functions.DemoFunctions(
-            strings_functions.arguments_sets(arguments_selection))
-        if arguments_selection < happy_path_range:
-            assert assigner.assigning_values() is not None
-        else:
-            assert assigner.assigning_values() is None
+
+    # Argument parser for handling arguments.
+    parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
+    # Adding the target  file option to the parser.
+    parser.add_argument(
+        strings.IP_FILE_OPT_SHORT, strings.IP_FILE_OPT_LONG,
+        dest='target', help=strings.IP_FILE_HELP, type=str)
+    # Adding the username option to the parser.
+    parser.add_argument(
+        strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
+        dest='username', help=strings.USERNAME_HELP, type=str)
+    # Adding the password file option to the parser.
+    parser.add_argument(
+        strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
+        dest="password_file", help=strings.PW_FILE_HELP, type=str)
+    # Adding the port option to the parser.
+    parser.add_argument(
+        strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
+        dest='ports', help=strings.PORT_HELP, type=str)
+    # Adding the lan option to the parser.
+    parser.add_argument(
+        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG,
+        dest='lan', help=strings.LAN_HELP, type=str)
+    # Adding the propagate option to the parser.
+    parser.add_argument(
+        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG,
+        dest='propagate', help=strings.PROP_HELP, type=str)
+    # Adding the transfer file option to the parser.
+    parser.add_argument(
+        strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
+        dest='propagate_file', help=strings.PROP_FILE_HELP, type=str)
+
+    # Parsing the arguments.
+    arguments = parser.parse_args()
+
+    # Spoofing certain arguments for a forced pass
+    arguments.target = strings.IP_LIST_SHORT
+    arguments.ports = strings.ALL_PORTS
+    arguments.username = strings.ADMIN
+    arguments.password_file = strings.PWDS_LIST_SHORT
+    assigner = demo_functions.DemoFunctions(arguments)
+    assert assigner.assigning_values() is not None
+
+    # Removing certain arguments for a forced fail
+    arguments.target = None
+    arguments.password_file = None
+    assigner = demo_functions.DemoFunctions(arguments)
+    assert assigner.assigning_values() is None
 
 
 def test_exit_and_show_instructions(capfd):

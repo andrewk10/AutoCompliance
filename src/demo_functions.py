@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-# Importing path to check for the existence of files.
-from os import path
 # Importing file for file based functionality.
 import file
 # Importing logging to safely log sensitive, error or debug info.
@@ -38,36 +36,19 @@ class DemoFunctions:
         """
         # Out of scope initialisation for return later.
         ip_list = None
-        if strings.ARGUMENT_IP_ADDRESS_FILENAME in self.arguments:
-            try:
-                ip_addresses_filename = \
-                    self.arguments[
-                        self.arguments.index(
-                            strings.ARGUMENT_IP_ADDRESS_FILENAME) + 1]
-            except RuntimeError:
-                logging.error(strings.IP_FILENAME_NOT_FOUND)
-                return None
+        if self.arguments.target:
+            ip_addresses_filename = self.arguments.target
             ip_address_file = file.File(ip_addresses_filename)
             ip_list = ip_address_file.convert_file_to_list()
-            if ip_list is None:
-                return None
-        try:
-            target_ports = self.arguments[
-                self.arguments.index(strings.ARGUMENT_PORTS) + 1]
-            target_username = \
-                self.arguments[self.arguments.index(strings.ARGUMENT_USERNAME)
-                               + 1]
-            if path.exists(self.arguments[self.arguments.index(
-                    strings.ARGUMENT_PWS_FILENAME) + 1]):
-                passwords_filename = self.arguments[self.arguments.index(
-                    strings.ARGUMENT_PWS_FILENAME) + 1]
-                return ip_list, target_ports, target_username, \
-                    passwords_filename
-            logging.error(strings.FILE_DOES_NOT_EXIST)
-            return None
-        except ValueError:
-            logging.error(strings.MISSING_ARGUMENT)
-            return None
+        else:
+            logging.debug(strings.IP_FILENAME_NOT_FOUND)
+
+        if self.arguments.password_file:
+            return ip_list, self.arguments.ports, self.arguments.username, \
+                   self.arguments.password_file
+
+        logging.error(strings.FILE_DOES_NOT_EXIST)
+        return None
 
     def checking_arguments(self):
         """
@@ -81,21 +62,13 @@ class DemoFunctions:
         :return values[3]: Filename for a file containing passwords
         :return None: If the values can't be assigned.
         """
-        if ((strings.ARGUMENT_IP_ADDRESS_FILENAME or
-             strings.ARGUMENT_SCAN_LOCAL_NETWORKS in self.arguments) and
-                strings.ARGUMENT_PORTS and strings.ARGUMENT_USERNAME and
-                strings.ARGUMENT_USERNAME in self.arguments and len(
-                    self.arguments) >= 8 and
-                strings.ARGUMENT_HELP_SHORT and strings.ARGUMENT_HELP_LONG not
-                in self.arguments):
+        if (self.arguments.target or self.arguments.lan) and \
+                self.arguments.ports and self.arguments.username:
             try:
                 values = self.assigning_values()
-                if values is not None and \
-                        strings.ARGUMENT_SCAN_LOCAL_NETWORKS not in \
-                        self.arguments:
+                if values is not None and not self.arguments.lan:
                     return values[0], values[1], values[2], values[3]
-                if values is not None and \
-                        strings.ARGUMENT_SCAN_LOCAL_NETWORKS in self.arguments:
+                if values is not None and self.arguments.lan:
                     return strings.SPACE, values[1], values[2], values[3]
                 logging.error(strings.FAILED_ASSIGNING_VALUES)
                 return None

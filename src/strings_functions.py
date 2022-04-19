@@ -20,63 +20,6 @@ def adding_address_to_interface(specific_address, interface):
         str(interface) + strings.INTERFACE_SUBNET
 
 
-def arguments_sets(selection):
-    """
-    This function contains the all sets of arguments used for testing
-    purposes
-    :param selection: The argument being called from the function
-    :return : The argument selected itself.
-    """
-    arguments = {
-        # This runs the script against all services and four ports
-        0: [strings.ARGUMENT_IP_ADDRESS_FILENAME, strings.IP_LIST_SHORT,
-            strings.ARGUMENT_PORTS, strings.ALL_PORTS,
-            strings.ARGUMENT_USERNAME, strings.ADMIN,
-            strings.ARGUMENT_PWS_FILENAME, strings.PWDS_LIST_SHORT],
-        # This just runs the scripts against one port / service
-        1: [strings.ARGUMENT_IP_ADDRESS_FILENAME, strings.IP_LIST_SHORT,
-            strings.ARGUMENT_PORTS, strings.SSH_PORT,
-            strings.ARGUMENT_USERNAME, strings.ROOT,
-            strings.ARGUMENT_PWS_FILENAME, strings.PWDS_LIST_SHORT],
-        # This propagates a specific file over SSH
-        2: [strings.ARGUMENT_IP_ADDRESS_FILENAME, strings.IP_LIST_SHORT,
-            strings.ARGUMENT_PORTS, strings.SSH_PORT,
-            strings.ARGUMENT_USERNAME, strings.ROOT,
-            strings.ARGUMENT_PWS_FILENAME, strings.PWDS_LIST_SHORT,
-            strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE, strings.FILE],
-        # This is running the automated propagation feature over SSH.
-        3: [strings.ARGUMENT_SCAN_LOCAL_NETWORKS, strings.ARGUMENT_PORTS,
-            strings.SSH_PORT, strings.ARGUMENT_USERNAME, strings.ROOT,
-            strings.ARGUMENT_PWS_FILENAME, strings.PWDS_LIST_SHORT,
-            strings.ARGUMENT_PROPAGATE],
-
-        # This fails to run the script against all services and four ports
-        # because the passwords file filename is invalid.
-        4: [strings.ARGUMENT_IP_ADDRESS_FILENAME, strings.IP_LIST_SHORT,
-            strings.ARGUMENT_PORTS, strings.ALL_PORTS,
-            strings.ARGUMENT_USERNAME, strings.ADMIN,
-            strings.ARGUMENT_PWS_FILENAME, strings.FORCE_FAIL],
-        # This fails to run the scripts against one port / service because the
-        # OP list filename is invalid.
-        5: [strings.ARGUMENT_IP_ADDRESS_FILENAME, strings.FORCE_FAIL,
-            strings.ARGUMENT_PORTS, strings.SSH_PORT,
-            strings.ARGUMENT_USERNAME, strings.ROOT,
-            strings.ARGUMENT_PWS_FILENAME, strings.PWDS_LIST_SHORT],
-        # This fails the propagation of a specific file over SSH because
-        # parameter misuse.
-        6: [strings.ARGUMENT_IP_ADDRESS_FILENAME, strings.IP_LIST_SHORT,
-            strings.PWDS_LIST_SHORT, strings.SSH_PORT,
-            strings.ARGUMENT_USERNAME, strings.ROOT,
-            strings.ARGUMENT_PWS_FILENAME, strings.PWDS_LIST_SHORT,
-            strings.ARGUMENT_SPECIFIC_PROPAGATION_FILE, strings.FILE],
-        # This fails in general as no arguments are specified.
-        7: [strings.FORCE_FAIL, strings.FORCE_FAIL, strings.FORCE_FAIL,
-            strings.FORCE_FAIL, strings.FORCE_FAIL, strings.FORCE_FAIL,
-            strings.FORCE_FAIL, strings.FORCE_FAIL],
-    }
-    return arguments.get(selection, None)
-
-
 def cat_file(filename):
     """
     This function creates a command for concatenating a specific file
@@ -146,31 +89,31 @@ def help_output():
     :return: The output itself.
     """
     return strings.PARAMETERS + strings.NEWLINE_TAB + \
-        strings.ARGUMENT_IP_ADDRESS_FILENAME + strings.SPACE + \
+        strings.IP_FILE_OPT_SHORT + strings.SPACE + \
         strings.ARROW + strings.SPACE + strings.FILENAME_LIST_IP_ADDRESSES + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_PORTS + strings.SPACE + \
+        strings.NEWLINE_TAB + strings.PORT_OPT_SHORT + strings.SPACE + \
         strings.ARROW + strings.SPACE + strings.PORTS_TO_SCAN + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_USERNAME + strings.SPACE + \
+        strings.NEWLINE_TAB + strings.USERNAME_OPT_SHORT + strings.SPACE + \
         strings.ARROW + strings.SPACE + strings.A_USERNAME + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_PWS_FILENAME + strings.SPACE + \
+        strings.NEWLINE_TAB + strings.PW_FILE_OPT_SHORT + strings.SPACE + \
         strings.ARROW + strings.SPACE + strings.FILENAME_PWS_FILE + \
-        strings.NEWLINE_TAB + strings.ARGUMENT_SCAN_LOCAL_NETWORKS + \
+        strings.NEWLINE_TAB + strings.LAN_OPT_SHORT + \
         strings.SPACE + strings.ARROW + strings.SPACE + \
         strings.LOCAL_SCAN_STRING_HELP + strings.NEWLINE_TAB + \
-        strings.ARGUMENT_PROPAGATE + strings.SPACE + strings.ARROW + \
+        strings.PROP_OPT_SHORT + strings.SPACE + strings.ARROW + \
         strings.SPACE + strings.HELP_STRING_PROPAGATION + strings.NEWLINE + \
         strings.EXAMPLE_USAGE + strings.NEWLINE_TAB + strings.MAIN_SCRIPT + \
-        strings.SPACE + strings.ARGUMENT_IP_ADDRESS_FILENAME + \
+        strings.SPACE + strings.IP_FILE_OPT_SHORT + \
         strings.SPACE + strings.IP_LIST + strings.SPACE + \
-        strings.ARGUMENT_PORTS + strings.SPACE + strings.ALL_PORTS + \
-        strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
-        strings.ADMIN + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
+        strings.PORT_OPT_SHORT + strings.SPACE + strings.ALL_PORTS + \
+        strings.SPACE + strings.USERNAME_OPT_SHORT + strings.SPACE + \
+        strings.ADMIN + strings.SPACE + strings.PW_FILE_OPT_SHORT + \
         strings.SPACE + strings.PWDS_LIST + strings.NEWLINE_NEWLINE_TAB + \
-        strings.MAIN_SCRIPT + strings.ARGUMENT_IP_ADDRESS_FILENAME + \
+        strings.MAIN_SCRIPT + strings.IP_FILE_OPT_SHORT + \
         strings.SPACE + strings.IP_LIST + strings.SPACE + \
-        strings.ARGUMENT_PORTS + strings.SPACE + strings.SSH_PORT + \
-        strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
-        strings.ROOT + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
+        strings.PORT_OPT_SHORT + strings.SPACE + strings.SSH_PORT + \
+        strings.SPACE + strings.USERNAME_OPT_SHORT + strings.SPACE + \
+        strings.ROOT + strings.SPACE + strings.PW_FILE_OPT_SHORT + \
         strings.SPACE + strings.PWDS_LIST
 
 
@@ -237,11 +180,11 @@ def run_script_command():
     :return: The command itself
     """
     return strings.MAIN_SCRIPT + strings.SPACE + \
-        strings.ARGUMENT_SCAN_LOCAL_NETWORKS + strings.SPACE + \
-        strings.ARGUMENT_PORTS + strings.SPACE + strings.SSH_PORT + \
-        strings.SPACE + strings.ARGUMENT_USERNAME + strings.SPACE + \
-        strings.ROOT + strings.SPACE + strings.ARGUMENT_PWS_FILENAME + \
-        strings.PWDS_LIST + strings.SPACE + strings.ARGUMENT_PROPAGATE
+        strings.LAN_OPT_SHORT + strings.SPACE + \
+        strings.PORT_OPT_SHORT + strings.SPACE + strings.SSH_PORT + \
+        strings.SPACE + strings.USERNAME_OPT_SHORT + strings.SPACE + \
+        strings.ROOT + strings.SPACE + strings.PW_FILE_OPT_SHORT + \
+        strings.PWDS_LIST + strings.SPACE + strings.PROP_OPT_SHORT
 
 
 def scp_command_string(port, username, target_ip, filename):

@@ -9,33 +9,6 @@ ADMIN = "admin"
 # All ports list, for utilising all services in the scripts.
 ALL_PORTS = "22,23,25,80"
 
-# Argument to denote the filename of the IP address file.
-ARGUMENT_IP_ADDRESS_FILENAME = "-t"
-
-# Argument to denote the set of ports to use.
-ARGUMENT_PORTS = "-p"
-
-# Argument to denote the username for each of the actions.
-ARGUMENT_USERNAME = "-u"
-
-# Argument to denote the filename of the passwords file.
-ARGUMENT_PWS_FILENAME = "-f"
-
-# Argument to denote the need to propagate the running script.
-ARGUMENT_PROPAGATE = "-P"
-
-# Argument to denote the need to scan the local network.
-ARGUMENT_SCAN_LOCAL_NETWORKS = "-L"
-
-# Argument to denote the use of a specific file given the filename propagation.
-ARGUMENT_SPECIFIC_PROPAGATION_FILE = "-d"
-
-# Argument to denote the need for further help.
-ARGUMENT_HELP_SHORT = "-h"
-
-# Argument to denote the need for further help, just the long version.
-ARGUMENT_HELP_LONG = "--help"
-
 # Just a little arrow for CLI output.
 ARROW = "->"
 
@@ -47,6 +20,9 @@ AT_SYMBOL = "@"
 
 # String to describe the username argument under help
 A_USERNAME = "A username"
+
+# Blank String
+BLANK_STRING = ''
 
 # Letting the user know we can't read an IP list from a specific file.
 CAN_NOT_READ_IP_LIST = "IP list cannot be read from filename:"
@@ -70,8 +46,14 @@ COMMA = ","
 # The demo filename
 DEMO_SCRIPT_FILENAME = "demo.py"
 
-# The main script.
+# The demo script path.
 DEMO_SCRIPT_PATH = "./demo.py"
+
+# This is the program description for the cli help menu.
+DESCRIPTION = "Automating the Implementation of a " \
+              "Cybersecurity Governance, Risk and " \
+              "Compliance Programme using Distributed " \
+              "Ledger Technologies"
 
 # A string that states a script wasn't propagated.
 DO_NOT_PROPAGATE = "Requirement to propagate script not specified, skipping..."
@@ -134,6 +116,15 @@ FILENAME_PWS_FILE = "Filename for a file containing a list of passwords"
 # Greater than symbol.
 GREATER_THAN = ">"
 
+# Help text for... the help.
+HELP_HELP = "Guidance regarding how to utilise the demo back-end"
+
+# Short option name for help.
+HELP_OPT_SHORT = "-h"
+
+# Option name for help.
+HELP_OPT_LONG = "--help"
+
 # The help string for the propagation argument definition in help output.
 HELP_STRING_PROPAGATION = "Propagates the script onto available devices and " \
                           "executes the script using the given command"
@@ -150,6 +141,16 @@ IMPOSSIBLE_ACTION = "It was impossible to bruteforce this IP address and port"
 # Specifying that something is from an interface's subnet.
 INTERFACE_SUBNET = "'s subnet."
 
+# Help text for the target IP option.
+IP_FILE_HELP = "Filename for a file containing a list of target IP " \
+                   "addresses"
+
+# Short option name for the target IP option.
+IP_FILE_OPT_SHORT = "-t"
+
+# Option name for the target IP option.
+IP_FILE_OPT_LONG = "--target"
+
 # Letting the user know a specified IP file could not be found.
 IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
 
@@ -161,6 +162,16 @@ IP_LIST_SHORT = "src/test_files/ip_list_short.txt"
 
 # Let the user know that we're checking to see if the IP address is reachable.
 IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
+
+# Help text for the LAN scan option.
+LAN_HELP = "Scans the lan across all interfaces and " \
+            "creates/adds to the list of target IP addresses"
+
+# Short option name for the LAN scan option.
+LAN_OPT_SHORT = "-L"
+
+# Option name for the LAN scan option.
+LAN_OPT_LONG = "--lan"
 
 # The less than symbol.
 LESS_THAN = "<"
@@ -195,6 +206,9 @@ LOOPBACK = "lo"
 # The main script.
 MAIN_SCRIPT = "./main.py"
 
+# The main function call.
+MAIN = "main()"
+
 # A string to let the user know a necessary argument is missing.
 MISSING_ARGUMENT = "Missing a mandatory argument, ensure arguments are used " \
                    "correctly"
@@ -226,6 +240,15 @@ PASSWORD_PROMPT = "Password:"
 # Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
 
+# Short option name for the password file option.
+PW_FILE_OPT_SHORT = "-f"
+
+# Option name for the password file option.
+PW_FILE_OPT_LONG = "--file"
+
+# Help text for the password file option.
+PW_FILE_HELP = "Filename for a file containing a list of passwords"
+
 # List of dummy passwords
 PWDS_LIST = "src/test_files/passwords_list.txt"
 
@@ -248,8 +271,36 @@ PING = "ping"
 # The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
 
+# Short option name for the port option.
+PORT_OPT_SHORT = "-p"
+
+# Option name for the port option.
+PORT_OPT_LONG = "--port"
+
+# Help text for the port option.
+PORT_HELP = "Ports to scan on the target host"
+
 # String for the help text.
 PORTS_TO_SCAN = "Ports to scan on the target host"
+
+# Help text for the propagate option.
+PROP_HELP = "Propagates the script onto available devices " \
+            "and executes the script using the given command"
+
+# Option name for the propagate option.
+PROP_OPT_LONG = "--propagate"
+
+# Short option name for the propagate option.
+PROP_OPT_SHORT = "-P"
+
+# Help text for the propagate option.
+PROP_FILE_HELP = "Propagates the provided file onto available devices"
+
+# Option name for propagate a file option.
+PROP_FILE_OPT_LONG = "--deliver"
+
+# Short option name for propagate a file option.
+PROP_FILE_OPT_SHORT = "-d"
 
 # A string just for tests.
 RANDOM_STRING = "tests"
@@ -311,8 +362,18 @@ TRANSFER_SUCCESS_SSH = "File transferred over port 22 / SSH"
 # Unsuccessful statement to be used with services and actions.
 UNSUCCESSFUL = "Unsuccessful"
 
+# Help text for the username option.
+USERNAME_HELP = "A Username on which we wish to run network propagation " \
+                "actions against"
+
 USERNAME_IN_PWS = "using the specified username with a password in the " \
                   "passwords file."
+
+# Short option name for the username option.
+USERNAME_OPT_SHORT = "-u"
+
+# Option name for the username option.
+USERNAME_OPT_LONG = "--username"
 
 # The username prompt that comes with web login POST requests.
 USERNAME_PROMPT_WEB = "username:"
@@ -346,3 +407,247 @@ WELCOME_TO = "Welcome to"
 
 # Letting the user know about a working username and password.
 WORKING_USERNAME_PASS = "A working username and password for"
+
+
+def adding_address_to_interface(specific_address, interface):
+    """
+    This function takes a specific address and an interface and generates a
+    string for declaring it was found in a given subnet
+    :param specific_address: The specific target address to be added to the
+    interface
+    :param interface: The interface on which we're adding a specific target
+    address
+    :return "Adding " + str(specific_address) + " from interface "
+    + str(interface) + "'s subnet.": The string in question
+    """
+    return ADDING + SPACE + str(specific_address) + SPACE + \
+        FROM_INTERFACE + SPACE + str(interface) + INTERFACE_SUBNET
+
+
+def arguments_sets(selection):
+    """
+    This function contains the all sets of arguments used for testing
+    purposes
+    :param selection: The argument being called from the function
+    :return : The argument selected itself.
+    """
+    arguments = {
+        # This runs the script against all services and four ports
+        0: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            ALL_PORTS, USERNAME_OPT_SHORT, ADMIN, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT],
+        # This just runs the scripts against one port / service
+        1: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT],
+        # This propagates a specific file over SSH
+        2: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT, PROP_FILE_OPT_SHORT, FILE],
+        # This is running the automated propagation feature over SSH.
+        3: [LAN_OPT_SHORT, PORT_OPT_SHORT, SSH_PORT,
+            USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT, PWDS_LIST_SHORT,
+            PROP_OPT_SHORT],
+
+        # This fails to run the script against all services and four ports
+        # because the passwords file filename is invalid.
+        4: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PORT_OPT_SHORT,
+            ALL_PORTS, USERNAME_OPT_SHORT, ADMIN, PW_FILE_OPT_SHORT,
+            FORCE_FAIL],
+        # This fails to run the scripts against one port / service because the
+        # OP list filename is invalid.
+        5: [IP_FILE_OPT_SHORT, FORCE_FAIL, PORT_OPT_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT],
+        # This fails the propagation of a specific file over SSH because
+        # parameter misuse.
+        6: [IP_FILE_OPT_SHORT, IP_LIST_SHORT, PWDS_LIST_SHORT,
+            SSH_PORT, USERNAME_OPT_SHORT, ROOT, PW_FILE_OPT_SHORT,
+            PWDS_LIST_SHORT, PROP_FILE_OPT_SHORT, FILE],
+        # This fails in general as no arguments are specified.
+        7: [FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL, FORCE_FAIL,
+            FORCE_FAIL, FORCE_FAIL, FORCE_FAIL],
+    }
+    return arguments.get(selection, None)
+
+
+def cat_file(filename):
+    """
+    This function creates a command for concatenating a specific file
+    :param filename: The filename of the file we want to touch
+    :return "cat " + filename: The completed cat command
+    """
+    return CAT + SPACE + filename
+
+
+def checking_ip_reachable(ip):
+    """
+    This function creates a string that describes the availability of a machine
+    on a specific IP address
+    :param ip: The specific IP address
+    :return "Checking if the following ip address is reachable: " + str(ip):
+    The string in question
+    """
+    return IS_IP_REACHABLE + SPACE + str(ip)
+
+
+def connection_status(service, ip, port, status):
+    """
+    This function creates the connection status string dependent
+    on the context given by the arguments passed into it.
+    """
+    return str(status) + SPACE + str(service) + SPACE + LOGIN_TO + SPACE + \
+        str(ip) + COLON + str(port) + SPACE + USERNAME_IN_PWS
+
+
+def fetching_ips_for_interface(interface):
+    """
+    This function generates the string for fetching the IPs for a specific
+    interface
+    :param interface: The interface we're fetching IPs on
+    :return "Fetching IPs for interface " + str(interface) + "...": The string
+    in question
+    """
+    return FETCHING_INTERFACE_IPS + SPACE + str(interface) + ELLIPSES
+
+
+def file_present_on_host(ip):
+    """
+    This function generates the string for a file already present on a host
+    :param ip: The host itself
+    :return "A file is already present on this host: " + str(ip): The string
+    in question
+    """
+    return FILE_PRESENT_ON_HOST + SPACE + str(ip)
+
+
+def scp_command_string(port, username, target_ip, filename):
+    """
+    This function creates and SSH copy string for an OS command
+    :param port: Port over which we are running the SSH copy
+    :param username: The username for the SSH login
+    :param target_ip: The IP address of the machine we are copying too
+    :param filename: The name of the file to be copied across by SSH
+    :return: The SSH copy command
+    """
+    return SCP_COMMAND + SPACE + str(port) + SPACE + filename + SPACE + \
+        username + AT_SYMBOL + target_ip + HOME_DIR
+
+
+def touch_file(filename):
+    """
+    This function creates a command for touching a specific file
+    :param filename: The filename of the file we want to touch
+    :return: The completed touch command
+    """
+    return TOUCH_COMMAND + SPACE + filename
+
+
+def ip_list_not_read(filename):
+    """
+    This function returns the error for an ip list that can't be generated from
+    a particular filename
+    :param filename: The filename of the file that can't have an ip list
+    derived from it
+    :return: The string in question
+    """
+    return CAN_NOT_READ_IP_LIST + SPACE + filename
+
+
+def ip_reachability(ip, reachable):
+    """
+    This function generates the string regarding the reachability of an IP i.e.
+    whether it can be pinged
+    :param ip: The IP being pinged
+    :param reachable: Whether it is reachable
+    :return str(ip) + " was reachable.": String returned if it is reachable
+    :return str(ip) + " was not reachable.": String returned if it is not
+    reachable
+    """
+    if reachable:
+        return str(ip) + SPACE + WAS_REACHABLE + FULL_STOP
+    return str(ip) + SPACE + WAS_NOT_REACHABLE + FULL_STOP
+
+
+def netcat_listener(port, filename):
+    """
+    This function will create a netcat listener on the device we have a netcat
+    link to
+    :param port: The port on which the netcat listener will operate
+    :param filename: The filename of the file we're moving using the listener
+    parameter
+    :return: The string in question
+    """
+    return NETCAT_LISTENER_PORT_COMMAND + SPACE + str(port) + SPACE + \
+        GREATER_THAN + SPACE + filename
+
+
+def netcat_writer(ip, port, filename):
+    """
+    This function will create a netcat writer to write a file to a device we
+    have a netcat link to
+    :param ip: Machine with the netcat listener we are writing to
+    :param port: The port on which the netcat writer will operate
+    :param filename: The filename of the file we're moving using the writer
+    parameter
+    :return: The string in question
+    """
+    return NETCAT_WRITER_COMMAND + SPACE + str(ip) + SPACE + str(port) + \
+        SPACE + LESS_THAN + SPACE + filename
+
+
+def help_output():
+    """
+    This is the help output for when the user passes in the help parameter
+    :return: The output itself.
+    """
+    return PARAMETERS + NEWLINE_TAB + IP_FILE_OPT_SHORT + SPACE + \
+        ARROW + SPACE + FILENAME_LIST_IP_ADDRESSES + NEWLINE_TAB + \
+        PORT_OPT_SHORT + SPACE + ARROW + SPACE + PORTS_TO_SCAN + \
+        NEWLINE_TAB + USERNAME_OPT_SHORT + SPACE + ARROW + SPACE + \
+        A_USERNAME + NEWLINE_TAB + PW_FILE_OPT_SHORT + SPACE + ARROW + \
+        SPACE + FILENAME_PWS_FILE + NEWLINE_TAB + \
+        LAN_OPT_SHORT + SPACE + ARROW + SPACE + \
+        LOCAL_SCAN_STRING_HELP + NEWLINE_TAB + PROP_OPT_SHORT + SPACE + \
+        ARROW + SPACE + HELP_STRING_PROPAGATION + NEWLINE + EXAMPLE_USAGE + \
+        NEWLINE_TAB + DEMO_SCRIPT_PATH + SPACE + \
+        IP_FILE_OPT_SHORT + SPACE + IP_LIST + SPACE + \
+        PORT_OPT_SHORT + SPACE + ALL_PORTS + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ADMIN + SPACE + PW_FILE_OPT_SHORT + SPACE + PWDS_LIST + \
+        NEWLINE_NEWLINE_TAB + DEMO_SCRIPT_PATH + \
+        IP_FILE_OPT_SHORT + SPACE + IP_LIST + SPACE + \
+        PORT_OPT_SHORT + SPACE + SSH_PORT + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ROOT + SPACE + PW_FILE_OPT_SHORT + SPACE + PWDS_LIST
+
+
+def run_script_command():
+    """
+    This function will run the propagation script on another target machine
+    over any service
+    :return: The command itself
+    """
+    return DEMO_SCRIPT_PATH + SPACE + LAN_OPT_SHORT + SPACE + \
+        PORT_OPT_SHORT + SPACE + SSH_PORT + SPACE + USERNAME_OPT_SHORT + \
+        SPACE + ROOT + SPACE + PW_FILE_OPT_SHORT + PWDS_LIST + SPACE + \
+        PROP_OPT_SHORT
+
+
+def web_login_url(ip, port):
+    """
+    This function will build the web login url string
+    :param ip: The IP of the machine running the web service
+    :param port: The port the web service is running on
+    :return: The string itself
+    """
+    return HTTPS_STRING + ip + COLON + port + LOGIN_PHP
+
+
+def working_username_password(service):
+    """
+    This function will build a string for a working username and password given
+     a specific service
+    :param service: Service for which there is a working username and password
+    combination
+    :return: The string itself
+    """
+    return WORKING_USERNAME_PASS + SPACE + str(service) + SPACE + WAS_FOUND

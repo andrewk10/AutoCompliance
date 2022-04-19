@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ 38-sprint4-refactors ]
+    branches: [ update/adding_argparser ]
   pull_request:
-    branches: [ 38-sprint4-refactors ]
+    branches: [ update/adding_argparser ]
 
 jobs:
   build:
