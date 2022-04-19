@@ -6,12 +6,14 @@ import demo_functions
 import logging
 # For net_propagation related functionality.
 import net_propagation
-# Import os for path checking and command execution.
+# Import os for path checking.
 import os
 # Importing strings for use of the external strings resources.
 import strings
 # Importing strings_functions for string building functions.
 import strings_functions
+# Importing subprocess for running commands.
+import subprocess
 
 
 class File:
@@ -115,8 +117,8 @@ class File:
         login_string_split = login_string.split(strings.COLON)
         try:
             print(strings.RSA_AND_PROMPT)
-            os.system(strings_functions.scp_command_string(
-                port, login_string_split[0], ip, self.filename))
+            subprocess.call(strings_functions.scp_command_string(
+                port, login_string_split[0], ip, self.filename), shell=True)
             return True
         except ConnectionRefusedError:
             return False

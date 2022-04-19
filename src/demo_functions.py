@@ -46,9 +46,9 @@ class DemoFunctions:
         if self.arguments.password_file:
             return ip_list, self.arguments.ports, self.arguments.username, \
                    self.arguments.password_file
-        else:
-            logging.error(strings.FILE_DOES_NOT_EXIST)
-            return None
+
+        logging.error(strings.FILE_DOES_NOT_EXIST)
+        return None
 
     def checking_arguments(self):
         """

@@ -374,15 +374,12 @@ class NetPropagation:
         combination
         """
         try:
-            connect_service_switch = {
-                strings.SSH_PORT: lambda: self.connect_ssh_client(),
-                strings.WEB_PORT_EIGHTY: lambda: self.connect_web(),
-                strings.WEB_PORT_EIGHTY_EIGHTY: lambda: self.connect_web(),
-                strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT: lambda:
-                self.connect_web(),
-            }
-            connect_service = connect_service_switch.get(str(self.port))
-            if connect_service():
+            if self.port is strings.SSH_PORT and self.connect_ssh_client():
+                return str(self.username) + strings.COLON + str(self.password)
+            if (self.port is strings.WEB_PORT_EIGHTY or self.port is
+                strings.WEB_PORT_EIGHTY_EIGHTY or self.port is
+                strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT) and \
+                    self.connect_web():
                 return str(self.username) + strings.COLON + str(self.password)
             return False
 

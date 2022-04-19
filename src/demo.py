@@ -58,7 +58,7 @@ def demo():
     transfer_file = strings.SPACE
 
     # If there is no arguments then just print the help menu and exit.
-    if not len(sys.argv) > 1:
+    if len(sys.argv) <= 1:
         demo_functions.exit_and_show_instructions()
         sys.exit(-1)
 
