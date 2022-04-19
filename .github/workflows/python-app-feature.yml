@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ update/adding_argparser ]
+    branches: [ 31-add-automated-tests ]
   pull_request:
-    branches: [ update/adding_argparser ]
+    branches: [ 31-add-automated-tests ]
 
 jobs:
   build:

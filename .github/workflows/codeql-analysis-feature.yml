@@ -13,10 +13,10 @@ name: "CodeQL - Feature"
 
 on:
   push:
-    branches: [ update/adding_argparser ]
+    branches: [ 31-add-automated-tests ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ update/adding_argparser ]
+    branches: [ 31-add-automated-tests ]
   schedule:
     - cron: '34 22 * * 4'
 
