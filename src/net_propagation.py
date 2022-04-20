@@ -83,7 +83,7 @@ class NetPropagation:
             client.set_missing_host_key_policy(RejectPolicy)
             client.connect(hostname=str(self.ip), port=int(self.port),
                            username=str(self.username), password=str(
-                    self.password))
+                    self.password), timeout=2)
             client.exec_command(pipes.quote(strings_functions.touch_file(
                 filename)))
 
@@ -116,13 +116,19 @@ class NetPropagation:
             client.set_missing_host_key_policy(RejectPolicy)
             client.connect(hostname=str(self.ip), port=int(self.port),
                            username=str(self.username), password=str(
-                    self.password))
+                    self.password), timeout=2)
             client.close()
             logging.info(strings_functions.connection_status(
                 strings.SSH, self.ip, self.port, strings.SUCCESSFUL))
             return True
 
         except SSHException:
+            client.close()
+            logging.debug(strings_functions.connection_status(
+                strings.SSH, self.ip, self.port, strings.UNSUCCESSFUL))
+            return False
+
+        except TimeoutError:
             client.close()
             logging.debug(strings_functions.connection_status(
                 strings.SSH, self.ip, self.port, strings.UNSUCCESSFUL))
@@ -232,7 +238,7 @@ class NetPropagation:
                     client.set_missing_host_key_policy(RejectPolicy)
                     client.connect(hostname=str(self.ip), port=int(self.port),
                                    username=str(self.username),
-                                   password=str(self.password))
+                                   password=str(self.password), timeout=2)
                     if strings_functions.run_script_command() == \
                             "./demo.py -L -p 22 -u " \
                             "root -f " \
@@ -247,6 +253,8 @@ class NetPropagation:
                     return True
                 except RuntimeError:
                     client.close()
+                    return False
+                except TimeoutError:
                     return False
 
             else:
@@ -317,7 +325,7 @@ class NetPropagation:
             self.ip, self.port),
             data={strings.USERNAME_PROMPT_WEB: self.username,
                   strings.PASSWORD_PROMPT_WEB: self.password},
-            timeout=4)
+            timeout=2)
         if response:
             logging.info(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.SUCCESSFUL))

@@ -8,8 +8,6 @@ import file
 import net_propagation
 # Importing strings for common string resources.
 import strings
-# Importing strings_functions for dynamic string functionality.
-import strings_functions
 
 
 def test_additional_actions():
@@ -17,7 +15,7 @@ def test_additional_actions():
     This function tests the additional_actions function in the net_propagation
     script. Currently, the function only calls two other functions, so this
     test uses the bad path in both to run through once. Good paths will be
-    tested in the two functions own tests.
+    tested in the two functions own tests eventually
     """
     propagator = net_propagation.NetPropagation(
         strings.RANDOM_STRING, None, strings.TEST_IP, None, None, None, None)
@@ -72,29 +70,10 @@ def test_additional_actions():
                                       arguments)
 
 
-def test_append_lines_from_file_to_list():
-    """
-    This function tests the append_lines_from_file_to_list function in the
-    net_propagation script. It feeds in a test file, and we check the result it
-    returns for validity. Each line is checked independently without a for loop
-    for readability in test results i.e. we'll be able to correlate a specific
-    line with an error.
-    """
-    test_file = file.File(strings.FILE)
-    lines_list = test_file.append_lines_from_file_to_list()
-    assert lines_list[0] == strings.LINES[0]
-    assert lines_list[1] == strings.LINES[1]
-    assert lines_list[2] == strings.LINES[2]
-    assert lines_list[3] == strings.LINES[3]
-    assert lines_list[4] == strings.LINES[4]
-    assert lines_list[5] == strings.LINES[5]
-
-
 def test_check_over_ssh():
     """
-    This function tests the check_check_over_ssh function, it will always fail
-    for now until I figure out how to mock a file present across an SSH
-    connection.
+    This function tests the check_check_over_ssh function, only tests the bad
+    path for now
     """
     test_file = file.File(strings.FILE)
     propagator = net_propagation.NetPropagation(
@@ -103,29 +82,33 @@ def test_check_over_ssh():
     assert propagator.check_over_ssh(test_file.filename) is True
 
 
-def test_convert_file_to_list():
+def test_connect_ssh_client():
     """
-    This function tests the convert_file_to_list function, it does this by
-    passing in one valid filename and one invalid filename.
+    This function tests the connect_ssh_client function, only tests the bad
+    path for now
     """
-    test_file = file.File(strings.IP_LIST_SHORT)
-    assert test_file.convert_file_to_list() is not None
-    test_file = file.File(strings.PWDS_LIST_SHORT)
-    assert test_file.convert_file_to_list() is not None
-    test_file = file.File(strings.TEST_IP)
-    assert test_file.convert_file_to_list() is None
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.SSH_PORT, None,
+        None, None)
+    assert propagator.connect_ssh_client() is False
 
 
-def test_file_error_handler(capfd):
+def test_connect_web():
     """
-    This function tests the file_error_handler function. Should just run
-    straight through no problem hence why all this function does is run that
-    function and check what shows up in the console, errors or exceptions will
-    fail this test for us
-    :param capfd: Parameter needed to capture log output.
+    This function tests the connect_web function, only tests the bad path for
+    now
     """
-    test_file = file.File(strings.FILE)
-    test_file.file_error_handler()
-    out, err = capfd.readouterr()
-    assert out == strings_functions.help_output() + "\n" + strings.EXITING + \
-           "\n"
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.SSH_PORT, None,
+        None, None)
+    assert propagator.connect_ssh_client() is False
+
+
+def test_cycle_through_subnet():
+    """
+    This function tests the cycle_through_subnet function
+    """
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.SSH_PORT,
+        strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
+    assert propagator.cycle_through_subnet() == strings.TEST_IP_LIST
