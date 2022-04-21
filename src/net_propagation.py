@@ -148,6 +148,9 @@ class NetPropagation:
         except RuntimeError:
             logging.debug(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.UNSUCCESSFUL))
+        except requests.exceptions.ConnectTimeout:
+            logging.debug(strings_functions.connection_status(
+                strings.WEB, self.ip, self.port, strings.UNSUCCESSFUL))
         if attempt_succeeded:
             logging.info(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.SUCCESSFUL))
@@ -262,6 +265,8 @@ class NetPropagation:
                 return False
         except RuntimeError:
             return False
+        except NoValidConnectionsError:
+            return False
 
     def propagating(self, script, arguments):
         """
@@ -289,13 +294,11 @@ class NetPropagation:
         This function will try and ping every IP in the IP list and if it
         doesn't receive a response it will then remove that IP from the IP list
         """
-        new_ip_list = []
         for ip in self.ip_list:
             self.ip = ip
             logging.info(strings_functions.checking_ip_reachable(self.ip))
-            if self.is_reachable_ip():
-                new_ip_list.append(self.ip)
-        self.ip_list = new_ip_list
+            if not self.is_reachable_ip():
+                self.ip_list.remove(self.ip)
 
     def scan_port(self):
         """

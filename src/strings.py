@@ -203,8 +203,14 @@ LOGIN_TO = "login to"
 # The typical ID of the loopback interface.
 LOOPBACK = "lo"
 
+# The typical ID of the loopback interface.
+LOOPBACK_IP = "127.0.0.1"
+
 # The typical IP of the loopback interface as a list for testing.
 LOOPBACK_IP_AS_LIST = ["127.0.0.1"]
+
+# The typical IP of the loopback interface as a list for testing.
+LOOPBACK_AND_FAIL_IP_AS_LIST = ["127.0.0.1", "10.255.255.254"]
 
 # The main script.
 MAIN_SCRIPT = "./main.py"
@@ -349,8 +355,11 @@ SUCCESSFUL = "Successful"
 # The syn flag for packet crafting in Scapy
 SYN_FLAG = "S"
 
-# Test IP addresses.
+# Test IP address.
 TEST_IP = "192.168.1.1"
+
+# Test IP address which should fail.
+TEST_IP_FAIL = "10.255.255.254"
 
 # A list of IPs for testing subnet scanning.
 TEST_IP_LIST = ['127.0.0.1', '127.0.0.0',  '127.0.0.2', '127.0.0.3',
