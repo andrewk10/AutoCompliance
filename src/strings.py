@@ -285,6 +285,11 @@ PING = "ping"
 # The argument for ping which specifies the number of packets sent.
 PING_ARGUMENT = "-c"
 
+# The error for when the ping command can not be tested, so instead we must
+# default to removing an IP address
+PING_CMD_NOT_FOUND = "The ping command is not available, defaulting to " \
+                     "removing IP"
+
 # Short option name for the port option.
 PORT_OPT_SHORT = "-p"
 

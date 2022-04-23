@@ -202,13 +202,17 @@ class NetPropagation:
         :return True: If the IP address is reachable
         :return False: If the IP address is not reachable
         """
-        command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
-            self.ip)]
-        if subprocess.call(command) == 0:
-            logging.info(strings_functions.ip_reachability(self.ip, True))
-            return True
-        logging.debug(strings_functions.ip_reachability(self.ip, False))
-        return False
+        try:
+            command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
+                self.ip)]
+            if subprocess.call(command) == 0:
+                logging.info(strings_functions.ip_reachability(self.ip, True))
+                return True
+            logging.debug(strings_functions.ip_reachability(self.ip, False))
+            return False
+        except FileNotFoundError:
+            logging.debug(strings.PING_CMD_NOT_FOUND)
+            return False
 
     def propagate_script(self, script):
         """
