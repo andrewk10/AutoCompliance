@@ -209,6 +209,11 @@ LOOPBACK_IP = "127.0.0.1"
 # The typical IP of the loopback interface as a list for testing.
 LOOPBACK_IP_AS_LIST = ["127.0.0.1"]
 
+# The typical IP of the loopback interface as a list for testing, second
+# iteration as the first iteration on the full run of the test suite breaks?
+# Weird.
+LOOPBACK_IP_AS_LIST_REMOVE = ["127.0.0.1"]
+
 # The typical IP of the loopback interface as a list for testing.
 LOOPBACK_AND_FAIL_IP_AS_LIST = ["127.0.0.1", "10.255.255.254"]
 

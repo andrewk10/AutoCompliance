@@ -160,8 +160,7 @@ class NetPropagation:
         """
         This function takes in a given network interface and an IP list, it
         will get the IP address of the interface and add all the address from
-        its /24 subnet to the IP list and will then return the list
-        for a response
+        its /24 subnet to the IP list.
         """
         interface_split = get_if_addr(self.interface).split(strings.FULL_STOP)
         last_byte = 0
@@ -174,12 +173,11 @@ class NetPropagation:
                 logging.info(strings_functions.adding_address_to_interface(
                     specific_address,
                     self.interface))
-                if self.ip_list is not strings.SPACE:
+                if self.ip_list:
                     self.ip_list.append(specific_address)
                 else:
                     self.ip_list = [specific_address]
             last_byte = last_byte + 1
-        return self.ip_list
 
     def gathering_local_ips(self):
         """
@@ -195,8 +193,7 @@ class NetPropagation:
             self.interface = interface
             logging.info(strings_functions.fetching_ips_for_interface(
                 interface))
-            self.ip_list = self.cycle_through_subnet()
-        return self.ip_list
+            self.cycle_through_subnet()
 
     def is_reachable_ip(self):
         """
@@ -300,7 +297,7 @@ class NetPropagation:
         """
         for ip in self.ip_list:
             self.ip = ip
-            logging.info(strings_functions.checking_ip_reachable(self.ip))
+            logging.info(strings_functions.checking_ip_reachable(ip))
             if not self.is_reachable_ip():
                 self.ip_list.remove(self.ip)
 
@@ -397,7 +394,18 @@ class NetPropagation:
                     self.connect_web():
                 return str(self.username) + strings.COLON + str(self.password)
             return False
-
+# def test_remove_unreachable_ips():
+#     """
+#     This function tests the remove_unreachable_ips function but only the bad
+#     path.
+#     """
+#     propagator = net_propagation.NetPropagation(
+#         strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP, strings.SSH_PORT,
+#         strings.LOOPBACK, strings.LOOPBACK_AND_FAIL_IP_AS_LIST, None)
+#     propagator.remove_unreachable_ips()
+#     # Weird quirk, can't use LOOPBACK_IP_AS_LIST here if
+#     # test_cycle_through_subnet or gathering_local_ips is used.
+#     assert propagator.ip_list == strings.LOOPBACK_IP_AS_LIST_REMOVE
         except RuntimeError:
             return False
 
