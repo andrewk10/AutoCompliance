@@ -258,6 +258,10 @@ class NetPropagation:
                     client.close()
                     return False
                 except TimeoutError:
+                    client.close()
+                    return False
+                except SSHException:
+                    client.close()
                     return False
 
             else:
