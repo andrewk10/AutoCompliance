@@ -1,13 +1,17 @@
 #!/usr/bin/python3
 
-# Importing argparse for the handling of passed in arguments.
+# Importing argparse for the handling of passed in arguments
 import argparse
 # Importing file for file based functionality
 import file
-# Importing net_propagation for testing.
+# Importing logging to log the ping command fails
+import logging
+# Importing net_propagation for testing
 import net_propagation
-# Importing strings for common string resources.
+# Importing strings for common string resources
 import strings
+# Importing subprocess to run the ping command where needed
+import subprocess
 
 
 def test_additional_actions():
@@ -131,12 +135,23 @@ def test_is_reachable_ip():
     path by using the default loopback IP address and the bad path by using a
     reserved local IP address.
     """
-    propagator = net_propagation.NetPropagation(
-        strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP, strings.SSH_PORT,
-        strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
-    assert propagator.is_reachable_ip() is True
-    propagator.ip = strings.TEST_IP_FAIL
-    assert propagator.is_reachable_ip() is False
+    try:
+        # Need to do a quick test ping to ensure the ping command is actually
+        # available, this is being done on the test level as this test assumes
+        # ping is in fact available.
+        command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
+            strings.LOOPBACK_IP)]
+        subprocess.call(command)
+        propagator = net_propagation.NetPropagation(
+            strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP,
+            strings.SSH_PORT,
+            strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
+        assert propagator.is_reachable_ip() is True
+        propagator.ip = strings.TEST_IP_FAIL
+        assert propagator.is_reachable_ip() is False
+    except FileNotFoundError:
+        # If ping isn't available, no worries, we handle it
+        logging.debug(strings.PING_CMD_NOT_FOUND)
 
 
 def test_propagate_script():
@@ -205,10 +220,21 @@ def test_remove_unreachable_ips():
     This function tests the remove_unreachable_ips function but only the bad
     path.
     """
-    propagator = net_propagation.NetPropagation(
-        strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP, strings.SSH_PORT,
-        strings.LOOPBACK, strings.LOOPBACK_AND_FAIL_IP_AS_LIST, None)
-    propagator.remove_unreachable_ips()
-    # Weird quirk, can't use LOOPBACK_IP_AS_LIST here if
-    # test_cycle_through_subnet or gathering_local_ips is used.
-    assert propagator.ip_list == strings.LOOPBACK_IP_AS_LIST_REMOVE
+    try:
+        # Need to do a quick test ping to ensure the ping command is actually
+        # available, this is being done on the test level as this test assumes
+        # ping is in fact available.
+        command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
+            strings.LOOPBACK_IP)]
+        subprocess.call(command)
+        propagator = net_propagation.NetPropagation(
+            strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP,
+            strings.SSH_PORT, strings.LOOPBACK,
+            strings.LOOPBACK_AND_FAIL_IP_AS_LIST, None)
+        propagator.remove_unreachable_ips()
+        # Weird quirk, can't use LOOPBACK_IP_AS_LIST here if
+        # test_cycle_through_subnet or gathering_local_ips is used.
+        assert propagator.ip_list == strings.LOOPBACK_IP_AS_LIST_REMOVE
+    except FileNotFoundError:
+        # If ping isn't available, no worries, we handle it
+        logging.debug(strings.PING_CMD_NOT_FOUND)
