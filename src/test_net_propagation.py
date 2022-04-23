@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 
-# Importing argparse for the handling of passed in arguments.
+# Importing argparse for the handling of passed in arguments
 import argparse
 # Importing file for file based functionality
 import file
-# Importing net_propagation for testing.
+# Importing logging to log the ping command fails
+import logging
+# Importing net_propagation for testing
 import net_propagation
-# Importing strings for common string resources.
+# Importing strings for common string resources
 import strings
-# Importing strings_functions for dynamic string functionality.
-import strings_functions
+# Importing subprocess to run the ping command where needed
+import subprocess
 
 
 def test_additional_actions():
@@ -17,7 +19,7 @@ def test_additional_actions():
     This function tests the additional_actions function in the net_propagation
     script. Currently, the function only calls two other functions, so this
     test uses the bad path in both to run through once. Good paths will be
-    tested in the two functions own tests.
+    tested in the two functions own tests eventually
     """
     propagator = net_propagation.NetPropagation(
         strings.RANDOM_STRING, None, strings.TEST_IP, None, None, None, None)
@@ -49,7 +51,7 @@ def test_additional_actions():
     # Adding the propagate option to the parser.
     parser.add_argument(
         strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG,
-        dest='propagate', help=strings.PROP_HELP, type=str)
+        dest='propagate', help=strings.PROP_HELP)
     # Adding the transfer file option to the parser.
     parser.add_argument(
         strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
@@ -63,38 +65,17 @@ def test_additional_actions():
     arguments.username = strings.ADMIN
     arguments.password_file = strings.PWDS_LIST_SHORT
     arguments.propagate_file = strings.FILE
-    ports = [strings.SSH_PORT, strings.WEB_PORT_EIGHTY,
-             strings.WEB_PORT_EIGHTY_EIGHTY,
-             strings.WEB_PORT_EIGHTY_EIGHT_EIGHTY_EIGHT]
+    ports = [strings.SSH_PORT, strings.WEB_PORT_EIGHTY]
     for port in ports:
         propagator.port = port
         propagator.additional_actions(transfer_file, propagation_script,
                                       arguments)
 
 
-def test_append_lines_from_file_to_list():
-    """
-    This function tests the append_lines_from_file_to_list function in the
-    net_propagation script. It feeds in a test file, and we check the result it
-    returns for validity. Each line is checked independently without a for loop
-    for readability in test results i.e. we'll be able to correlate a specific
-    line with an error.
-    """
-    test_file = file.File(strings.FILE)
-    lines_list = test_file.append_lines_from_file_to_list()
-    assert lines_list[0] == strings.LINES[0]
-    assert lines_list[1] == strings.LINES[1]
-    assert lines_list[2] == strings.LINES[2]
-    assert lines_list[3] == strings.LINES[3]
-    assert lines_list[4] == strings.LINES[4]
-    assert lines_list[5] == strings.LINES[5]
-
-
 def test_check_over_ssh():
     """
-    This function tests the check_check_over_ssh function, it will always fail
-    for now until I figure out how to mock a file present across an SSH
-    connection.
+    This function tests the check_check_over_ssh function, only tests the bad
+    path for now
     """
     test_file = file.File(strings.FILE)
     propagator = net_propagation.NetPropagation(
@@ -103,29 +84,157 @@ def test_check_over_ssh():
     assert propagator.check_over_ssh(test_file.filename) is True
 
 
-def test_convert_file_to_list():
+def test_connect_ssh_client():
     """
-    This function tests the convert_file_to_list function, it does this by
-    passing in one valid filename and one invalid filename.
+    This function tests the connect_ssh_client function, only tests the bad
+    path for now
     """
-    test_file = file.File(strings.IP_LIST_SHORT)
-    assert test_file.convert_file_to_list() is not None
-    test_file = file.File(strings.PWDS_LIST_SHORT)
-    assert test_file.convert_file_to_list() is not None
-    test_file = file.File(strings.TEST_IP)
-    assert test_file.convert_file_to_list() is None
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.SSH_PORT, None,
+        None, None)
+    assert propagator.connect_ssh_client() is False
 
 
-def test_file_error_handler(capfd):
+def test_connect_web():
     """
-    This function tests the file_error_handler function. Should just run
-    straight through no problem hence why all this function does is run that
-    function and check what shows up in the console, errors or exceptions will
-    fail this test for us
-    :param capfd: Parameter needed to capture log output.
+    This function tests the connect_web function, only tests the bad path for
+    now
     """
-    test_file = file.File(strings.FILE)
-    test_file.file_error_handler()
-    out, err = capfd.readouterr()
-    assert out == strings_functions.help_output() + "\n" + strings.EXITING + \
-           "\n"
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.WEB_PORT_EIGHTY,
+        None, None, None)
+    assert propagator.connect_web() is False
+
+
+def test_cycle_through_subnet():
+    """
+    This function tests the cycle_through_subnet function
+    """
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.SSH_PORT,
+        strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
+    propagator.cycle_through_subnet()
+    assert propagator.ip_list == strings.TEST_IP_LIST
+
+
+def test_gathering_local_ips():
+    """
+    This function tests the gathering_local_ips function which is going to have
+    a different result no matter what machine it runs on, hence no assertion
+    since no assumption can be made
+    """
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.TEST_IP, strings.SSH_PORT,
+        strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
+    propagator.gathering_local_ips()
+
+
+def test_is_reachable_ip():
+    """
+    This function tests the is_ip_reachable function good and bad paths, good
+    path by using the default loopback IP address and the bad path by using a
+    reserved local IP address.
+    """
+    try:
+        # Need to do a quick test ping to ensure the ping command is actually
+        # available, this is being done on the test level as this test assumes
+        # ping is in fact available.
+        command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
+            strings.LOOPBACK_IP)]
+        subprocess.call(command)
+        propagator = net_propagation.NetPropagation(
+            strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP,
+            strings.SSH_PORT,
+            strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
+        assert propagator.is_reachable_ip() is True
+        propagator.ip = strings.TEST_IP_FAIL
+        assert propagator.is_reachable_ip() is False
+    except FileNotFoundError:
+        # If ping isn't available, no worries, we handle it
+        logging.debug(strings.PING_CMD_NOT_FOUND)
+
+
+def test_propagate_script():
+    """
+    This function tests the propagate_script function but only the bad path.
+    """
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP, strings.SSH_PORT,
+        strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
+    assert propagator.propagate_script(file.File(strings.FILE)) is False
+
+
+def test_propagating():
+    """
+    This function tests the propagating function but only the bad path.
+    """
+    propagator = net_propagation.NetPropagation(
+        strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP, strings.SSH_PORT,
+        strings.LOOPBACK, strings.LOOPBACK_IP_AS_LIST, None)
+    # Argument parser for handling arguments.
+    parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
+    # Adding the target  file option to the parser.
+    parser.add_argument(
+        strings.IP_FILE_OPT_SHORT, strings.IP_FILE_OPT_LONG,
+        dest='target', help=strings.IP_FILE_HELP, type=str)
+    # Adding the username option to the parser.
+    parser.add_argument(
+        strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
+        dest='username', help=strings.USERNAME_HELP, type=str)
+    # Adding the password file option to the parser.
+    parser.add_argument(
+        strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
+        dest="password_file", help=strings.PW_FILE_HELP, type=str)
+    # Adding the port option to the parser.
+    parser.add_argument(
+        strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
+        dest='ports', help=strings.PORT_HELP, type=str)
+    # Adding the lan option to the parser.
+    parser.add_argument(
+        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG,
+        dest='lan', help=strings.LAN_HELP, type=str)
+    # Adding the propagate option to the parser.
+    parser.add_argument(
+        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG,
+        dest='propagate', help=strings.PROP_HELP)
+    # Adding the transfer file option to the parser.
+    parser.add_argument(
+        strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
+        dest='propagate_file', help=strings.PROP_FILE_HELP, type=str)
+
+    # Parsing the arguments.
+    arguments = parser.parse_args()
+    # Hard-coding necessary arguments
+    arguments.target = strings.IP_LIST_SHORT
+    arguments.ports = strings.ALL_PORTS
+    arguments.username = strings.ADMIN
+    arguments.password_file = strings.PWDS_LIST_SHORT
+    arguments.propagate_file = strings.FILE
+    arguments.propagate = True
+
+    propagator.propagating(file.File(strings.FILE), arguments)
+
+
+def test_remove_unreachable_ips():
+    """
+    This function tests the remove_unreachable_ips function but only the bad
+    path.
+    """
+    try:
+        # Need to do a quick test ping to ensure the ping command is actually
+        # available, this is being done on the test level as this test assumes
+        # ping is in fact available.
+        command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
+            strings.LOOPBACK_IP)]
+        subprocess.call(command)
+        propagator = net_propagation.NetPropagation(
+            strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP,
+            strings.SSH_PORT, strings.LOOPBACK,
+            strings.LOOPBACK_AND_FAIL_IP_AS_LIST, None)
+        propagator.remove_unreachable_ips()
+        # Weird quirk, can't use LOOPBACK_IP_AS_LIST here if
+        # test_cycle_through_subnet or gathering_local_ips is used.
+        assert propagator.ip_list == strings.LOOPBACK_IP_AS_LIST_REMOVE
+    except FileNotFoundError:
+        # If ping isn't available, no worries, we handle it
+        logging.debug(strings.PING_CMD_NOT_FOUND)

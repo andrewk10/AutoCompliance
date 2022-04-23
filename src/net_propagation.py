@@ -83,7 +83,7 @@ class NetPropagation:
             client.set_missing_host_key_policy(RejectPolicy)
             client.connect(hostname=str(self.ip), port=int(self.port),
                            username=str(self.username), password=str(
-                    self.password))
+                    self.password), timeout=2)
             client.exec_command(pipes.quote(strings_functions.touch_file(
                 filename)))
 
@@ -116,13 +116,19 @@ class NetPropagation:
             client.set_missing_host_key_policy(RejectPolicy)
             client.connect(hostname=str(self.ip), port=int(self.port),
                            username=str(self.username), password=str(
-                    self.password))
+                    self.password), timeout=2)
             client.close()
             logging.info(strings_functions.connection_status(
                 strings.SSH, self.ip, self.port, strings.SUCCESSFUL))
             return True
 
         except SSHException:
+            client.close()
+            logging.debug(strings_functions.connection_status(
+                strings.SSH, self.ip, self.port, strings.UNSUCCESSFUL))
+            return False
+
+        except TimeoutError:
             client.close()
             logging.debug(strings_functions.connection_status(
                 strings.SSH, self.ip, self.port, strings.UNSUCCESSFUL))
@@ -142,6 +148,9 @@ class NetPropagation:
         except RuntimeError:
             logging.debug(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.UNSUCCESSFUL))
+        except requests.exceptions.ConnectTimeout:
+            logging.debug(strings_functions.connection_status(
+                strings.WEB, self.ip, self.port, strings.UNSUCCESSFUL))
         if attempt_succeeded:
             logging.info(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.SUCCESSFUL))
@@ -151,8 +160,7 @@ class NetPropagation:
         """
         This function takes in a given network interface and an IP list, it
         will get the IP address of the interface and add all the address from
-        its /24 subnet to the IP list and will then return the list
-        for a response
+        its /24 subnet to the IP list.
         """
         interface_split = get_if_addr(self.interface).split(strings.FULL_STOP)
         last_byte = 0
@@ -165,12 +173,11 @@ class NetPropagation:
                 logging.info(strings_functions.adding_address_to_interface(
                     specific_address,
                     self.interface))
-                if self.ip_list is not strings.SPACE:
+                if self.ip_list:
                     self.ip_list.append(specific_address)
                 else:
                     self.ip_list = [specific_address]
             last_byte = last_byte + 1
-        return self.ip_list
 
     def gathering_local_ips(self):
         """
@@ -186,8 +193,7 @@ class NetPropagation:
             self.interface = interface
             logging.info(strings_functions.fetching_ips_for_interface(
                 interface))
-            self.ip_list = self.cycle_through_subnet()
-        return self.ip_list
+            self.cycle_through_subnet()
 
     def is_reachable_ip(self):
         """
@@ -196,13 +202,17 @@ class NetPropagation:
         :return True: If the IP address is reachable
         :return False: If the IP address is not reachable
         """
-        command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
-            self.ip)]
-        if subprocess.call(command) == 0:
-            logging.info(strings_functions.ip_reachability(self.ip, True))
-            return True
-        logging.debug(strings_functions.ip_reachability(self.ip, False))
-        return False
+        try:
+            command = [strings.PING, strings.PING_ARGUMENT, strings.ONE, str(
+                self.ip)]
+            if subprocess.call(command) == 0:
+                logging.info(strings_functions.ip_reachability(self.ip, True))
+                return True
+            logging.debug(strings_functions.ip_reachability(self.ip, False))
+            return False
+        except FileNotFoundError:
+            logging.debug(strings.PING_CMD_NOT_FOUND)
+            return False
 
     def propagate_script(self, script):
         """
@@ -232,7 +242,7 @@ class NetPropagation:
                     client.set_missing_host_key_policy(RejectPolicy)
                     client.connect(hostname=str(self.ip), port=int(self.port),
                                    username=str(self.username),
-                                   password=str(self.password))
+                                   password=str(self.password), timeout=2)
                     if strings_functions.run_script_command() == \
                             "./demo.py -L -p 22 -u " \
                             "root -f " \
@@ -248,11 +258,19 @@ class NetPropagation:
                 except RuntimeError:
                     client.close()
                     return False
+                except TimeoutError:
+                    client.close()
+                    return False
+                except SSHException:
+                    client.close()
+                    return False
 
             else:
                 logging.debug(strings_functions.file_present_on_host(self.ip))
                 return False
         except RuntimeError:
+            return False
+        except NoValidConnectionsError:
             return False
 
     def propagating(self, script, arguments):
@@ -281,13 +299,11 @@ class NetPropagation:
         This function will try and ping every IP in the IP list and if it
         doesn't receive a response it will then remove that IP from the IP list
         """
-        new_ip_list = []
         for ip in self.ip_list:
             self.ip = ip
-            logging.info(strings_functions.checking_ip_reachable(self.ip))
-            if self.is_reachable_ip():
-                new_ip_list.append(self.ip)
-        self.ip_list = new_ip_list
+            logging.info(strings_functions.checking_ip_reachable(ip))
+            if not self.is_reachable_ip():
+                self.ip_list.remove(self.ip)
 
     def scan_port(self):
         """
@@ -317,7 +333,7 @@ class NetPropagation:
             self.ip, self.port),
             data={strings.USERNAME_PROMPT_WEB: self.username,
                   strings.PASSWORD_PROMPT_WEB: self.password},
-            timeout=4)
+            timeout=2)
         if response:
             logging.info(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.SUCCESSFUL))
@@ -382,7 +398,18 @@ class NetPropagation:
                     self.connect_web():
                 return str(self.username) + strings.COLON + str(self.password)
             return False
-
+# def test_remove_unreachable_ips():
+#     """
+#     This function tests the remove_unreachable_ips function but only the bad
+#     path.
+#     """
+#     propagator = net_propagation.NetPropagation(
+#         strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP, strings.SSH_PORT,
+#         strings.LOOPBACK, strings.LOOPBACK_AND_FAIL_IP_AS_LIST, None)
+#     propagator.remove_unreachable_ips()
+#     # Weird quirk, can't use LOOPBACK_IP_AS_LIST here if
+#     # test_cycle_through_subnet or gathering_local_ips is used.
+#     assert propagator.ip_list == strings.LOOPBACK_IP_AS_LIST_REMOVE
         except RuntimeError:
             return False
 
