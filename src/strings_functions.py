@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Author: @andrewk10
+
 # Importing strings for use of the external strings resources.
 import strings
 

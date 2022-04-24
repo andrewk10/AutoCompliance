@@ -13,10 +13,10 @@ name: "CodeQL - Feature"
 
 on:
   push:
-    branches: [ 31-add-automated-tests ]
+    branches: [ 23-include-initial-functions-for-blockchain-functionality ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ 31-add-automated-tests ]
+    branches: [ 23-include-initial-functions-for-blockchain-functionality ]
   schedule:
     - cron: '34 22 * * 4'
 

@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Author: @andrewk10
+
 # A string that just states "Adding".
 ADDING = "Adding"
 
