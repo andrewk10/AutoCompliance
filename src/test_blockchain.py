@@ -6,6 +6,7 @@
 import blockchain
 
 
-def_test_create_blockchain:
-    test_blockchain = blockchain
+def test_create_blockchain():
+    # Already calling create blockchain on init.
+    test_blockchain = blockchain.Blockchain
 
