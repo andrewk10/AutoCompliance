@@ -53,4 +53,3 @@ class Blockchain:
     def initialise_consensus_information(self):
         self.consensus_context = self.number_of_validators - \
                                  ((self.number_of_validators-1)/3)
-

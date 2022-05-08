@@ -9,4 +9,3 @@ import blockchain
 def test_create_blockchain():
     # Already calling create blockchain on init.
     test_blockchain = blockchain.Blockchain
-
