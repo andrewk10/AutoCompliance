@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+
+# Author: @andrewk10
+
 # Importing file for file based functionality.
 import file
 # Importing logging to safely log sensitive, error or debug info.

@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+
+# Author: @andrewk10
+
 # Importing paramiko modules for SSH connection and exception handling.
 from paramiko import SSHClient, RejectPolicy
 from paramiko.ssh_exception import NoValidConnectionsError, SSHException

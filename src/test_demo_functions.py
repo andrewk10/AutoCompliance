@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Author: @andrewk10
+
 # Import demo_functions to test the demo specific functionality.
 import demo_functions
 # Importing strings for use of the external strings resources.

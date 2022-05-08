@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Author: @andrewk10
+
 # Importing strings_functions.py for testing.
 import strings_functions
 # Importing strings for the use of predefined test strings.

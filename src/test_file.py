@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Author: @andrewk10
+
 # Importing file for file based functionality
 import file
 # Importing strings for common string resources.
