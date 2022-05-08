@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ 14-finish-test_net_propagationpy-and-add-proper-logging ]
+    branches: [ 23-include-initial-functions-for-blockchain-functionality ]
   pull_request:
-    branches: [ 14-finish-test_net_propagationpy-and-add-proper-logging ]
+    branches: [ 23-include-initial-functions-for-blockchain-functionality ]
 
 jobs:
   build:
