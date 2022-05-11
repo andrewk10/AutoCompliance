@@ -302,11 +302,12 @@ class NetPropagation:
         This function will try and ping every IP in the IP list and if it
         doesn't receive a response it will then remove that IP from the IP list
         """
-        for ip in self.ip_list:
-            self.ip = ip
-            logging.info(strings_functions.checking_ip_reachable(ip))
-            if not self.is_reachable_ip():
-                self.ip_list.remove(self.ip)
+        if self.ip_list:
+            for ip in self.ip_list:
+                self.ip = ip
+                logging.info(strings_functions.checking_ip_reachable(ip))
+                if not self.is_reachable_ip():
+                    self.ip_list.remove(self.ip)
 
     def scan_port(self):
         """

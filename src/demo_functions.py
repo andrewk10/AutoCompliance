@@ -27,7 +27,7 @@ class DemoFunctions:
 
     def assigning_values(self):
         """
-        This function will read in the target ports, target username and
+        This method will read in the target ports, target username and
         passwords filename from the user and if the user specified an ip
         addresses file it will read that and return it alongside all the other
         values
@@ -46,16 +46,16 @@ class DemoFunctions:
         else:
             logging.debug(strings.IP_FILENAME_NOT_FOUND)
 
-        if self.arguments.password_file:
+        if self.arguments.pw_file:
             return ip_list, self.arguments.ports, self.arguments.username, \
-                   self.arguments.password_file
+                   self.arguments.pw_file
 
         logging.error(strings.FILE_DOES_NOT_EXIST)
         return None
 
     def checking_arguments(self):
         """
-        This function checks if the arguments are appropriately given and if
+        This method checks if the arguments are appropriately given and if
         they're not it calls the help function and gracefully exits. There's
         also a check for the help argument itself. It'll try to assign the \
         values if the proper arguments are given, and they're valid
@@ -81,6 +81,19 @@ class DemoFunctions:
         else:
             logging.error(strings.PARAMETER_MISUSE)
             return None
+
+
+def remove_duplicates_in_list(list_with_duplicates):
+    """
+    This function simply removes duplicate entries in a given list
+    :param list_with_duplicates: A list with duplicate entries
+    :return deduplicated_list: A list without duplicate entries
+    """
+    deduplicated_list = list()
+    for ip in list_with_duplicates:
+        if ip not in deduplicated_list:
+            deduplicated_list.append(ip)
+    return deduplicated_list
 
 
 def exit_and_show_instructions():

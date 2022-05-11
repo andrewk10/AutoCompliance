@@ -58,13 +58,13 @@ def test_assigning_values():
     arguments.target = strings.IP_LIST_SHORT
     arguments.ports = strings.ALL_PORTS
     arguments.username = strings.ADMIN
-    arguments.password_file = strings.PWDS_LIST_SHORT
+    arguments.pw_file = strings.PWDS_LIST_SHORT
     assigner = demo_functions.DemoFunctions(arguments)
     assert assigner.assigning_values() is not None
 
     # Removing certain arguments for a forced fail
     arguments.target = None
-    arguments.password_file = None
+    arguments.pw_file = None
     assigner = demo_functions.DemoFunctions(arguments)
     assert assigner.assigning_values() is None
 

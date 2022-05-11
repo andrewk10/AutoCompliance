@@ -86,7 +86,7 @@ def demo():
     # If so then extend the ip_list.
     if arguments.lan:
         logging.info(strings.PERFORMING_LOCAL_SCAN)
-        propagator.ip_list = propagator.gathering_local_ips()
+        propagator.gathering_local_ips()
 
     # Creating the password file.
     pw_file = file.File(arguments.pw_file)
@@ -120,7 +120,10 @@ def demo():
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
     # example. This would be a user error, we're just handling that.
-    propagator.ip_list = list(dict.fromkeys(propagator.ip_list))
+    if propagator.ip_list:
+        propagator.ip_list = demo_functions.remove_duplicates_in_list(
+            propagator.ip_list)
+
     # Removing IPs from the IP list that can't be pinged from the host machine
     # of the script.
     propagator.remove_unreachable_ips()
@@ -128,14 +131,17 @@ def demo():
     # user on the comma.
     ports = arguments.ports.split(strings.COMMA)
     # Cycling through every IP in the IP list...
-    for ip in propagator.ip_list:
-        # And then using all user specified ports against that specific IP...
-        for port in ports:
-            propagator.ip = ip
-            propagator.port = port
-            propagation_script = file.File(strings.DEMO_SCRIPT_FILENAME)
-            # Try to spread using services and actions.
-            propagator.try_action(transfer_file, propagation_script, arguments)
+    if propagator.ip_list:
+        for ip in propagator.ip_list:
+            # And then using all user specified ports against that specific
+            # IP...
+            for port in ports:
+                propagator.ip = ip
+                propagator.port = port
+                propagation_script = file.File(strings.DEMO_SCRIPT_FILENAME)
+                # Try to spread using services and actions.
+                propagator.try_action(transfer_file, propagation_script,
+                                      arguments)
 
 
 if __name__ == "__main__":
