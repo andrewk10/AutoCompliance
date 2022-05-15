@@ -131,6 +131,12 @@ class NetPropagation:
                 strings.SSH, self.ip, self.port, strings.UNSUCCESSFUL))
             return False
 
+        except NoValidConnectionsError:
+            client.close()
+            logging.debug(strings_functions.connection_status(
+                strings.SSH, self.ip, self.port, strings.UNSUCCESSFUL))
+            return False
+
         except TimeoutError:
             client.close()
             logging.debug(strings_functions.connection_status(
@@ -151,9 +157,15 @@ class NetPropagation:
         except RuntimeError:
             logging.debug(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.UNSUCCESSFUL))
+            return attempt_succeeded
         except requests.exceptions.ConnectTimeout:
             logging.debug(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.UNSUCCESSFUL))
+            return attempt_succeeded
+        except requests.exceptions.ConnectionError:
+            logging.debug(strings_functions.connection_status(
+                strings.WEB, self.ip, self.port, strings.UNSUCCESSFUL))
+            return attempt_succeeded
         if attempt_succeeded:
             logging.info(strings_functions.connection_status(
                 strings.WEB, self.ip, self.port, strings.SUCCESSFUL))
@@ -317,13 +329,15 @@ class NetPropagation:
         :return True: The port is open
         :return False: The port is not open
         """
-        ip_header = IP(dst=self.ip)
-        tcp_header = TCP(dport=int(self.port), flags=strings.SYN_FLAG)
-        packet = ip_header / tcp_header
-        response, unanswered = sr(packet, timeout=2)
-        sleep(2)
-        if len(response) > 0:
-            return True
+        if isinstance(self.ip, str) and isinstance(self.port, str):
+            ip_header = IP(dst=self.ip)
+            tcp_header = TCP(dport=int(self.port), flags=strings.SYN_FLAG)
+            packet = ip_header / tcp_header
+            response, unanswered = sr(packet, timeout=2)
+            # Needed to process the response
+            sleep(1)
+            if len(response) > 0:
+                return True
         return False
 
     def send_post_request_with_login(self):
@@ -402,18 +416,6 @@ class NetPropagation:
                     self.connect_web():
                 return str(self.username) + strings.COLON + str(self.password)
             return False
-# def test_remove_unreachable_ips():
-#     """
-#     This function tests the remove_unreachable_ips function but only the bad
-#     path.
-#     """
-#     propagator = net_propagation.NetPropagation(
-#         strings.ADMIN, strings.ADMIN, strings.LOOPBACK_IP, strings.SSH_PORT,
-#         strings.LOOPBACK, strings.LOOPBACK_AND_FAIL_IP_AS_LIST, None)
-#     propagator.remove_unreachable_ips()
-#     # Weird quirk, can't use LOOPBACK_IP_AS_LIST here if
-#     # test_cycle_through_subnet or gathering_local_ips is used.
-#     assert propagator.ip_list == strings.LOOPBACK_IP_AS_LIST_REMOVE
         except RuntimeError:
             return False
 

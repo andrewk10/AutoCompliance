@@ -45,6 +45,26 @@ COLON = ":"
 # A string that just denotes the use of a comma, same "idea" as above.
 COMMA = ","
 
+# The consensus message for requesting a change of the current view.
+CONSENSUS_MESSAGE_CHANGE_VIEW_REQUEST = "Change View Request"
+
+# The consensus message that commits the consensus changes.
+CONSENSUS_MESSAGE_COMMIT = "Commit"
+
+# The consensus message that asks for the preparing of a consensus request.
+CONSENSUS_MESSAGE_PREPARE_REQUEST = "Prepare Request"
+
+# The consensus message that asks for the preparing of a consensus response.
+CONSENSUS_MESSAGE_PREPARE_RESPONSE = "Prepare Response"
+
+# The consensus message that asks for the preparing of a consensus recovery
+# request.
+CONSENSUS_MESSAGE_RECOVERY_MESSAGE = "Recovery Message"
+
+# The consensus message that asks for the preparing of a consensus recovery
+# request.
+CONSENSUS_MESSAGE_RECOVERY_REQUEST = "Recovery Request"
+
 # The demo filename
 DEMO_SCRIPT_FILENAME = "demo.py"
 

@@ -8,6 +8,8 @@ import file
 import strings
 # Importing strings_functions for dynamic string functionality.
 import strings_functions
+# Importing demo functions for the parsing of arguments.
+import demo_functions
 
 
 def test_append_lines_from_file_to_list():
@@ -26,6 +28,19 @@ def test_append_lines_from_file_to_list():
     assert lines_list[3] == strings.LINES[3]
     assert lines_list[4] == strings.LINES[4]
     assert lines_list[5] == strings.LINES[5]
+
+
+def test_check_transfer_file():
+    """
+    This function tests the check_transfer_file function. Only runs through the
+    function with web and ssh ports making sure no errors are encountered.
+    """
+    test_file = file.File(strings.IP_LIST_SHORT)
+    arguments = demo_functions.parse_arguments([strings.PROP_OPT_SHORT])
+    test_file.check_transfer_file(
+        arguments, strings.LOOPBACK_IP, strings.SSH_PORT, strings.ADMIN)
+    test_file.check_transfer_file(
+        arguments, strings.LOOPBACK_IP, strings.WEB_PORT_EIGHTY, strings.ADMIN)
 
 
 def test_convert_file_to_list():
