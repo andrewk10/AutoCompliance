@@ -192,11 +192,11 @@ def test_scan_port():
     # Good path
     propagator = net_propagation.NetPropagation(
         None, None, strings.LOOPBACK_IP, strings.SSH_PORT, None, None, None)
-    propagator.scan_port()
+    assert not propagator.scan_port()
     # Bad Path
     propagator = net_propagation.NetPropagation(
         None, None, None, None, None, None, None)
-    propagator.scan_port()
+    assert not propagator.scan_port()
 
 
 def test_try_password_for_function():

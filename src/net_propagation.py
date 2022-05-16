@@ -333,11 +333,14 @@ class NetPropagation:
             ip_header = IP(dst=self.ip)
             tcp_header = TCP(dport=int(self.port), flags=strings.SYN_FLAG)
             packet = ip_header / tcp_header
-            response, unanswered = sr(packet, timeout=2)
-            # Needed to process the response
-            sleep(1)
-            if len(response) > 0:
-                return True
+            try:
+                response, unanswered = sr(packet, timeout=2)
+                # Needed to process the response
+                sleep(1)
+                if len(response) > 0:
+                    return True
+            except PermissionError:
+                logging.error(strings.PERMISSIONS_ERROR)
         return False
 
     def send_post_request_with_login(self):

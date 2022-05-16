@@ -276,6 +276,11 @@ PASSWORD_PROMPT = "Password:"
 # Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
 
+# Permissions error, advise the user that superuser permissions are needed for
+# scan_port.
+PERMISSIONS_ERROR = "Superuser permissions or admin privileges are needed " \
+                    "for the scanning of ports"
+
 # Short option name for the password file option.
 PW_FILE_OPT_SHORT = "-f"
 
