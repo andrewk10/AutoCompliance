@@ -15,10 +15,7 @@ import strings
 # Importing subprocess to run the ping command where needed
 import subprocess
 
-"""
-Uncomment this test if needed, it takes over two minutes to run though so needs
-to be optimised somewhat.
-"""
+# Uncomment this test if needed. Warning, it's very slow.
 # def test_additional_actions():
 #     """
 #     This function tests the additional_actions function in the net_propagation
