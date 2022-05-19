@@ -27,8 +27,13 @@ class Blockchain:
         self.validator = 0
         # Set to seconds
         self.block_time = 15
+        self.host_ip = None
 
     def create_blockchain(self, proof, previous_hash):
+        """
+        This method creates the blockchain by adding the genesis block to the
+        chain.
+        """
         block = {
            "index": len(self.chain) + 1,
            "timestamp": str(datetime.datetime.now()),
