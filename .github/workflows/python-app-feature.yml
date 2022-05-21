@@ -5,9 +5,9 @@ name: Python Application - Feature
 
 on:
   push:
-    branches: [ 23-include-initial-functions-for-blockchain-functionality ]
+    branches: [ 24-initial-work-on-the-gui-elements ]
   pull_request:
-    branches: [ 23-include-initial-functions-for-blockchain-functionality ]
+    branches: [ 24-initial-work-on-the-gui-elements ]
 
 jobs:
   build:
