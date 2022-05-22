@@ -3,15 +3,15 @@
 # Author: @andrewk10
 
 # Importing demo_functions for demo specific functionality.
-import demo_functions
+import autocompliance.src.demo_functions as demo_functions
 # Importing file for working with files.
-import file
+import autocompliance.src.file as file
 # Importing logging to safely log sensitive, error or debug info.
 import logging
 # Importing net_propagation for propagating across the network.
-import net_propagation
+import autocompliance.src.net_propagation as net_propagation
 # Importing strings for use of the external strings resources.
-import strings
+import autocompliance.src.strings as strings
 # Importing sys to handle arguments
 import sys
 # Importing argparse for command-line option parsing

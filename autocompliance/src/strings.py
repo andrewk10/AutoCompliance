@@ -85,7 +85,7 @@ FETCHING_INTERFACE_IPS = "Fetching IPs for interface"
 FETCHING_LOCAL_INTERFACE_LIST = "Fetching local interface list..."
 
 # Name of the test text file, prepended with src/ for Pytest to work.
-FILE = "src/test_files/file.txt"
+FILE = "autocompliance/src/test_files/file.txt"
 
 # Lets the user know a file doesn't exist.
 FILE_DOES_NOT_EXIST = "A specified file does not exist"
@@ -157,10 +157,10 @@ IP_FILE_OPT_LONG = "--target"
 IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
 
 # Name of the test IP list file, prepended with src/ for Pytest to work.
-IP_LIST = "src/test_files/ip_list.txt"
+IP_LIST = "autocompliance/src/test_files/ip_list.txt"
 
 # Name of the short test IP list file, prepended with src/ for Pytest to work.
-IP_LIST_SHORT = "src/test_files/ip_list_short.txt"
+IP_LIST_SHORT = "autocompliance/src/test_files/ip_list_short.txt"
 
 # Let the user know that we're checking to see if the IP address is reachable.
 IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
@@ -236,7 +236,7 @@ NETCAT_LISTENER_PORT_COMMAND = "nc -l -p"
 NETCAT_WRITER_COMMAND = "nc -w 3"
 
 # The name of the net propagation script.
-NET_PROPAGATION = "src/net_propagation.py"
+NET_PROPAGATION = "autocompliance/src/net_propagation.py"
 
 # Newline character, mostly used to mimic an enter key press.
 NEWLINE = "\n"
@@ -266,10 +266,10 @@ PW_FILE_OPT_LONG = "--file"
 PW_FILE_HELP = "Filename for a file containing a list of passwords"
 
 # List of dummy passwords
-PWDS_LIST = "src/test_files/passwords_list.txt"
+PWDS_LIST = "autocompliance/src/test_files/passwords_list.txt"
 
 # Shorter list of dummy passwords
-PWDS_LIST_SHORT = "src/test_files/passwords_list_short.txt"
+PWDS_LIST_SHORT = "autocompliance/src/test_files/passwords_list_short.txt"
 
 # Parameters string for help test.
 PARAMETERS = "Parameters:"

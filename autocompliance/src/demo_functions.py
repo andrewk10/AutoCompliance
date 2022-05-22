@@ -3,13 +3,13 @@
 # Author: @andrewk10
 
 # Importing file for file based functionality.
-import file
+import autocompliance.src.file as file
 # Importing logging to safely log sensitive, error or debug info.
 import logging
 # Importing strings for use of the external strings resources.
-import strings
+import autocompliance.src.strings as strings
 # Importing strings_functions for string building functions.
-import strings_functions
+import autocompliance.src.strings_functions as strings_functions
 
 
 class DemoFunctions:

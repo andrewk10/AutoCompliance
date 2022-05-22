@@ -3,11 +3,11 @@
 # Author: @andrewk10
 
 # Import demo_functions to test the demo specific functionality.
-import demo_functions
+import autocompliance.src.demo_functions as demo_functions
 # Importing strings for use of the external strings resources.
-import strings
+import autocompliance.src.strings as strings
 # Importing strings_functions for string building functions.
-import strings_functions
+import autocompliance.src.strings_functions as strings_functions
 # Importing argparse for mocking argument parsing.
 import argparse
 

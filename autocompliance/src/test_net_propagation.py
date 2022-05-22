@@ -5,13 +5,13 @@
 # Importing argparse for the handling of passed in arguments
 import argparse
 # Importing file for file based functionality
-import file
+import autocompliance.src.file as file
 # Importing logging to log the ping command fails
 import logging
 # Importing net_propagation for testing
-import net_propagation
+import autocompliance.src.net_propagation as net_propagation
 # Importing strings for common string resources
-import strings
+import autocompliance.src.strings as strings
 # Importing subprocess to run the ping command where needed
 import subprocess
 

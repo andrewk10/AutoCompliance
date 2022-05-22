@@ -3,7 +3,7 @@
 # Author: @andrewk10
 
 # Importing blockchain for blockchain  based functionality
-import blockchain
+import autocompliance.src.blockchain as blockchain
 
 
 def test_create_blockchain():

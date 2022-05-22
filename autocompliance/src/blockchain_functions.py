@@ -7,7 +7,7 @@
 # Using flask to send messages to postman.
 from flask import Flask, jsonify
 # Importing blockchain for the blockchain object
-import blockchain
+import autocompliance.src.blockchain as blockchain
 # Importing json to encode information as JSON.
 import json
 # Hashlib for the hashing of blockchain blocks.

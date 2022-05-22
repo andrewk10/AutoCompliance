@@ -7,9 +7,9 @@
 # Importing datetime for timestamps.
 import datetime
 # Importing strings for use of the external strings resources.
-import strings
+import autocompliance.src.strings as strings
 # Importing strings_functions for string building functions.
-import strings_functions
+import autocompliance.src.strings_functions as strings_functions
 
 
 class Blockchain:

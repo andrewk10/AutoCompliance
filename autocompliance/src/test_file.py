@@ -3,11 +3,11 @@
 # Author: @andrewk10
 
 # Importing file for file based functionality
-import file
+import autocompliance.src.file as file
 # Importing strings for common string resources.
-import strings
+import autocompliance.src.strings as strings
 # Importing strings_functions for dynamic string functionality.
-import strings_functions
+import autocompliance.src.strings_functions as strings_functions
 
 
 def test_append_lines_from_file_to_list():
