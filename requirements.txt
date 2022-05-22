@@ -6,3 +6,4 @@ requests
 coverage
 pyinstaller
 Flask
+PyGObject
