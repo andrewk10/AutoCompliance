@@ -8,8 +8,6 @@ import autocompliance.src.demo_functions as demo_functions
 import autocompliance.src.strings as strings
 # Importing strings_functions for string building functions.
 import autocompliance.src.strings_functions as strings_functions
-# Importing argparse for mocking argument parsing.
-import argparse
 
 
 def test_assigning_values():

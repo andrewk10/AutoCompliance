@@ -3,7 +3,7 @@
 # Author: @andrewk10
 
 # Importing demo_functions for demo specific functionality.
-import demo_functions
+import autocompliance.src.demo_functions as demo_functions
 # Importing file for file based functionality
 import autocompliance.src.file as file
 # Importing logging to log the ping command fails

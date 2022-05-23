@@ -7,31 +7,38 @@
 # Importing datetime for timestamps.
 import datetime
 # Importing strings for use of the external strings resources.
-import autocompliance.src.strings as strings
+# import autocompliance.src.strings as strings
 # Importing strings_functions for string building functions.
-import autocompliance.src.strings_functions as strings_functions
+# import autocompliance.src.strings_functions as strings_functions
 
 
 class Blockchain:
+    """
+    This class defines the blockchain for AutoCompliance.
+    """
     def __init__(self):
+        # The blockchain itself.
         self.chain = []
+        # Adds the first block to the chain.
         self.create_blockchain(proof=1, previous_hash='0')
-        self.consensus_messages = ["Prepare Request", "Prepare Response",
-                                   "Commit", "Change View Requesst",
-                                   "Recovery Request", "Recovery Message"]
         self.number_of_validators = 0
         self.consensus_context = 0
         self.speaker_timeout = 0
         self.validator = 0
         # Set to seconds
         self.block_time = 15
+        self.host_ip = None
 
     def create_blockchain(self, proof, previous_hash):
+        """
+        This method creates the blockchain by adding the genesis block to the
+        chain.
+        """
         block = {
-           'index': len(self.chain) + 1,
-           'timestamp': str(datetime.datetime.now()),
-           'proof': proof,
-           'previous_hash': previous_hash
+           "index": len(self.chain) + 1,
+           "timestamp": str(datetime.datetime.now()),
+           "proof": proof,
+           "previous_hash": previous_hash
         }
 
         self.chain.append(block)
