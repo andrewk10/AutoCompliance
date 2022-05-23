@@ -14,47 +14,14 @@ import autocompliance.src.net_propagation as net_propagation
 import autocompliance.src.strings as strings
 # Importing sys to handle arguments
 import sys
-# Importing argparse for command-line option parsing
-import argparse
 
 
 def demo():
     """
     This demo function is just for demo purposes.
     """
-    # Argument parser for handling arguments.
-    parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
-    # Adding the target  file option to the parser.
-    parser.add_argument(
-        strings.IP_FILE_OPT_SHORT, strings.IP_FILE_OPT_LONG,
-        dest='target', help=strings.IP_FILE_HELP, type=str)
-    # Adding the username option to the parser.
-    parser.add_argument(
-        strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
-        dest='username', help=strings.USERNAME_HELP, type=str)
-    # Adding the password file option to the parser.
-    parser.add_argument(
-        strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
-        dest="pw_file", help=strings.PW_FILE_HELP, type=str)
-    # Adding the port option to the parser.
-    parser.add_argument(
-        strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
-        dest='ports', help=strings.PORT_HELP, type=str)
-    # Adding the lan option to the parser.
-    parser.add_argument(
-        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG, action='store_true',
-        help=strings.LAN_HELP)
-    # Adding the propagate option to the parser.
-    parser.add_argument(
-        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG, action='store_true',
-        help=strings.PROP_HELP)
-    # Adding the transfer file option to the parser.
-    parser.add_argument(
-        strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
-        dest='propagate_file', help=strings.PROP_FILE_HELP, type=str)
-
     # Parsing the arguments.
-    arguments = parser.parse_args()
+    arguments = demo_functions.parse_arguments(sys.argv[1:])
 
     # Initialising this for possible later use
     transfer_file = strings.SPACE

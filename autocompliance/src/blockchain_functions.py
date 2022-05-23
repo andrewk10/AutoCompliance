@@ -20,13 +20,10 @@ app_blockchain = blockchain.Blockchain()
 @app.route('/broadcast_recovery', methods=['GET'])
 def broadcast_recovery_request():
     """
-    This function
+    This function is called via web request
     """
-    # TODO: Iterating through all hosts in the network and getting them to
-    #  initialize the local context
-    #
-    # for host in chain.hosts:
-    return None
+    # for block in app_blockchain:
+    # <Send the recovery request to the associated block host>
 
 
 @app.route('/get_proof', methods=['GET'])
