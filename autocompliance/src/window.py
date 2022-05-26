@@ -26,6 +26,7 @@ class AutocomplianceWindow(Gtk.ApplicationWindow):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.set_title("AutoCompliance")
 
 
 class AboutDialog(Gtk.AboutDialog):
