@@ -28,6 +28,27 @@ class AutocomplianceWindow(Gtk.ApplicationWindow):
         super().__init__(**kwargs)
         self.set_title("AutoCompliance")
 
+        box = Gtk.VBox()
+        self.set_child(box)
+
+        resource_limiting_btn = Gtk.Button(label='Resource Limiting')
+        resource_limiting_btn.connect('clicked', lambda x: self.close())
+        box.(resource_limiting_btn)
+
+        specify_domain_details_btn = Gtk.Button(label='Specify Domain Details')
+        specify_domain_details_btn.connect('clicked', lambda x: self.close())
+        # self.add(specify_domain_details_btn)
+
+        add_domain_devices_btn = Gtk.Button(label='Add Domain Devices')
+        add_domain_devices_btn.connect('clicked', lambda x: self.close())
+        # self.add(add_domain_devices_btn)
+
+        provide_brute_force_propagation_information_btn = Gtk.Button(label='Provide Brute-Force Propagation Information')
+        provide_brute_force_propagation_information_btn.connect('clicked', lambda x: self.close())
+        # self.add(provide_brute_force_propagation_information_btn)
+
+
+
 
 class AboutDialog(Gtk.AboutDialog):
 
@@ -40,3 +61,4 @@ class AboutDialog(Gtk.AboutDialog):
         self.props.logo_icon_name = 'org.example.App'
         self.props.modal = True
         self.set_transient_for(parent)
+
