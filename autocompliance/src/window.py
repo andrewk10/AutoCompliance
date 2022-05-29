@@ -33,7 +33,7 @@ class AutocomplianceWindow(Gtk.ApplicationWindow):
 
         resource_limiting_btn = Gtk.Button(label='Resource Limiting')
         resource_limiting_btn.connect('clicked', lambda x: self.close())
-        box.(resource_limiting_btn)
+        # box.(resource_limiting_btn)
 
         specify_domain_details_btn = Gtk.Button(label='Specify Domain Details')
         specify_domain_details_btn.connect('clicked', lambda x: self.close())
