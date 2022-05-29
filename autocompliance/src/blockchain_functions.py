@@ -7,7 +7,7 @@
 # Using flask to send messages to postman.
 from flask import Flask, jsonify
 # Importing blockchain for the blockchain object
-import blockchain
+import autocompliance.src.blockchain as blockchain
 # Importing json to encode information as JSON.
 import json
 # Hashlib for the hashing of blockchain blocks.
@@ -20,13 +20,10 @@ app_blockchain = blockchain.Blockchain()
 @app.route('/broadcast_recovery', methods=['GET'])
 def broadcast_recovery_request():
     """
-    This function
+    This function is called via web request
     """
-    # TODO: Iterating through all hosts in the network and getting them to
-    #  initialize the local context
-    #
-    # for host in chain.hosts:
-    return None
+    # for block in app_blockchain:
+    # <Send the recovery request to the associated block host>
 
 
 @app.route('/get_proof', methods=['GET'])
