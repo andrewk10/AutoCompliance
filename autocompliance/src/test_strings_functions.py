@@ -3,9 +3,9 @@
 # Author: @andrewk10
 
 # Importing strings_functions.py for testing.
-import strings_functions
+import autocompliance.src.strings_functions as strings_functions
 # Importing strings for the use of predefined test strings.
-import strings
+import autocompliance.src.strings as strings
 
 
 def test_adding_address_to_interface(capfd):

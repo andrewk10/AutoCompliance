@@ -45,6 +45,26 @@ COLON = ":"
 # A string that just denotes the use of a comma, same "idea" as above.
 COMMA = ","
 
+# The consensus message for requesting a change of the current view.
+CONSENSUS_MESSAGE_CHANGE_VIEW_REQUEST = "Change View Request"
+
+# The consensus message that commits the consensus changes.
+CONSENSUS_MESSAGE_COMMIT = "Commit"
+
+# The consensus message that asks for the preparing of a consensus request.
+CONSENSUS_MESSAGE_PREPARE_REQUEST = "Prepare Request"
+
+# The consensus message that asks for the preparing of a consensus response.
+CONSENSUS_MESSAGE_PREPARE_RESPONSE = "Prepare Response"
+
+# The consensus message that asks for the preparing of a consensus recovery
+# request.
+CONSENSUS_MESSAGE_RECOVERY_MESSAGE = "Recovery Message"
+
+# The consensus message that asks for the preparing of a consensus recovery
+# request.
+CONSENSUS_MESSAGE_RECOVERY_REQUEST = "Recovery Request"
+
 # The demo filename
 DEMO_SCRIPT_FILENAME = "demo.py"
 
@@ -84,8 +104,9 @@ FETCHING_INTERFACE_IPS = "Fetching IPs for interface"
 # Prompts the user that their fetching the local interface list.
 FETCHING_LOCAL_INTERFACE_LIST = "Fetching local interface list..."
 
-# Name of the test text file, prepended with src/ for Pytest to work.
-FILE = "src/test_files/file.txt"
+# Name of the test text file, prepended with autocompliance/src/ for Pytest to
+# work.
+FILE = "autocompliance/src/test_files/file.txt"
 
 # Lets the user know a file doesn't exist.
 FILE_DOES_NOT_EXIST = "A specified file does not exist"
@@ -156,11 +177,13 @@ IP_FILE_OPT_LONG = "--target"
 # Letting the user know a specified IP file could not be found.
 IP_FILENAME_NOT_FOUND = "Could not find the specified IP file"
 
-# Name of the test IP list file, prepended with src/ for Pytest to work.
-IP_LIST = "src/test_files/ip_list.txt"
+# Name of the test IP list file, prepended with autocompliance/src/ for Pytest
+# to work.
+IP_LIST = "autocompliance/src/test_files/ip_list.txt"
 
-# Name of the short test IP list file, prepended with src/ for Pytest to work.
-IP_LIST_SHORT = "src/test_files/ip_list_short.txt"
+# Name of the short test IP list file, prepended with autocompliance/src/ for
+# Pytest to work.
+IP_LIST_SHORT = "autocompliance/src/test_files/ip_list_short.txt"
 
 # Let the user know that we're checking to see if the IP address is reachable.
 IS_IP_REACHABLE = "Checking if the following ip address is reachable:"
@@ -235,8 +258,9 @@ NETCAT_LISTENER_PORT_COMMAND = "nc -l -p"
 # Netcat writer with a 3-second timeout time, command.
 NETCAT_WRITER_COMMAND = "nc -w 3"
 
-# The name of the net propagation script.
-NET_PROPAGATION = "src/net_propagation.py"
+# The name of the net propagation script, prepended with autocompliance/src/
+# for tests to work.
+NET_PROPAGATION = "autocompliance/src/net_propagation.py"
 
 # Newline character, mostly used to mimic an enter key press.
 NEWLINE = "\n"
@@ -256,6 +280,11 @@ PASSWORD_PROMPT = "Password:"
 # Password prompt for web logins, rather the post ID really.
 PASSWORD_PROMPT_WEB = "password:"
 
+# Permissions error, advise the user that superuser permissions are needed for
+# scan_port.
+PERMISSIONS_ERROR = "Superuser permissions or admin privileges are needed " \
+                    "for the scanning of ports"
+
 # Short option name for the password file option.
 PW_FILE_OPT_SHORT = "-f"
 
@@ -265,11 +294,11 @@ PW_FILE_OPT_LONG = "--file"
 # Help text for the password file option.
 PW_FILE_HELP = "Filename for a file containing a list of passwords"
 
-# List of dummy passwords
-PWDS_LIST = "src/test_files/passwords_list.txt"
+# List of dummy passwords, prepended with autocompliance/src/
+PWDS_LIST = "autocompliance/src/test_files/passwords_list.txt"
 
-# Shorter list of dummy passwords
-PWDS_LIST_SHORT = "src/test_files/passwords_list_short.txt"
+# Shorter list of dummy passwords, prepended with autocompliance/src/
+PWDS_LIST_SHORT = "autocompliance/src/test_files/passwords_list_short.txt"
 
 # Parameters string for help test.
 PARAMETERS = "Parameters:"
@@ -374,7 +403,7 @@ TEST_IP = "192.168.1.1"
 TEST_IP_FAIL = "10.255.255.254"
 
 # A list of IPs for testing subnet scanning.
-TEST_IP_LIST = ['127.0.0.1', '127.0.0.0',  '127.0.0.2', '127.0.0.3',
+TEST_IP_LIST = ['127.0.0.1', '127.0.0.0', '127.0.0.2', '127.0.0.3',
                 '127.0.0.4', '127.0.0.5', '127.0.0.6', '127.0.0.7',
                 '127.0.0.8', '127.0.0.9', '127.0.0.10', '127.0.0.11',
                 '127.0.0.12', '127.0.0.13', '127.0.0.14', '127.0.0.15',
