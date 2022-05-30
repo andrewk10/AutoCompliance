@@ -3,7 +3,7 @@
 # Author: @andrewk10
 
 # Importing strings for use of the external strings resources.
-import strings
+import autocompliance.src.strings as strings
 
 
 def adding_address_to_interface(specific_address, interface):

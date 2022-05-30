@@ -2,14 +2,16 @@
 
 # Author: @andrewk10
 
-# Importing file for file based functionality.
-import file
+# Importing argparse for command-line option parsing
+import argparse
+# Importing file for file based functionality
+import autocompliance.src.file as file
 # Importing logging to safely log sensitive, error or debug info.
 import logging
 # Importing strings for use of the external strings resources.
-import strings
+import autocompliance.src.strings as strings
 # Importing strings_functions for string building functions.
-import strings_functions
+import autocompliance.src.strings_functions as strings_functions
 
 
 class DemoFunctions:
@@ -27,7 +29,7 @@ class DemoFunctions:
 
     def assigning_values(self):
         """
-        This function will read in the target ports, target username and
+        This method will read in the target ports, target username and
         passwords filename from the user and if the user specified an ip
         addresses file it will read that and return it alongside all the other
         values
@@ -46,16 +48,16 @@ class DemoFunctions:
         else:
             logging.debug(strings.IP_FILENAME_NOT_FOUND)
 
-        if self.arguments.password_file:
+        if self.arguments.pw_file:
             return ip_list, self.arguments.ports, self.arguments.username, \
-                   self.arguments.password_file
+                   self.arguments.pw_file
 
         logging.error(strings.FILE_DOES_NOT_EXIST)
         return None
 
     def checking_arguments(self):
         """
-        This function checks if the arguments are appropriately given and if
+        This method checks if the arguments are appropriately given and if
         they're not it calls the help function and gracefully exits. There's
         also a check for the help argument itself. It'll try to assign the \
         values if the proper arguments are given, and they're valid
@@ -83,9 +85,65 @@ class DemoFunctions:
             return None
 
 
+def parse_arguments(arguments):
+    """
+    This function will parse arguments and is even used to dummy arguments for
+    tests when needed
+    :param arguments: The arguments to be parsed
+    """
+
+    # Argument parser for handling arguments.
+    parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
+    # Adding the target  file option to the parser.
+    parser.add_argument(
+        strings.IP_FILE_OPT_SHORT, strings.IP_FILE_OPT_LONG,
+        dest='target', help=strings.IP_FILE_HELP, type=str)
+    # Adding the username option to the parser.
+    parser.add_argument(
+        strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
+        dest='username', help=strings.USERNAME_HELP, type=str)
+    # Adding the password file option to the parser.
+    parser.add_argument(
+        strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
+        dest="pw_file", help=strings.PW_FILE_HELP, type=str)
+    # Adding the port option to the parser.
+    parser.add_argument(
+        strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
+        dest='ports', help=strings.PORT_HELP, type=str)
+    # Adding the lan option to the parser.
+    parser.add_argument(
+        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG, action='store_true',
+        help=strings.LAN_HELP)
+    # Adding the propagate option to the parser.
+    parser.add_argument(
+        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG, action='store_true',
+        help=strings.PROP_HELP)
+    # Adding the transfer file option to the parser.
+    parser.add_argument(
+        strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
+        dest='propagate_file', help=strings.PROP_FILE_HELP, type=str)
+
+    # Parsing the arguments.
+    arguments = parser.parse_args(arguments)
+    return arguments
+
+
 def exit_and_show_instructions():
     """
     This function will print the help screen and show an exit prompt.
     """
     print(strings_functions.help_output())
     print(strings.EXITING)
+
+
+def remove_duplicates_in_list(list_with_duplicates):
+    """
+    This function simply removes duplicate entries in a given list
+    :param list_with_duplicates: A list with duplicate entries
+    :return deduplicated_list: A list without duplicate entries
+    """
+    deduplicated_list = list()
+    for ip in list_with_duplicates:
+        if ip not in deduplicated_list:
+            deduplicated_list.append(ip)
+    return deduplicated_list

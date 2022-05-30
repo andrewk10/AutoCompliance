@@ -3,58 +3,25 @@
 # Author: @andrewk10
 
 # Importing demo_functions for demo specific functionality.
-import demo_functions
+import autocompliance.src.demo_functions as demo_functions
 # Importing file for working with files.
-import file
+import autocompliance.src.file as file
 # Importing logging to safely log sensitive, error or debug info.
 import logging
 # Importing net_propagation for propagating across the network.
-import net_propagation
+import autocompliance.src.net_propagation as net_propagation
 # Importing strings for use of the external strings resources.
-import strings
+import autocompliance.src.strings as strings
 # Importing sys to handle arguments
 import sys
-# Importing argparse for command-line option parsing
-import argparse
 
 
 def demo():
     """
     This demo function is just for demo purposes.
     """
-    # Argument parser for handling arguments.
-    parser = argparse.ArgumentParser(description=strings.DESCRIPTION)
-    # Adding the target  file option to the parser.
-    parser.add_argument(
-        strings.IP_FILE_OPT_SHORT, strings.IP_FILE_OPT_LONG,
-        dest='target', help=strings.IP_FILE_HELP, type=str)
-    # Adding the username option to the parser.
-    parser.add_argument(
-        strings.USERNAME_OPT_SHORT, strings.USERNAME_OPT_LONG,
-        dest='username', help=strings.USERNAME_HELP, type=str)
-    # Adding the password file option to the parser.
-    parser.add_argument(
-        strings.PW_FILE_OPT_SHORT, strings.PW_FILE_OPT_LONG,
-        dest="pw_file", help=strings.PW_FILE_HELP, type=str)
-    # Adding the port option to the parser.
-    parser.add_argument(
-        strings.PORT_OPT_SHORT, strings.PORT_OPT_LONG,
-        dest='ports', help=strings.PORT_HELP, type=str)
-    # Adding the lan option to the parser.
-    parser.add_argument(
-        strings.LAN_OPT_SHORT, strings.LAN_OPT_LONG, action='store_true',
-        help=strings.LAN_HELP)
-    # Adding the propagate option to the parser.
-    parser.add_argument(
-        strings.PROP_OPT_SHORT, strings.PROP_OPT_LONG, action='store_true',
-        help=strings.PROP_HELP)
-    # Adding the transfer file option to the parser.
-    parser.add_argument(
-        strings.PROP_FILE_OPT_SHORT, strings.PROP_FILE_OPT_LONG,
-        dest='propagate_file', help=strings.PROP_FILE_HELP, type=str)
-
     # Parsing the arguments.
-    arguments = parser.parse_args()
+    arguments = demo_functions.parse_arguments(sys.argv[1:])
 
     # Initialising this for possible later use
     transfer_file = strings.SPACE
@@ -86,7 +53,7 @@ def demo():
     # If so then extend the ip_list.
     if arguments.lan:
         logging.info(strings.PERFORMING_LOCAL_SCAN)
-        propagator.ip_list = propagator.gathering_local_ips()
+        propagator.gathering_local_ips()
 
     # Creating the password file.
     pw_file = file.File(arguments.pw_file)
@@ -120,7 +87,10 @@ def demo():
     # Removing duplicate entries in the IP address list, can come from
     # combining local scan with given IP addresses in an ip address file for
     # example. This would be a user error, we're just handling that.
-    propagator.ip_list = list(dict.fromkeys(propagator.ip_list))
+    if propagator.ip_list:
+        propagator.ip_list = demo_functions.remove_duplicates_in_list(
+            propagator.ip_list)
+
     # Removing IPs from the IP list that can't be pinged from the host machine
     # of the script.
     propagator.remove_unreachable_ips()
@@ -128,14 +98,17 @@ def demo():
     # user on the comma.
     ports = arguments.ports.split(strings.COMMA)
     # Cycling through every IP in the IP list...
-    for ip in propagator.ip_list:
-        # And then using all user specified ports against that specific IP...
-        for port in ports:
-            propagator.ip = ip
-            propagator.port = port
-            propagation_script = file.File(strings.DEMO_SCRIPT_FILENAME)
-            # Try to spread using services and actions.
-            propagator.try_action(transfer_file, propagation_script, arguments)
+    if propagator.ip_list:
+        for ip in propagator.ip_list:
+            # And then using all user specified ports against that specific
+            # IP...
+            for port in ports:
+                propagator.ip = ip
+                propagator.port = port
+                propagation_script = file.File(strings.DEMO_SCRIPT_FILENAME)
+                # Try to spread using services and actions.
+                propagator.try_action(transfer_file, propagation_script,
+                                      arguments)
 
 
 if __name__ == "__main__":
